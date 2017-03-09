@@ -1,0 +1,201 @@
+
+images.png
+format: RGBA8888
+filter: MipMapLinearLinear,MipMapLinearLinear
+repeat: none
+bbendscreen
+  rotate: false
+  xy: 1, 407
+  size: 617, 511
+  orig: 617, 511
+  offset: 0, 0
+  index: -1
+gameover
+  rotate: false
+  xy: 1, 235
+  size: 270, 170
+  orig: 270, 170
+  offset: 0, 0
+  index: -1
+hover
+  rotate: false
+  xy: 620, 848
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 1
+hover
+  rotate: false
+  xy: 1, 163
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 2
+hover
+  rotate: false
+  xy: 273, 335
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 3
+hover
+  rotate: false
+  xy: 620, 776
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 4
+hover
+  rotate: false
+  xy: 1, 91
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 5
+hover
+  rotate: false
+  xy: 273, 263
+  size: 270, 70
+  orig: 270, 70
+  offset: 0, 0
+  index: 6
+paddel-magnet-pull
+  rotate: false
+  xy: 620, 754
+  size: 220, 20
+  orig: 220, 20
+  offset: 0, 0
+  index: -1
+paddel-magnet-push
+  rotate: false
+  xy: 1, 69
+  size: 220, 20
+  orig: 220, 20
+  offset: 0, 0
+  index: -1
+paddel
+  rotate: false
+  xy: 273, 241
+  size: 220, 20
+  orig: 220, 20
+  offset: 0, 0
+  index: -1
+obstacle
+  rotate: false
+  xy: 892, 854
+  size: 76, 64
+  orig: 76, 64
+  offset: 0, 0
+  index: -1
+ball_lazer_pup
+  rotate: false
+  xy: 545, 373
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+bomb_pup
+  rotate: false
+  xy: 620, 720
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+extra_ball_pup
+  rotate: false
+  xy: 1, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+extra_mag_ball_pup
+  rotate: false
+  xy: 273, 207
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+lazer_pup
+  rotate: false
+  xy: 892, 820
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+lightBulb
+  rotate: false
+  xy: 970, 886
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+mag_power_pup
+  rotate: false
+  xy: 545, 339
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+mag_strength_pup
+  rotate: false
+  xy: 579, 373
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 620, 686
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+pesquare
+  rotate: false
+  xy: 654, 720
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+pre_particle
+  rotate: false
+  xy: 1, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+score_pup
+  rotate: false
+  xy: 35, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ball
+  rotate: false
+  xy: 842, 758
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+bomb
+  rotate: false
+  xy: 223, 73
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+mag_ball
+  rotate: false
+  xy: 495, 245
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+background
+  rotate: false
+  xy: 273, 195
+  size: 20, 10
+  orig: 20, 10
+  offset: 0, 0
+  index: -1
