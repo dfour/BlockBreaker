@@ -21,6 +21,12 @@ public class BlockBreaker extends Game {
 	//TODO make level designer
 	//TODO add money power up
 	//TODO show bomb count, score, money in play area ( instead of top corner )
+	//TODO finish adding spinners
+	//TODO add obstacles that speed up/slowdown ball
+	//TODO add obstacles that make ball veer right/left (spin)
+	//TODO finish designing end screen
+	//TODO create bug reporter( ingame or online )
+	
 	
 	private Screen menu;
 	private PreferencesScreen prefs;
