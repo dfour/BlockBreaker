@@ -4,12 +4,9 @@ package com.dfour.blockbreaker.view;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.controller.AppController;
 
@@ -20,9 +17,6 @@ public class EndScreen implements Screen {
 	private BlockBreaker parent;
 	private SpriteBatch pb;
 	private AppController controller;
-	//private Texture visFont = new Texture(Gdx.files.internal("font/visitor.png"), true);
-	private BitmapFont font ;//= new BitmapFont(Gdx.files.internal("font/visitor.fnt"), new TextureRegion(visFont), false);
-	private int widthOffset;
 	private int sw;
 	private int sh;
 	private TextureAtlas atlas;
@@ -38,7 +32,6 @@ public class EndScreen implements Screen {
 		pb = new SpriteBatch();
 		bg = atlasGui.findRegion("background");
 		bgCredits = atlas.findRegion("bbendscreen");
-		font 			= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
 
 	}
 
@@ -102,7 +95,6 @@ public class EndScreen implements Screen {
 	public void resize(int width, int height) {
 		this.sw = width;
 		this.sh = height;
-		widthOffset = width / 2 - 100;
 	}
 
 	@Override

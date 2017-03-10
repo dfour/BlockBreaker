@@ -4,8 +4,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader.ParticleEffectParameter;
 import com.badlogic.gdx.assets.loaders.SkinLoader.SkinParameter;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,46 +17,6 @@ public class BBAssetManager {
 	public final String imagesPack 		= "images/images.pack";
 	public final String lazorPack 		= "lazor/lazor.pack";
 	
-	/*
-	public final String obbTitle			= "gui/blockBreakerTitle.png";
-	public final String obbLoading		= "gui/loading.png";
-	public final String ovisFontTexture 	= "font/visitor.png";
-	public final String ocatborder 		= "secretCatImage.png";
-	public final String ogameOver 		= "gameover.png";
-	public final String olazerStartBg 	= "lazor/lazorStart.png";
-	public final String olazerStartOver 	= "lazor/lazorStartOver.png";
-	public final String olazerMidBg 		= "lazor/lazor.png";
-	public final String olazerMidOver 	= "lazor/lazorOver.png";
-	public final String olazerEndBg 		= "lazor/lazorEnd.png";
-	public final String olazerEndOver 	= "lazor/lazorEndOver.png";
-	public final String olazerAllOver 	= "lazor/lazorAllOver.png";
-	public final String oball			= "ball.png";
-	public final String omagBall			= "mag_ball.png";
-	public final String olightBulb		= "lightBulb.png";
-	public final String opaddle			= "paddel.png";
-	public final String opaddlePull		= "paddel-magnet-pull.png";
-	public final String opaddlePush		= "paddel-magnet-push.png";
-	public final String ohover1			= "hover_1.png";
-	public final String ohover2			= "hover_2.png";
-	public final String ohover3			= "hover_3.png";
-	public final String ohover4			= "hover_4.png";
-	public final String ohover5			= "hover_5.png";
-	public final String ohover6			= "hover_6.png";
-	public final String omag_power_pup	= "mag_power_pup.png";
-	public final String omag_strength_pup= "mag_strength_pup.png";
-	public final String oextra_ball_pup	= "extra_ball_pup.png";
-	public final String oextra_mag_ball_pup= "extra_mag_ball_pup.png";
-	public final String olazer_pup		= "lazer_pup.png";
-	public final String oscore_pup		= "score_pup.png";
-	public final String oball_lazer_pup	= "ball_lazer_pup.png";
-	public final String obomb_pup		= "bomb_pup.png";
-	public final String oprogressBarStart= "gui/progressBarStart.png";
-	public final String oprogressBarMiddle= "gui/progressBarMiddle.png";
-	public final String oprogressBarEnd	= "gui/progressBarEnd.png";
-	public final String oprogressBarSurround	= "gui/progressBarSurround.png";
-	public final String opnkButtonNine	= "gui/btn_blue_pink_glossy.9.png";
-	public final String obomb			= "bomb.png";
-	*/
 	
 	public void loadImages(){
 		manager.load(imagesPack, TextureAtlas.class);

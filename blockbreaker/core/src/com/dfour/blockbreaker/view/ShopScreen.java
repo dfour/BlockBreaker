@@ -50,8 +50,6 @@ public class ShopScreen implements Screen{
 	
 	private boolean isReturning = false;
 	private Skin skin;
-	private Object atlas;
-	private Image title;
 	private TextButtonStyle textButtonStyle;
 	private TextButton btnExBall;
 	private TextButton btnExLazer;
@@ -71,6 +69,7 @@ public class ShopScreen implements Screen{
 	private Label lblCash;
 	private Label lblScore;
 	private TextButton btnDone;
+	private Image title;
 	
 	public ShopScreen (BlockBreaker p, BBModel m){
 		parent = p;
@@ -190,7 +189,7 @@ public class ShopScreen implements Screen{
 		// label for score
 		lblScore = new Label("Score:"+bbModel.score,skin);
 		
-		Image title = new Image(atlasGui.findRegion("blockBreakerTitle"));
+		
         table.add(title).pad(10);
         table.row().expandY();
         
@@ -297,10 +296,9 @@ public class ShopScreen implements Screen{
 	}
 	
 	private void loadImages() {
-		atlas = parent.assMan.manager.get("images/images.pack");
 		atlasGui = parent.assMan.manager.get("gui/loadingGui.pack");
-		
 		title = new Image(atlasGui.findRegion("blockBreakerTitle"));
+		
 		bg = atlasGui.findRegion("background");
 		
 		skin = new Skin();

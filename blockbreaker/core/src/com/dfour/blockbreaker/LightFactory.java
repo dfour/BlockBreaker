@@ -130,13 +130,5 @@ public class LightFactory {
 		allLights.add(cl);
 		return cl;
 	}
-	
-	// no longer need as using pool
-	private void removeLights(){
-		for (Light light : allLights) {
-			light.remove();
-		}
-		allLights.clear();
-	}
-	
+		
 }

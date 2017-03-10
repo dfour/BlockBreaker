@@ -1,7 +1,6 @@
 package com.dfour.blockbreaker.view;
 
 import box2dLight.RayHandler;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -98,7 +96,7 @@ public class ApplicationScreen implements Screen {
 	private TextureAtlas atlasLazor;
 	
 	private float fadeIn = 1f;
-	private float fadeOut = 1f;
+	//private float fadeOut = 1f;
 	private float currentAlpha = 1f;
 	
 	
