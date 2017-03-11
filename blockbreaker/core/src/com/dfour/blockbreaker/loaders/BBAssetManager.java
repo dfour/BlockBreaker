@@ -32,6 +32,7 @@ public class BBAssetManager {
 	
 	// Particle Effects
 	public final String sparksPE		="particles/sparks.pe";
+	public final String blackHolePE		="particles/blackhole.pe";
 	public final String explosionPE		="particles/explosion.pe";
 	public final String lazerPE			="particles/lazer.pe";
 	public final String pupGetEffectPE	="particles/pupGetEffect.pe";
@@ -45,6 +46,7 @@ public class BBAssetManager {
 		manager.load(lazerPE, ParticleEffect.class, pep);
 		manager.load(pupGetEffectPE, ParticleEffect.class, pep);
 		manager.load(laserHitPE, ParticleEffect.class, pep);
+		manager.load(blackHolePE, ParticleEffect.class, pep);
 	}
 	
 	//Sounds

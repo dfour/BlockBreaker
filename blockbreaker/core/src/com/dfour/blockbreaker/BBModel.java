@@ -25,6 +25,7 @@ import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
 import com.dfour.blockbreaker.entity.Pad;
 import com.dfour.blockbreaker.entity.PowerUp;
+import com.dfour.blockbreaker.entity.Spinner;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
 import com.dfour.blockbreaker.loaders.LevelLoader;
 
@@ -71,7 +72,7 @@ public class BBModel {
 	public int level = 0;
 	public int livesLeft = 3;	// initial lives
 	public int bombsLeft = 0;
-	private static final int MAX_LEVELS = 1; //26;
+	private static final int MAX_LEVELS = 20; //26;
 	
 	private float levelTimer;
 	public float baseGuideLazerTimer = 10f;
@@ -93,6 +94,7 @@ public class BBModel {
 	public Array<Vector2> sparks = new Array<Vector2>();
 	public Array<Vector2> explosions = new Array<Vector2>();
 	public Array<Vector2> pupExplosions = new Array<Vector2>();
+	public Array<Vector2> blackHolePE = new Array<Vector2>();
 	
 	public Pad pad;
 	public Brick brickLazoredLeft;
@@ -227,6 +229,7 @@ public class BBModel {
 		updatePowerUps();
 		updateBricks();
 		updateExplosions();
+		updateObstacles();
 		
 		if (entFactory.bricks.size < 1 && !changingLevel) {
 			levelTimer = 1f;
@@ -249,6 +252,13 @@ public class BBModel {
 		}
 		
 		controller.ffive = false;
+	}
+
+	private void updateObstacles() {
+		for (Spinner spinner : entFactory.spinners){
+			spinner.update();
+		}
+		
 	}
 
 	private void updateExplosions() {
@@ -439,12 +449,13 @@ public class BBModel {
 
 	private void updateBombs() {
 		
+		// TODO implement limit to bomb count per second to stop all bombs being released at once
 		// B key to init bomb
 		if (controller.useBomb) {
 			controller.useBomb = false;
 			if(this.bombsLeft > 0){
 				this.bombsLeft -= 1;
-				addBombPowerUp();
+				dispenseBomb();
 			}
 		}
 		
@@ -490,7 +501,7 @@ public class BBModel {
 		
 		if (controller.fsix) {
 			controller.fsix = false;
-			addBombPowerUp();
+			dispenseBomb();
 		}
 	}
 
@@ -586,8 +597,11 @@ public class BBModel {
 	}
 
 	public void addBombPowerUp() {
-		//isAddingBomb = true;
 		this.bombsLeft += 1;
+	}
+	
+	public void dispenseBomb(){
+		isAddingBomb = true;
 	}
 
 	public void addGuidLazer() {

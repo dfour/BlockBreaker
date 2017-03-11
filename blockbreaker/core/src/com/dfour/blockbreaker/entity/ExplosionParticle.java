@@ -9,12 +9,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
 public class ExplosionParticle {
-	public int blastPower = 100;
 	public static final int NUMRAYS = 36;
 	public Body body;
 	public float lifeTime = 3f;
 	
-	public ExplosionParticle(World world, Vector2 vector, Vector2 rayDir){
+	public ExplosionParticle(World world, Vector2 vector, Vector2 rayDir, int blastPower){
 		BodyDef bd = new BodyDef();
 	      bd.type = BodyType.DynamicBody;
 	      bd.fixedRotation = true; // rotation not necessary

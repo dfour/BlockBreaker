@@ -31,6 +31,7 @@ public class EntityFactory {
 	public Array<Obstacle> obstacles = new Array<Obstacle>();
 	public Array<Body> walls = new Array<Body>();
 	public Array<Spinner> spinners = new Array<Spinner>();
+	public Array<BlackHole> blackHoles = new Array<BlackHole>();
 	
 	public int ballCount;
 
@@ -169,25 +170,25 @@ public class EntityFactory {
 	
 	public Spinner addSpinner(float x, float y, boolean clockwise){
 		// plus sign in verctor coords
-		Vector2[] verts = new Vector2[12];
-		verts[0]  = new Vector2(-0.5f,-2.5f); 
-		verts[1]  = new Vector2( 0.5f,-2.5f); 
-		verts[2]  = new Vector2( 0.5f,-0.5f); 
-		verts[3]  = new Vector2( 2.5f,-0.5f); 
-		verts[4]  = new Vector2( 2.5f, 0.5f); 
-		verts[5]  = new Vector2( 0.5f, 0.5f); 
-		verts[6]  = new Vector2( 0.5f, 2.5f); 
-		verts[7]  = new Vector2(-0.5f, 2.5f); 
-		verts[8]  = new Vector2(-0.5f, 0.5f); 
-		verts[9]  = new Vector2(-2.5f, 0.5f); 
-		verts[10] = new Vector2(-2.5f,-0.5f); 
-		verts[11] = new Vector2(-0.5f,-0.5f); 
+		Vector2[] verts = new Vector2[4];
+		verts[0]  = new Vector2(-0.25f,-1.5f); 
+		verts[1]  = new Vector2(-0.25f, 1.5f); 
+		verts[2]  = new Vector2(0.25f, 1.5f); 
+		verts[3]  = new Vector2(0.25f, -1.5f); 
 		
 		Body spBody = bodyFactory.makePolygonShapeBody(verts, x, y, BodyFactory.WOOD, BodyType.KinematicBody);
+		//TODO add second spinner fixture to body here
 		Spinner spinny = new Spinner(spBody, null, clockwise);
 		spinners.add(spinny);
 		return spinny;
 		
+	}
+	
+	public BlackHole addBlackHole(int x, int y) {
+		Body bhbod = bodyFactory.makeCirclePolyBody(x, y, 1, BodyFactory.WOOD, BodyType.StaticBody);
+		BlackHole bh = new BlackHole(bhbod, null);
+		blackHoles.add(bh);
+		return bh;
 	}
 	
 	public Bomb addBomb() {
@@ -202,12 +203,21 @@ public class EntityFactory {
 	
 	public void addExplosionParticles(Vector2 vector){
 		int numRays = ExplosionParticle.NUMRAYS;
+		// one to free static blocks
 		for (int i = 0; i < numRays; i++) {
 			float angle = ((i / (float) numRays) * 360)
 					* MathUtils.degreesToRadians;
 			Vector2 rayDir = new Vector2((float) Math.sin(angle),
 					(float) Math.cos(angle));
-			explosionParticles.add(new ExplosionParticle(world, vector, rayDir));
+			explosionParticles.add(new ExplosionParticle(world, vector, rayDir, 150));
+		}
+		// one to apply force after freeing
+		for (int i = 0; i < numRays; i++) {
+			float angle = ((i / (float) numRays) * 360)
+					* MathUtils.degreesToRadians;
+			Vector2 rayDir = new Vector2((float) Math.sin(angle),
+					(float) Math.cos(angle));
+			explosionParticles.add(new ExplosionParticle(world, vector, rayDir, 149));
 		}
 	}
 	
@@ -262,7 +272,11 @@ public class EntityFactory {
 		obstacles.clear();
 		explosionParticles.clear();
 		spinners.clear();
+		blackHoles.clear();
 	}
+
+
+
 }
 
 

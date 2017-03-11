@@ -32,6 +32,8 @@ public class LevelLoader {
 					model.entFactory.addSpinner(x * 2, (Math.abs(y - 30)) * 2, true);
 				}else if (coord == 'a') {
 					model.entFactory.addSpinner(x * 2, (Math.abs(y - 30)) * 2, false);
+				}else if (coord == 'b'){
+					model.entFactory.addBlackHole(x * 2, (Math.abs(y - 30)) * 2);
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package com.dfour.blockbreaker.view;
 
 import box2dLight.RayHandler;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -26,12 +27,14 @@ import com.dfour.blockbreaker.BBModel;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
+import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
 import com.dfour.blockbreaker.entity.Obstacle;
 import com.dfour.blockbreaker.entity.PowerUp;
+import com.dfour.blockbreaker.entity.Spinner;
 
 public class ApplicationScreen implements Screen {
 	private BlockBreaker parent;
@@ -60,11 +63,13 @@ public class ApplicationScreen implements Screen {
 	ParticleEffect lazerEffect = new ParticleEffect();
 	ParticleEffect pupEffect = new ParticleEffect();
 	ParticleEffect lazerHitEffect = new ParticleEffect();
+	ParticleEffect blackHoleEffect = new ParticleEffect();
 	private ParticleEffectPool partySparksPool;
 	private ParticleEffectPool partyExplosionPool;
 	private ParticleEffectPool partyLazerPool;
 	private ParticleEffectPool partyHitLazerPool;
 	private ParticleEffectPool partyPupPool;
+	private ParticleEffectPool partyBhPool;
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
 	
 	private Texture wall;
@@ -89,6 +94,7 @@ public class ApplicationScreen implements Screen {
 	public static final int POWERUP = 2;
 	public static final int LAZER = 3;
 	public static final int LAZER_HIT = 4;
+	public static final int BLACK_HOLE = 5;
 	
 	private float gameOverTimer = 5f;
 	private TextureAtlas atlas;
@@ -98,6 +104,7 @@ public class ApplicationScreen implements Screen {
 	private float fadeIn = 1f;
 	//private float fadeOut = 1f;
 	private float currentAlpha = 1f;
+	private ParticleEffect bhEffect;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -222,6 +229,7 @@ public class ApplicationScreen implements Screen {
 		pb.end();
 		
 		if(bbModel.showShop){
+			removeConstantPE();
 			bbModel.showShop = false;
 			parent.changeScreen(BlockBreaker.SHOP);
 		}
@@ -233,6 +241,14 @@ public class ApplicationScreen implements Screen {
 		}
 	}
 	
+	private void removeConstantPE() {
+		for (int i = effects.size - 1; i >= 0; i--) {
+		    PooledEffect effect = effects.get(i);
+		    effect.free();
+		    effects.removeIndex(i); 
+		}  		
+	}
+
 	@Override
 	public void pause() {
 		isPaused = true;
@@ -299,6 +315,17 @@ public class ApplicationScreen implements Screen {
 		for(Obstacle obsstacle :bbModel.entFactory.obstacles){
 			obsstacle.sprite.draw(sb,currentAlpha);
 		}
+		for(Spinner spinner :bbModel.entFactory.spinners){
+			spinner.sprite.draw(sb,currentAlpha);
+		}
+		for(BlackHole blackHole : bbModel.entFactory.blackHoles){
+			blackHole.sprite.draw(sb,currentAlpha);
+			if(!blackHole.hasPartyEffect){
+				bbModel.blackHolePE.add(blackHole.body.getPosition());
+				blackHole.hasPartyEffect = true;
+			}
+		}
+		
 		bbModel.pad.sprite.draw(sb,currentAlpha);
 		bbModel.pad.drawAnimation(sb, delta);		
 	}
@@ -317,6 +344,11 @@ public class ApplicationScreen implements Screen {
 	    for(Vector2 pos: bbModel.pupExplosions){
 			this.addPartyEffect(pos, POWERUP);
 			bbModel.pupExplosions.removeValue(pos, true);
+		}
+	    
+	    for(Vector2 pos: bbModel.blackHolePE){
+			this.addPartyEffect(pos, BLACK_HOLE);
+			bbModel.blackHolePE.removeValue(pos, true);
 		}
 		
 	}
@@ -414,6 +446,7 @@ public class ApplicationScreen implements Screen {
 		case LAZER:		effect = partyLazerPool.obtain();break;
 		case POWERUP:	effect = partyPupPool.obtain();break;
 		case LAZER_HIT:	effect = partyHitLazerPool.obtain();break;
+		case BLACK_HOLE:effect = partyBhPool.obtain();break;
 		default:	 	effect = partySparksPool.obtain(); break;
 		}
 		effect.setPosition(pos.x * BBModel.BOX_TO_WORLD, pos.y * BBModel.BOX_TO_WORLD);
@@ -471,16 +504,19 @@ public class ApplicationScreen implements Screen {
 		lazerEffect = parent.assMan.manager.get("particles/lazer.pe",ParticleEffect.class);
 		lazerHitEffect = parent.assMan.manager.get("particles/laserHitSparks.pe",ParticleEffect.class);
 		pupEffect = parent.assMan.manager.get("particles/pupGetEffect.pe",ParticleEffect.class);
+		bhEffect = parent.assMan.manager.get("particles/blackhole.pe",ParticleEffect.class);
 		// scale effects
 		sparks.scaleEffect(1/2f);
 		explosion.scaleEffect(1/4f);
 		lazerEffect.scaleEffect(1/4f);
 		lazerHitEffect.scaleEffect(1/3f);
+		bhEffect.scaleEffect(1/4f);
 		//create object pools
 		partySparksPool = new ParticleEffectPool(sparks, 5, 20);
 		partyExplosionPool = new ParticleEffectPool(explosion, 5, 20);
 		partyLazerPool = new ParticleEffectPool(lazerEffect, 5, 20);
 		partyHitLazerPool = new ParticleEffectPool(lazerHitEffect, 5, 20);
 		partyPupPool = new ParticleEffectPool(pupEffect, 5, 20);
+		partyBhPool = new ParticleEffectPool(bhEffect,5,20);
 	}
 }
