@@ -68,7 +68,7 @@ public class BBModel {
 	public int magnetPower = 1000;
 	public int baseMagnetStrength = 100; // power at start
 	public int magnetStrength = 100;
-	public int cash = 50;
+	public int cash = 500;
 	public int score = 0;
 	public int level = 0;
 	public int livesLeft = 3;	// initial lives
@@ -190,7 +190,7 @@ public class BBModel {
 			bombsLeft = 0;
 			baseGuideLazerTimer = 10f;
 			baseLazerTimer = 5f;
-			cash = 50;
+			cash = 500;
 		}
 		
 		gameOver = false;
@@ -336,8 +336,8 @@ public class BBModel {
 			}
 		} else {
 			magnetPower++;
-			if (magnetPower > 1000) {
-				magnetPower = 1000;
+			if (magnetPower > this.baseMagnetPower) {
+				magnetPower = this.baseMagnetPower;
 			}
 		}
 
@@ -391,6 +391,7 @@ public class BBModel {
 						ball.isAttached = true;
 						ball.setNormalBall(atlas.findRegion("ball"));
 						ball.isDead = false;
+						this.livesLeft-=1;
 					}else{
 						gameOver = true;
 					}
@@ -621,7 +622,7 @@ public class BBModel {
 	}
 
 	public boolean removeCash(int cost) {
-		if(this.cash - cost > 0){
+		if(this.cash - cost >= 0){
 			this.cash -= cost;
 			return true;
 		}else{

@@ -7,8 +7,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -101,75 +99,83 @@ public class ShopScreen implements Screen{
 		skin = parent.assMan.manager.get("uiskin.json",Skin.class);
 		
 		// make button and labels for extra ball, longer lazer, longer guide, mag power, mag strength
-		btnExBall = new TextButton(""+(5^bbModel.livesLeft) * 2, textButtonStyle);
-		btnExBall.addListener(new EventListener() {
+		btnExBall = new TextButton("$"+calculateCost(bbModel.livesLeft,2.5,10), textButtonStyle);
+		btnExBall.addListener(new ClickListener() {
 			@Override
-			public boolean handle(Event e){
-				if(bbModel.removeCash((5^bbModel.livesLeft) * 2)){
+			public void clicked(InputEvent e, float x, float y) {
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost(bbModel.livesLeft,2.5,10))){
 					bbModel.livesLeft += 1;
-					btnExBall.setText(""+(5^bbModel.livesLeft) * 2);
+					btnExBall.setText("$"+calculateCost(bbModel.livesLeft,2.5,10));
 					updateCash();
-					btnExBall.setChecked(false);
-					return true;
 				}
-				return false;
+				btnExBall.setChecked(false);
 			}
 		});
 		
-		btnExLazer = new TextButton(""+(5^(int)bbModel.baseLazerTimer), textButtonStyle);
+		btnExLazer = new TextButton("$"+calculateCost(bbModel.baseLazerTimer,5,10), textButtonStyle);
 		btnExLazer.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				if(bbModel.removeCash((5^(int)bbModel.baseLazerTimer))){
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost(bbModel.baseLazerTimer,5,10))){
 					bbModel.baseLazerTimer+=0.5f;
-					btnExLazer.setText(""+(5^(int)bbModel.baseLazerTimer));
+					btnExLazer.setText("$"+calculateCost(bbModel.baseLazerTimer,5,10));
 					updateCash();
-					btnExLazer.setChecked(false);
 				}
+				btnExLazer.setChecked(false);
 			}
 		});
 		
-		btnExGuide = new TextButton(""+(5^(int)bbModel.baseGuideLazerTimer), textButtonStyle);
+		btnExGuide = new TextButton("$"+calculateCost(bbModel.baseGuideLazerTimer,2,10), textButtonStyle);
 		btnExGuide.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				if(bbModel.removeCash((5^(int)bbModel.baseGuideLazerTimer))){
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost(bbModel.baseGuideLazerTimer,2,10))){
 					bbModel.baseGuideLazerTimer+=0.5f;
-					btnExGuide.setText(""+(5^(int)bbModel.baseGuideLazerTimer));
+					btnExGuide.setText("$"+calculateCost(bbModel.baseGuideLazerTimer,2,10));
 					updateCash();
-					btnExGuide.setChecked(false);
 				}
+				btnExGuide.setChecked(false);
 			}
 		});
 		
-		btnExMPower = new TextButton(""+(5^((int)bbModel.baseMagnetPower)/ 200), textButtonStyle);
+		btnExMPower = new TextButton("$"+calculateCost((bbModel.baseMagnetPower/100),2,15), textButtonStyle);
 		btnExMPower.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				if(bbModel.removeCash((5^((int)bbModel.baseMagnetPower)/ 200))){
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost((bbModel.baseMagnetPower/100),2,15))){
 					bbModel.baseMagnetPower+=100;
-					btnExMPower.setText(""+(5^((int)bbModel.baseMagnetPower)/ 200));
+					btnExMPower.setText("$"+calculateCost((bbModel.baseMagnetPower/100),2,15));
 					updateCash();
-					btnExMPower.setChecked(false);
 				}
+				btnExMPower.setChecked(false);
 			}
 		});
 		
-		btnExMStrength = new TextButton("50", textButtonStyle);
+		btnExMStrength = new TextButton("$"+calculateCost((bbModel.baseMagnetStrength/10),2,15), textButtonStyle);
 		btnExMStrength.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				if(bbModel.removeCash(50)){
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost((bbModel.baseMagnetStrength/10),2,15))){
 					bbModel.baseMagnetStrength+=50;
 					updateCash();
-					btnExMStrength.setChecked(false);
+					btnExMStrength.setText("$"+calculateCost((bbModel.baseMagnetStrength/10),2,15));
 				}
+				btnExMStrength.setChecked(false);
 			}
 		});
 		
 		btnDone = new TextButton("Done", textButtonStyle);
 		btnDone.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
+				super.clicked(e, x, y);
 				isReturning = true;	
 				btnDone.setChecked(false);
 			}
 		});
+		// label for score and cash
+		lblScore = new Label("Score:"+bbModel.score,skin);
+		lblCash = new Label("Cash: $"+bbModel.cash,skin);
 		
 		lblExBall = new Label("Extra Life",skin);
 		lblExLazer = new Label("Longer Lasting Lazer Drill",skin);
@@ -177,17 +183,16 @@ public class ShopScreen implements Screen{
 		lblExMPower = new Label("More Magnet Power Storage",skin);
 		lblExMStrength = new Label("Stronger Magnets",skin);
 		
-		lblExBallc = new Label(""+bbModel.livesLeft,skin);
-		lblExLazerc = new Label(""+bbModel.baseLazerTimer,skin);
-		lblExGuidec = new Label(""+bbModel.baseGuideLazerTimer,skin);
-		lblExMPowerc = new Label(""+bbModel.baseMagnetPower,skin);
-		lblExMStrengthc = new Label(""+bbModel.baseMagnetStrength,skin);
+		lblExBallc = new Label(bbModel.livesLeft+" Lives",skin);
+		lblExLazerc = new Label(bbModel.baseLazerTimer+" Seconds",skin);
+		lblExGuidec = new Label(bbModel.baseGuideLazerTimer+" Seconds",skin);
+		lblExMPowerc = new Label(bbModel.baseMagnetPower+" Units",skin);
+		lblExMStrengthc = new Label(bbModel.baseMagnetStrength+" Units",skin);
 		
 		// label for cash
 		updateCash();
 		
-		// label for score
-		lblScore = new Label("Score:"+bbModel.score,skin);
+		
 		
 		
         table.add(title).pad(10);
@@ -195,22 +200,27 @@ public class ShopScreen implements Screen{
         
         shopTable.add(lblExBall).uniformX().align(Align.left);
         shopTable.add(lblExBallc).uniformX().align(Align.right);
+        shopTable.add().width(20f);
         shopTable.add(btnExBall);
         shopTable.row();
         shopTable.add(lblExLazer).uniformX().align(Align.left);
         shopTable.add(lblExLazerc).uniformX().align(Align.right);
+        shopTable.add().width(20f);
         shopTable.add(btnExLazer);
         shopTable.row();
         shopTable.add(lblExGuide).uniformX().align(Align.left);
         shopTable.add(lblExGuidec).uniformX().align(Align.right);
+        shopTable.add().width(20f);
         shopTable.add(btnExGuide);
         shopTable.row();
         shopTable.add(lblExMPower).uniformX().align(Align.left);
         shopTable.add(lblExMPowerc).uniformX().align(Align.right);
+        shopTable.add().width(20f);
         shopTable.add(btnExMPower);
         shopTable.row();
         shopTable.add(lblExMStrength).uniformX().align(Align.left);
         shopTable.add(lblExMStrengthc).uniformX().align(Align.right);
+        shopTable.add().width(20f);
         shopTable.add(btnExMStrength);
         shopTable.row();
         shopTable.add(lblCash);
@@ -224,12 +234,17 @@ public class ShopScreen implements Screen{
 	}
 
 	private void updateCash() {
-		lblCash = new Label("£"+bbModel.cash,skin);
-		lblExBallc = new Label(""+bbModel.livesLeft,skin);
-		lblExLazerc = new Label(""+bbModel.baseLazerTimer,skin);
-		lblExGuidec = new Label(""+bbModel.baseGuideLazerTimer,skin);
-		lblExMPowerc = new Label(""+bbModel.baseMagnetPower,skin);
-		lblExMStrengthc = new Label(""+bbModel.baseMagnetStrength,skin);
+		lblCash.setText("Cash: $"+bbModel.cash);
+		lblScore.setText("Score: "+bbModel.score);
+		lblExBallc.setText(bbModel.livesLeft+" Lives");
+		lblExLazerc.setText(bbModel.baseLazerTimer+" Seconds");
+		lblExGuidec.setText(bbModel.baseGuideLazerTimer+" Seconds");
+		lblExMPowerc.setText(bbModel.baseMagnetPower+" Units");
+		lblExMStrengthc.setText(bbModel.baseMagnetStrength+" Units");
+	}
+	
+	private int calculateCost(float multiplier, double mod, int base){
+		return (int) Math.pow(multiplier,mod) + base;
 	}
 
 
@@ -259,6 +274,7 @@ public class ShopScreen implements Screen{
 					}
 				}
 
+				updateCash();
 				stage.act();
 				stage.draw();
 		
