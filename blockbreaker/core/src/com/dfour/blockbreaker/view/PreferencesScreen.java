@@ -103,9 +103,9 @@ public class PreferencesScreen implements Screen{
 		fadeOut = 1f;
 		table = new Table();
 		table.setFillParent(true);
-		table.setDebug(true);
+		table.setDebug(BlockBreaker.debug);
 		optionsTable = new Table();
-		optionsTable.setDebug(true);
+		optionsTable.setDebug(BlockBreaker.debug);
 		
 		
 		Gdx.input.setInputProcessor(stage);

@@ -1,39 +1,39 @@
 
 loadingGui.png
 format: RGBA8888
-filter: Nearest,Nearest
+filter: MipMapLinearLinear,MipMapLinearLinear
 repeat: none
+blockBreakerTitle
+  rotate: false
+  xy: 1, 102
+  size: 960, 145
+  orig: 960, 145
+  offset: 0, 0
+  index: -1
 progressBarSurround
   rotate: false
-  xy: 1, 85
+  xy: 1, 58
   size: 510, 42
   orig: 510, 42
   offset: 0, 0
   index: -1
-blockBreakerTitle
-  rotate: false
-  xy: 1, 7
-  size: 320, 76
-  orig: 320, 76
-  offset: 0, 0
-  index: -1
 loaded
   rotate: false
-  xy: 513, 84
+  xy: 1, 13
   size: 247, 43
   orig: 247, 43
   offset: 0, 0
   index: -1
 loading
   rotate: false
-  xy: 762, 84
+  xy: 250, 13
   size: 247, 43
   orig: 247, 43
   offset: 0, 0
   index: -1
 btn_blue_pink_glossy
   rotate: false
-  xy: 323, 43
+  xy: 513, 60
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -41,7 +41,7 @@ btn_blue_pink_glossy
   index: -1
 btn_down
   rotate: false
-  xy: 323, 1
+  xy: 640, 60
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -49,7 +49,7 @@ btn_down
   index: -1
 btn_norm
   rotate: false
-  xy: 450, 42
+  xy: 767, 60
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -57,7 +57,7 @@ btn_norm
   index: -1
 btn_over
   rotate: false
-  xy: 577, 42
+  xy: 513, 18
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -65,35 +65,35 @@ btn_over
   index: -1
 btn_pink_glossy
   rotate: false
-  xy: 704, 42
+  xy: 640, 18
   size: 125, 40
   orig: 125, 40
   offset: 0, 0
   index: -1
 progressBarEnd
   rotate: false
-  xy: 450, 8
+  xy: 963, 215
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 progressBarStart
   rotate: false
-  xy: 831, 50
+  xy: 894, 68
   size: 21, 32
   orig: 21, 32
   offset: 0, 0
   index: -1
 progressBarMiddle
   rotate: false
-  xy: 1011, 95
+  xy: 499, 24
   size: 2, 32
   orig: 2, 32
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 484, 30
+  xy: 1, 1
   size: 20, 10
   orig: 20, 10
   offset: 0, 0

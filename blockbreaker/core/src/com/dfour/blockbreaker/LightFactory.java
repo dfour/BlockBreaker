@@ -33,6 +33,7 @@ public class LightFactory {
 	
 	private RayHandler rayHandler;
 	private Array<Light>  allLights = new Array<Light>();
+	private Array<PointLight>  staticLights = new Array<PointLight>();
 	
 	public PointLightPool plp;
 	
@@ -65,6 +66,12 @@ public class LightFactory {
 		}
 		allLights.add(sl);
 		return sl;
+	}
+	
+	public PointLight addStaticPointLight(int x, int y, Color col){
+		PointLight spl = addPointLight(x,y,col);
+		staticLights.add(spl);
+		return spl;
 	}
 	
 	public PointLight addPointLight(float x,float y){
@@ -130,5 +137,14 @@ public class LightFactory {
 		allLights.add(cl);
 		return cl;
 	}
-		
+	
+	public void updatePools(){
+		plp = new PointLightPool(rayHandler,rays);
+	}
+	
+	public void clearStaticLights(){
+		for(PointLight light : staticLights){
+			plp.free(light);
+		}
+	}
 }

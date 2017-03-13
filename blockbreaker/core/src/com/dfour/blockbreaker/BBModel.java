@@ -140,12 +140,9 @@ public class BBModel {
 		lf.rays = Math.round(LightFactory.RAYS_PER_LIGHT_HIGH * preferences.getLightingQuality()) + 6;
 		lf.size = LightFactory.LIGHT_SIZE_MID;
 		lf.soft = LightFactory.LIGHT_SOFTNESS_HARD;
+		// update lf to use new raycount quality
+		lf.updatePools();
 		
-		
-		lf.addPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
-		lf.addPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
-		lf.addPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
-		lf.addPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
 		lf.addDirectionalLight(-90, true, new Color(1f, 1f, 1f, .2f));
 		
 		entFactory = new EntityFactory(world,atlas,lf);
@@ -189,6 +186,15 @@ public class BBModel {
 
 	public void init() {
 		empty();
+		
+		// update lf to use new raycount quality
+		lf.rays = Math.round(LightFactory.RAYS_PER_LIGHT_HIGH * preferences.getLightingQuality()) + 6;
+		lf.updatePools();
+		
+		lf.addStaticPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
+		lf.addStaticPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
+		lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
+		lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
 		
 		// TODO verify this
 		if(this.level == 0){
@@ -610,10 +616,12 @@ public class BBModel {
 		for(LightBall light:entFactory.lightBalls){
 			lf.plp.free(light.light);
 		}
+
+		lf.clearStaticLights();
+		
 		for(Ball ball: entFactory.balls){
 			lf.plp.free(ball.light);
-		}
-		
+		}	
 
 		entFactory.clear();
 		

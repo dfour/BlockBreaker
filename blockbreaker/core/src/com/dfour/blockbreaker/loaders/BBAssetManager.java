@@ -25,9 +25,13 @@ public class BBAssetManager {
 	
 	// fonts
 	public final String visfont 			= "font/visitor.fnt";
+	public final String bizfont 			= "font/bizarre.fnt";
+	public final String tekfont 			= "font/tekton.fnt";
 	
 	public void loadFonts(){
 		manager.load(visfont, BitmapFont.class);
+		manager.load(bizfont, BitmapFont.class);
+		manager.load(tekfont, BitmapFont.class);
 	}
 	
 	// Particle Effects
