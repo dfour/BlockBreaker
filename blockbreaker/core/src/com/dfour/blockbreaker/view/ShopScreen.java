@@ -54,16 +54,19 @@ public class ShopScreen implements Screen{
 	private TextButton btnExGuide;
 	private TextButton btnExMPower;
 	private TextButton btnExMStrength;
+	private TextButton btnExRechargeRate;
 	private Label lblExBall;
 	private Label lblExLazer;
 	private Label lblExGuide;
 	private Label lblExMPower;
 	private Label lblExMStrength;
+	private Label lblExRechargeRate;
 	private Label lblExBallc;
 	private Label lblExLazerc;
 	private Label lblExGuidec;
 	private Label lblExMPowerc;
 	private Label lblExMStrengthc;
+	private Label lblExRechargeRatec;
 	private Label lblCash;
 	private Label lblScore;
 	private TextButton btnDone;
@@ -165,6 +168,19 @@ public class ShopScreen implements Screen{
 			}
 		});
 		
+		btnExRechargeRate = new TextButton("$"+calculateCost(bbModel.magnetRechargeRate*2500,1,2500), textButtonStyle);
+		btnExRechargeRate.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				super.clicked(e, x, y);
+				if(bbModel.removeCash(calculateCost(bbModel.magnetRechargeRate*2500,1,2500))){
+					bbModel.magnetRechargeRate+=1;
+					updateCash();
+					btnExRechargeRate.setText("$"+calculateCost(bbModel.magnetRechargeRate*2500,1,2500));
+				}
+				btnExRechargeRate.setChecked(false);
+			}
+		});
+		
 		btnDone = new TextButton("Done", textButtonStyle);
 		btnDone.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
@@ -182,12 +198,14 @@ public class ShopScreen implements Screen{
 		lblExGuide = new Label("Longer Lasting Guide",skin);
 		lblExMPower = new Label("More Magnet Power Storage",skin);
 		lblExMStrength = new Label("Stronger Magnets",skin);
+		lblExRechargeRate = new Label("Faster Magnet Power Recharge",skin);
 		
 		lblExBallc = new Label(bbModel.livesLeft+" Lives",skin);
 		lblExLazerc = new Label(bbModel.baseLazerTimer+" Seconds",skin);
 		lblExGuidec = new Label(bbModel.baseGuideLazerTimer+" Seconds",skin);
 		lblExMPowerc = new Label(bbModel.baseMagnetPower+" Units",skin);
 		lblExMStrengthc = new Label(bbModel.baseMagnetStrength+" Units",skin);
+		lblExRechargeRatec = new Label(bbModel.magnetRechargeRate*60+" Units per Second",skin);
 		
 		// label for cash
 		updateCash();
@@ -223,6 +241,11 @@ public class ShopScreen implements Screen{
         shopTable.add().width(20f);
         shopTable.add(btnExMStrength);
         shopTable.row();
+        shopTable.add(lblExRechargeRate).uniformX().align(Align.left);
+        shopTable.add(lblExRechargeRatec).uniformX().align(Align.right);
+        shopTable.add().width(20f);
+        shopTable.add(btnExRechargeRate);
+        shopTable.row();
         shopTable.add(lblCash);
         shopTable.row();
         shopTable.add(lblScore);
@@ -241,6 +264,7 @@ public class ShopScreen implements Screen{
 		lblExGuidec.setText(bbModel.baseGuideLazerTimer+" Seconds");
 		lblExMPowerc.setText(bbModel.baseMagnetPower+" Units");
 		lblExMStrengthc.setText(bbModel.baseMagnetStrength+" Units");
+		lblExRechargeRatec.setText(bbModel.magnetRechargeRate*60+" Units Per Second");
 	}
 	
 	private int calculateCost(float multiplier, double mod, int base){

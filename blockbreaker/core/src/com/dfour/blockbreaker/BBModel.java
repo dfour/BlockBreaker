@@ -64,6 +64,7 @@ public class BBModel {
 	public int sh = 600;
 	
 	// Game objects, timers and counters
+	public int magnetRechargeRate = 1;
 	public int baseMagnetPower = 1000; // power at start of level
 	public int magnetPower = 1000;
 	public int baseMagnetStrength = 100; // power at start
@@ -190,7 +191,8 @@ public class BBModel {
 			bombsLeft = 0;
 			baseGuideLazerTimer = 10f;
 			baseLazerTimer = 5f;
-			cash = 500;
+			cash = 500000;
+			magnetRechargeRate = 1;
 		}
 		
 		gameOver = false;
@@ -330,12 +332,12 @@ public class BBModel {
 
 	private void updateMagnet() {
 		if (controller.isMouse1Down() || controller.isMouse2Down()) {
-			this.magnetPower = magnetPower - 3;
+			this.magnetPower = magnetPower - (this.magnetStrength / 35);
 			if (magnetPower < 0) {
 				magnetPower = 0;
 			}
 		} else {
-			magnetPower++;
+			magnetPower+= magnetRechargeRate;
 			if (magnetPower > this.baseMagnetPower) {
 				magnetPower = this.baseMagnetPower;
 			}
