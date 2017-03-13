@@ -18,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
+import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.EntityFactory;
@@ -257,6 +258,10 @@ public class BBModel {
 	private void updateObstacles() {
 		for (Spinner spinner : entFactory.spinners){
 			spinner.update();
+		}
+		
+		for (BlackHole blackHole : entFactory.blackHoles){
+			blackHole.update();
 		}
 		
 	}

@@ -186,7 +186,9 @@ public class EntityFactory {
 	
 	public BlackHole addBlackHole(int x, int y) {
 		Body bhbod = bodyFactory.makeCirclePolyBody(x, y, 1, BodyFactory.WOOD, BodyType.StaticBody);
-		BlackHole bh = new BlackHole(bhbod, null);
+		bodyFactory.makeSensorFixture(bhbod, 5);
+		BlackHole bh = new BlackHole(bhbod, atlas.findRegion("blackhole"));
+		bhbod.setUserData(bh);
 		blackHoles.add(bh);
 		return bh;
 	}

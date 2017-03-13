@@ -87,86 +87,93 @@ obstacle
   orig: 76, 64
   offset: 0, 0
   index: -1
-ball_lazer_pup
+blackhole
   rotate: false
-  xy: 545, 373
-  size: 32, 32
-  orig: 32, 32
+  xy: 545, 341
+  size: 64, 64
+  orig: 64, 64
   offset: 0, 0
   index: -1
-bomb_pup
+ball_lazer_pup
   rotate: false
   xy: 620, 720
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-extra_ball_pup
+bomb_pup
   rotate: false
   xy: 1, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-extra_mag_ball_pup
+extra_ball_pup
   rotate: false
   xy: 273, 207
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-lazer_pup
+extra_mag_ball_pup
   rotate: false
   xy: 892, 820
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-lightBulb
+lazer_pup
   rotate: false
   xy: 970, 886
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+lightBulb
+  rotate: false
+  xy: 545, 307
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 mag_power_pup
-  rotate: false
-  xy: 545, 339
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-mag_strength_pup
-  rotate: false
-  xy: 579, 373
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: -1
-particle
   rotate: false
   xy: 620, 686
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pesquare
+mag_strength_pup
   rotate: false
   xy: 654, 720
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pre_particle
+particle
   rotate: false
   xy: 1, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-score_pup
+pesquare
   rotate: false
   xy: 35, 35
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+pre_particle
+  rotate: false
+  xy: 273, 173
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+score_pup
+  rotate: false
+  xy: 307, 207
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -194,7 +201,7 @@ mag_ball
   index: -1
 background
   rotate: false
-  xy: 273, 195
+  xy: 892, 808
   size: 20, 10
   orig: 20, 10
   offset: 0, 0

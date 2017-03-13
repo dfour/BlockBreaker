@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.dfour.blockbreaker.entity.Ball;
 import com.dfour.blockbreaker.entity.Bin;
+import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
@@ -59,9 +60,27 @@ public class BBContactListener implements ContactListener {
 			bombHitSomething((Bomb) fb.getBody().getUserData(),fa);
 		}
 		
-
-
+		if(fa.getBody().getUserData() instanceof BlackHole){
+			if(fa.isSensor()){
+				BlackHoleHitSomething((BlackHole) fa.getBody().getUserData(),fb);
+			}else{
+				objectInVoid(fb);
+			}
+		}else if(fb.getBody().getUserData() instanceof BlackHole){
+			if(fb.isSensor()){
+				BlackHoleHitSomething((BlackHole) fb.getBody().getUserData(),fa);
+			}else{
+				objectInVoid(fa);
+			}
+		}
 	}
+	private void BlackHoleHitSomething(BlackHole blackHole, Fixture fb) {
+		System.out.println("Hit blackhole");
+		
+		blackHole.gravitise(fb.getBody());
+		
+	}
+
 	private void bombHitSomething(Bomb bomb, Fixture fb) {
 		System.out.println("Bomb hit something");
 		if(fb.getBody().getType() == BodyType.StaticBody){
@@ -141,8 +160,24 @@ public class BBContactListener implements ContactListener {
 	
 
 	@Override
-	public void endContact(Contact contact) {		
+	public void endContact(Contact contact) {
+		System.out.println("End Contact");
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+		
+		if(fa.getBody().getUserData() instanceof BlackHole){
+			BlackHoleLeftSomething((BlackHole) fa.getBody().getUserData(),fb);
+		}else if(fb.getBody().getUserData() instanceof BlackHole){
+			BlackHoleLeftSomething((BlackHole) fb.getBody().getUserData(),fa);
+		}
 	}
+	private void BlackHoleLeftSomething(BlackHole blackHole, Fixture fb) {
+		System.out.println("Hit blackhole");
+		//apply force towards black hole to colliding object
+		blackHole.unGravitise(fb.getBody());
+		
+	}
+
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {		
 	}
