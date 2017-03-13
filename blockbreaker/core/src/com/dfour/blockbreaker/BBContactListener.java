@@ -132,6 +132,14 @@ public class BBContactListener implements ContactListener {
 				parent.addGuidLazer(); break;
 			case PowerUp.BOMB:
 				parent.addBombPowerUp(); break;
+			case PowerUp.CASH5:
+				parent.addCash(5); break;
+			case PowerUp.CASH10:
+				parent.addCash(10); break;
+			case PowerUp.CASH25:
+				parent.addCash(25); break;
+			case PowerUp.CASH100:
+				parent.addCash(100); break;
 			}
 			pup.isDead = true;
 		}

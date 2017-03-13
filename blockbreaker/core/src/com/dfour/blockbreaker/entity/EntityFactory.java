@@ -245,13 +245,13 @@ public class EntityFactory {
 		} else if (type == PowerUp.BOMB) {
 			tex = atlas.findRegion("bomb_pup");
 		} else if (type == PowerUp.CASH5) { //TODO add images
-			tex = atlas.findRegion("bomb_pup");
+			tex = atlas.findRegion("cash5_pup");
 		} else if (type == PowerUp.CASH10) {
-			tex = atlas.findRegion("bomb_pup");
+			tex = atlas.findRegion("cash10_pup");
 		} else if (type == PowerUp.CASH25) {
-			tex = atlas.findRegion("bomb_pup");
+			tex = atlas.findRegion("cash25_pup");
 		} else if (type == PowerUp.CASH100) {
-			tex = atlas.findRegion("bomb_pup");
+			tex = atlas.findRegion("cash100_pup");
 		} else {
 			tex = null;
 		}

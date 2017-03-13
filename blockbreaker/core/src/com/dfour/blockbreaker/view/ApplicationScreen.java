@@ -220,6 +220,7 @@ public class ApplicationScreen implements Screen {
 			font.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
 			font.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
 			font.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
+			font.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
 			if(bbModel.gameOver){
 				this.doGameOverStuff(delta);
 				pb.draw(this.gameOver, sw/2 -this.gameOver.getRegionWidth() / 2,sh/2 -this.gameOver.getRegionHeight() / 2);

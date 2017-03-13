@@ -26,7 +26,6 @@ public class BlockBreaker extends Game {
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
 	//TODO create bug reporter( ingame or online )
-	//TODO add magnet recharge rate to shop
 	
 	
 	private Screen menu;

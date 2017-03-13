@@ -631,4 +631,8 @@ public class BBModel {
 			return false;
 		}
 	}
+
+	public void addCash(int cashAmount) {
+		this.cash+=cashAmount;	
+	}
 }
