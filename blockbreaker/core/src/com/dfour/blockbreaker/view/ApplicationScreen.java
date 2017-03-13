@@ -55,7 +55,9 @@ public class ApplicationScreen implements Screen {
 	private boolean isPaused = false;
 	private TextureRegion background;
 	//private Texture visFont = parent.assMan.manager.get("font/visitor.png",Texture.class);
-	private BitmapFont font;
+	private BitmapFont visfont;
+	private BitmapFont tekfont;
+	private BitmapFont bizfont;
 	Texture secretCatImage;
 	TextureRegion gameOver;
 	
@@ -73,7 +75,6 @@ public class ApplicationScreen implements Screen {
 	private ParticleEffectPool partyBhPool;
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
 	
-	private Texture wall;
 	private Texture expParty;
 	private Texture magnetPowerBar;
 	private TextureRegion magnetPowerBarOverlay;
@@ -221,19 +222,19 @@ public class ApplicationScreen implements Screen {
 
 		pb.begin();
 			if(BlockBreaker.debug){
-				font.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
-				font.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
-				font.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
-				font.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
-				font.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
-				font.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
+				visfont.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
+				visfont.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
+				visfont.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
+				visfont.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
+				visfont.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
+				visfont.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
 			}
 			if(bbModel.gameOver){
 				this.doGameOverStuff(delta);
 				pb.draw(this.gameOver, sw/2 -this.gameOver.getRegionWidth() / 2,sh/2 -this.gameOver.getRegionHeight() / 2);
-				font.draw(pb, "Thanks for playing. Updates coming soon.", 100 , sh/2 - 150);
-				font.draw(pb, "Visit gamedev.is-sweet.co.uk for more info.", 100 , sh/2 - 160);
-				font.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
+				visfont.draw(pb, "Thanks for playing. Updates coming soon.", 100 , sh/2 - 150);
+				visfont.draw(pb, "Visit gamedev.is-sweet.co.uk for more info.", 100 , sh/2 - 160);
+				visfont.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
 			}
 			
 			if(bbModel.magnetPower > 0){
@@ -241,9 +242,10 @@ public class ApplicationScreen implements Screen {
 				pb.draw(magnetPowerBar, 39, 20,(bbModel.magnetPower/(float)bbModel.baseMagnetPower) * 521 ,10);
 				pb.setColor(new Color(1,1,1,0.5f));
 			}
+			tekfont.draw(pb,"Score: "+bbModel.score+"00",700,35);
 			pb.draw(magnetPowerBarOverlay,15,15,550,20);
 			pb.draw(bombIcon,17,35,16,16);
-			font.draw(pb,bbModel.bombsLeft+"",40,45);
+			visfont.draw(pb,bbModel.bombsLeft+"",40,45);
 		pb.end();
 		
 		if(bbModel.showShop){
@@ -493,7 +495,9 @@ public class ApplicationScreen implements Screen {
 		atlasLazor = parent.assMan.manager.get("lazor/lazor.pack");
 		
 		background 		= atlasGui.findRegion("background");
-		font 			= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
+		visfont 			= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
+		tekfont 			= parent.assMan.manager.get("font/tekton.fnt", BitmapFont.class);
+		bizfont 			= parent.assMan.manager.get("font/bizarre.fnt", BitmapFont.class);
 		gameOver 		= atlas.findRegion("gameover");
 		lazerStartBg 	= atlasLazor.findRegion("lazorStart");
 		lazerStartOver 	= atlasLazor.findRegion("lazorStartOver");
@@ -507,12 +511,7 @@ public class ApplicationScreen implements Screen {
 		leftWall = atlas.findRegion("leftwall");
 		bottomWall = atlas.findRegion("bottomwall");
 		
-		Pixmap pmap = new Pixmap(10,10, Pixmap.Format.RGBA4444);
-		pmap.setColor(1,1,1,0.5f);
-		pmap.fill();
-		wall = new Texture(pmap);
-		
-		pmap = new Pixmap(5,5, Pixmap.Format.RGBA4444);
+		Pixmap pmap = new Pixmap(5,5, Pixmap.Format.RGBA4444);
 		pmap.setColor(1,1,1,1);
 		pmap.fillCircle(3, 3, 2);
 		expParty = new Texture(pmap);	

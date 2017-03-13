@@ -3,10 +3,14 @@ package com.dfour.blockbreaker.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -19,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
@@ -104,12 +109,19 @@ public class PreferencesScreen implements Screen{
 		table = new Table();
 		table.setFillParent(true);
 		table.setDebug(BlockBreaker.debug);
+		
+		Pixmap pmap = new Pixmap(1,1,Pixmap.Format.RGB888);
+		pmap.setColor(Color.BLACK);
+		pmap.fill();
+		Texture tex = new Texture(pmap);
+		pmap.dispose();
 		optionsTable = new Table();
+		optionsTable.setBackground(new TextureRegionDrawable(new TextureRegion(tex)));
 		optionsTable.setDebug(BlockBreaker.debug);
 		
 		
 		Gdx.input.setInputProcessor(stage);
-		skin = parent.assMan.manager.get("uiskin.json",Skin.class);
+		skin = parent.assMan.manager.get("skin/neon-ui.json",Skin.class);
 		
 		
 		

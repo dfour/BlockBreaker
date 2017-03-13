@@ -74,13 +74,13 @@ public class MenuScreen implements Screen {
 		button4 = new TextButton("Level Designer", textButtonStyle);
 		table.add(title).pad(10);
         table.row().expandY();
-        buttonTable.add(button);
+        buttonTable.add(button).width(300).height(50);
         buttonTable.row().pad(10, 0, 10, 0);
-        buttonTable.add(button4);
+        buttonTable.add(button4).width(300).height(50);
         buttonTable.row();
-        buttonTable.add(button2);
+        buttonTable.add(button2).width(300).height(50);
         buttonTable.row().pad(10, 0, 10, 0);;
-        buttonTable.add(button3);
+        buttonTable.add(button3).width(300).height(50);
         table.add(buttonTable);
         table.row();
         table.add().height(title.getHeight()+10);
@@ -194,17 +194,15 @@ public class MenuScreen implements Screen {
 		
 		skin = new Skin();
 		
-		NinePatchDrawable npn = new NinePatchDrawable(atlasGui.createPatch("btn_norm"));
-		NinePatchDrawable npo = new NinePatchDrawable(atlasGui.createPatch("btn_over"));
-		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("btn_down"));
+		NinePatchDrawable npn = new NinePatchDrawable(atlasGui.createPatch("blockbutton"));
+		NinePatchDrawable npo = new NinePatchDrawable(atlasGui.createPatch("blockbuttonpr"));
+		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("blockbuttonlg"));
 
 		textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = npn;
 		textButtonStyle.down = npd;
 		textButtonStyle.over = npo;
 		textButtonStyle.checked = npd;
-		textButtonStyle.font = parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
-		
-		
+		textButtonStyle.font = parent.assMan.manager.get("font/tekton.fnt", BitmapFont.class);
 	}
 }

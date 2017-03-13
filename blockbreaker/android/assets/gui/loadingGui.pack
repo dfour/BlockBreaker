@@ -70,16 +70,40 @@ btn_pink_glossy
   orig: 125, 40
   offset: 0, 0
   index: -1
+blockbutton
+  rotate: false
+  xy: 963, 211
+  size: 36, 36
+  split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+blockbuttonlg
+  rotate: false
+  xy: 894, 64
+  size: 36, 36
+  split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+blockbuttonpr
+  rotate: false
+  xy: 767, 22
+  size: 36, 36
+  split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
 progressBarEnd
   rotate: false
-  xy: 963, 215
+  xy: 963, 177
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 progressBarStart
   rotate: false
-  xy: 894, 68
+  xy: 1001, 215
   size: 21, 32
   orig: 21, 32
   offset: 0, 0

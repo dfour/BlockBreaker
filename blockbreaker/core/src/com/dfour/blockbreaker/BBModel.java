@@ -207,6 +207,7 @@ public class BBModel {
 			baseLazerTimer = 5f;
 			cash = 500000;
 			magnetRechargeRate = 1;
+			score = 0;
 		}
 		
 		gameOver = false;
