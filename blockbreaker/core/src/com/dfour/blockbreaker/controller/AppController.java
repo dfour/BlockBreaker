@@ -3,6 +3,7 @@ package com.dfour.blockbreaker.controller;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.dfour.blockbreaker.BlockBreaker;
 
 public class AppController implements InputProcessor{
 	private boolean left,right,up,down,escape = false;
@@ -11,7 +12,6 @@ public class AppController implements InputProcessor{
 	private boolean isMouse3Down = false;
 	public boolean isDragged = false;
 	public boolean isPauseDown = false;
-	public boolean isDebugMode = false;
 	public boolean zoomIn, zoomOut = false;
 	public boolean ffive = false;
 	public boolean fsix = false;
@@ -86,7 +86,7 @@ public class AppController implements InputProcessor{
         	this.useBomb = false;
             return true;
         case Keys.F3:
-        	this.isDebugMode = !this.isDebugMode;
+        	BlockBreaker.debug = !BlockBreaker.debug;
         	return false;
         case Keys.F4:
         	this.ffour = true;
@@ -202,6 +202,10 @@ public class AppController implements InputProcessor{
 	
 	public Vector2 getMousePosition(){
 		return mouseLocation;
+	}
+	
+	public void overrideMouseLocation(int x, int y){
+		mouseLocation = new Vector2(x,y);
 	}
 	
 }

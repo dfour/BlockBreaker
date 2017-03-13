@@ -189,6 +189,7 @@ public class EntityFactory {
 		bodyFactory.makeSensorFixture(bhbod, 5);
 		BlackHole bh = new BlackHole(bhbod, atlas.findRegion("blackhole"));
 		bhbod.setUserData(bh);
+		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts
 		blackHoles.add(bh);
 		return bh;
 	}

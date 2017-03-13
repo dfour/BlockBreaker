@@ -78,9 +78,9 @@ public class LoadingScreen implements Screen{
 
 		table = new Table();
 		table.setFillParent(true);
-        table.setDebug(true);
+        table.setDebug(BlockBreaker.debug);
         tableInner = new Table();
-        tableInner.setDebug(true);
+        tableInner.setDebug(BlockBreaker.debug);
         tableInner.add(loadingLabel);
         tableInner.row();
         tableInner.add(stack);

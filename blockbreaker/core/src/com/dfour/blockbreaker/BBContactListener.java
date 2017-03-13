@@ -17,7 +17,6 @@ import com.dfour.blockbreaker.entity.PowerUp;
 
 public class BBContactListener implements ContactListener {
 
-	private boolean debug = false;
 	private BBModel parent;
 	
 	public BBContactListener(BBModel parent){
@@ -93,11 +92,11 @@ public class BBContactListener implements ContactListener {
 			Brick brick = (Brick) fix.getBody().getUserData();
 			brick.isDead = true;
 		}else if(fix.getBody().getUserData() instanceof Ball){
-			if(debug) System.out.println("Ball fell in void");
+			if(BlockBreaker.debug) System.out.println("Ball fell in void");
 			Ball ball = (Ball) fix.getBody().getUserData();
 			ball.isDead = true;			
 		}else if(fix.getBody().getUserData() instanceof PowerUp){
-			if(debug) System.out.println("PowerUp fell in void");
+			if(BlockBreaker.debug) System.out.println("PowerUp fell in void");
 			PowerUp pup = (PowerUp) fix.getBody().getUserData();
 			pup.isDead = true;			
 		}
@@ -105,7 +104,7 @@ public class BBContactListener implements ContactListener {
 	
 	private void padHit(Pad userData, Fixture fix) {
 		if(fix.getBody().getUserData() instanceof Ball){
-			if(debug) System.out.println("TODO play sound");
+			if(BlockBreaker.debug) System.out.println("TODO play sound");
 			
 		}else if(fix.getBody().getUserData() instanceof Brick){
 			Brick brick = (Brick) fix.getBody().getUserData();
@@ -113,7 +112,7 @@ public class BBContactListener implements ContactListener {
 			brick.wasEatenByPad = true;
 			brick.isDead = true;
 		}else if(fix.getBody().getUserData() instanceof PowerUp){
-			if(debug) System.out.println("pup hit");
+			if(BlockBreaker.debug) System.out.println("pup hit");
 			PowerUp pup = (PowerUp) fix.getBody().getUserData();
 			switch(pup.type){
 			case PowerUp.MAG_POWER:
@@ -147,7 +146,7 @@ public class BBContactListener implements ContactListener {
 
 	private void brickHit(Brick br, Fixture fix){
 		if(fix.getBody().getUserData() instanceof Ball){
-			if(debug) System.out.println("Ball Hit Brick");
+			if(BlockBreaker.debug) System.out.println("Ball Hit Brick");
 			parent.sparks.add(br.body.getPosition());
 			br.hit();
 		}else if(fix.getBody().getUserData() instanceof ExplosionParticle){
@@ -156,7 +155,7 @@ public class BBContactListener implements ContactListener {
 	}
 	
 	private void ballHitSomething(Ball ball, Fixture fix){
-		if (debug) System.out.println("Ball Hit");
+		if (BlockBreaker.debug) System.out.println("Ball Hit");
 		if(fix.getUserData() instanceof Brick){
 			parent.playSound(BBModel.PING_SOUND);
 		}else if(fix.getBody().getUserData() instanceof Pad){

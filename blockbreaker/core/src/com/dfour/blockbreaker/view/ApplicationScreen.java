@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.dfour.blockbreaker.BBModel;
+import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
@@ -74,6 +75,11 @@ public class ApplicationScreen implements Screen {
 	
 	private Texture wall;
 	private Texture expParty;
+	private Texture magnetPowerBar;
+	private TextureRegion magnetPowerBarOverlay;
+	private TextureRegion bombIcon;
+	private TextureRegion leftWall;
+	private TextureRegion bottomWall;
 	
 	//new lazor
 	TextureRegion lazerStartBg;
@@ -113,7 +119,6 @@ public class ApplicationScreen implements Screen {
 		bbModel = new BBModel(controller,parent.assMan);
 		
 		loadImages();
-		
 		cam = new OrthographicCamera(800,600);
 		cam.position.x = 400;
 	    cam.position.y = 300;
@@ -179,7 +184,7 @@ public class ApplicationScreen implements Screen {
 		sb.setProjectionMatrix(cam.combined); // set SpriteBatch Matrix
 		
 		pb.begin();
-			drawBrickBackground();			
+			drawBrickBackground();
 		pb.end();
 		
 		// render Lighting
@@ -190,11 +195,11 @@ public class ApplicationScreen implements Screen {
 		sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		sb.begin();
 			// draw walls
-			sb.setColor(1,1,1,(0.3f * currentAlpha));
-			sb.draw(wall, 0, 	10,	10,	580);
-			sb.draw(wall, 0, 	0,	800	,10);
-			sb.draw(wall, 0, 	590,800	,10);
-			sb.draw(wall, 790, 	10,	10	,580);
+			sb.setColor(1,1,1,(0.7f * currentAlpha));
+			sb.draw(leftWall, 0, 	0,	10,	590);
+			//sb.draw(wall, 0, 	0,	800	,10);
+			sb.draw(bottomWall, 0, 	600,800	,-11);
+			sb.draw(leftWall, 800, 	0,	-10	,590);
 			sb.setColor(1,1,1,currentAlpha);
 			drawGameObjects(delta);
 		sb.end();
@@ -208,19 +213,21 @@ public class ApplicationScreen implements Screen {
 			fireLazors();
 		sb.end();
 		
-		if(controller.isDebugMode){
+		if(BlockBreaker.debug){
 			debugRenderer.render(bbModel.world, debugMatrix);
 		}
 
 		drawGuideLazors();
 
 		pb.begin();
-			font.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
-			font.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
-			font.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
-			font.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
-			font.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
-			font.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
+			if(BlockBreaker.debug){
+				font.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
+				font.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
+				font.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
+				font.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
+				font.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
+				font.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
+			}
 			if(bbModel.gameOver){
 				this.doGameOverStuff(delta);
 				pb.draw(this.gameOver, sw/2 -this.gameOver.getRegionWidth() / 2,sh/2 -this.gameOver.getRegionHeight() / 2);
@@ -228,6 +235,15 @@ public class ApplicationScreen implements Screen {
 				font.draw(pb, "Visit gamedev.is-sweet.co.uk for more info.", 100 , sh/2 - 160);
 				font.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
 			}
+			
+			if(bbModel.magnetPower > 0){
+				pb.setColor(BBUtils.hsvToRgba(((bbModel.magnetPower/(float)bbModel.baseMagnetPower)* 0.35f), 0.9f,0.9f,0.5f));
+				pb.draw(magnetPowerBar, 39, 20,(bbModel.magnetPower/(float)bbModel.baseMagnetPower) * 521 ,10);
+				pb.setColor(new Color(1,1,1,0.5f));
+			}
+			pb.draw(magnetPowerBarOverlay,15,15,550,20);
+			pb.draw(bombIcon,17,35,16,16);
+			font.draw(pb,bbModel.bombsLeft+"",40,45);
 		pb.end();
 		
 		if(bbModel.showShop){
@@ -486,6 +502,10 @@ public class ApplicationScreen implements Screen {
 		lazerEndBg 		= atlasLazor.findRegion("lazorEnd");
 		lazerEndOver 	= atlasLazor.findRegion("lazorEndOver");
 		lazerAllOver 	= atlasLazor.findRegion("lazorAllOver");
+		magnetPowerBarOverlay = atlas.findRegion("magpowerbar");
+		bombIcon = atlas.findRegion("bomb");
+		leftWall = atlas.findRegion("leftwall");
+		bottomWall = atlas.findRegion("bottomwall");
 		
 		Pixmap pmap = new Pixmap(10,10, Pixmap.Format.RGBA4444);
 		pmap.setColor(1,1,1,0.5f);
@@ -495,8 +515,15 @@ public class ApplicationScreen implements Screen {
 		pmap = new Pixmap(5,5, Pixmap.Format.RGBA4444);
 		pmap.setColor(1,1,1,1);
 		pmap.fillCircle(3, 3, 2);
-		expParty = new Texture(pmap);
-		pmap.dispose();	
+		expParty = new Texture(pmap);	
+		
+		pmap = new Pixmap(10,10, Pixmap.Format.RGBA4444);
+		pmap.setColor(Color.WHITE);
+		pmap.fill();
+		magnetPowerBar = new Texture(pmap);
+		pmap.dispose();
+		
+		
 	}
 	
 	private void createEffects(){

@@ -63,7 +63,7 @@ public class MenuScreen implements Screen {
 		
 		table = new Table();
 		table.setFillParent(true);
-		table.setDebug(true);
+		table.setDebug(BlockBreaker.debug);
 		
 		buttonTable = new Table();
 		stage.addActor(table);

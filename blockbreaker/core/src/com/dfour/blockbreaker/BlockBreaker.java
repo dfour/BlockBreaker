@@ -19,13 +19,13 @@ import com.dfour.blockbreaker.view.MenuScreen;
 public class BlockBreaker extends Game {
 	
 	//TODO make level designer
-	//TODO add money power up
-	//TODO show bomb count, score, money in play area ( instead of top corner )
+	//TODO show bomb count(done), score, money in play area ( instead of top corner )
 	//TODO finish adding spinners
 	//TODO add obstacles that speed up/slowdown ball
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
 	//TODO create bug reporter( ingame or online )
+	//TODO control mapping to allow user to map their own keys (part done)
 	
 	
 	private Screen menu;
@@ -38,6 +38,8 @@ public class BlockBreaker extends Game {
 	private EndScreen end;
 	private boolean musicLoaded = false;
 	public BBAssetManager assMan = new BBAssetManager();
+	
+	public static boolean debug = false;
 	
 	//music
 	private Sound introMusic;

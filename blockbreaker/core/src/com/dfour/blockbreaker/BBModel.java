@@ -3,6 +3,7 @@ package com.dfour.blockbreaker;
 import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -98,6 +99,7 @@ public class BBModel {
 	public Array<Vector2> pupExplosions = new Array<Vector2>();
 	public Array<Vector2> blackHolePE = new Array<Vector2>();
 	
+	private Vector3 lastMousePos;
 	public Pad pad;
 	public Brick brickLazoredLeft;
 	public Brick brickLazoredRight;
@@ -131,7 +133,7 @@ public class BBModel {
 		RayHandler.useDiffuseLight(true);
 		rayHandler = new RayHandler(world);
 		rayHandler.setCulling(true);
-		rayHandler.setAmbientLight(1f);
+		rayHandler.setAmbientLight(0.7f);
 		
 		lf = new LightFactory(rayHandler);
 		lf.filter = (short) -1;
@@ -156,7 +158,11 @@ public class BBModel {
 				if (fixture.getBody().getUserData() instanceof Brick) {
 					Brick brick = (Brick) fixture.getBody().getUserData();
 					brickLazoredLeft = brick;
-				} else {
+				} else if(fixture.isSensor()){
+					// return max 1f to ignore
+					return 1f;
+				}else {
+				
 					brickLazoredLeft = null;
 				}
 				lazerEndLeft = point.cpy();
@@ -170,6 +176,8 @@ public class BBModel {
 				if (fixture.getBody().getUserData() instanceof Brick) {
 					Brick brick = (Brick) fixture.getBody().getUserData();
 					brickLazoredRight = brick;
+				} else if(fixture.isSensor()){
+					return 1f;
 				} else {
 					brickLazoredRight = null;
 				}
@@ -215,13 +223,33 @@ public class BBModel {
 	public void doLogic(float delta) {
 		// TODO check pad offset stuff
 		if(controller.getLeft()){
-			padOffset-=0.1f;
+			Gdx.input.setCursorPosition(sw/2,300);
+			controller.overrideMouseLocation(sw/2,300);
+			padOffset-=12f;
+			if(padOffset < -335){
+				padOffset = -335;
+			}
 		}else if(controller.getRight()){
-			padOffset+=0.1f;
+			Gdx.input.setCursorPosition(sw/2,300);
+			controller.overrideMouseLocation(sw/2,300);
+			padOffset+=12f;
+			if(padOffset > 335){
+				padOffset = 335;
+			}
+		}
+		if(BlockBreaker.debug){
+			System.out.println("Pad Offset is :"+padOffset);
 		}
 		Vector3 mousePosition = cam.unproject(new Vector3(controller.getMousePosition(), 0));
-		float screenx = MathUtils.clamp((mousePosition.x + padOffset) * WORLD_TO_BOX, 6, 74);
+		if(lastMousePos != null){
+			if(!mousePosition.equals(lastMousePos)){
+				padOffset = 0;
+			}
+		}
+		float screenx = MathUtils.clamp((mousePosition.x + padOffset) * WORLD_TO_BOX, 6.5f, 73.5f);
 		pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
+		
+		lastMousePos = mousePosition.cpy();
 		
 		debugFeatures();
 		updateLazer(delta);
@@ -496,7 +524,7 @@ public class BBModel {
 
 	private void debugFeatures() {
 		// debug lazer
-		if (controller.isDebugMode) {
+		if (BlockBreaker.debug) {
 			this.isFiringLazer = controller.isMouse3Down() ? true : false;
 		}
 
