@@ -2,7 +2,9 @@ package com.dfour.blockbreaker.view;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -11,13 +13,16 @@ import com.dfour.blockbreaker.BlockBreaker;
 
 public class ControlMapScreen extends Scene2DScreen{
 	private AppPreferences prefs;
-	private TextField txfControlLeft;
-	private TextField txfControlRight;
-	private TextField txfControlPush;
-	private TextField txfControlPull;
-	private TextField txfControlBomb;
-	private TextField txfControlPause;
-	private TextField txfControlQuit;
+	private TextButton txfControlLeft;
+	private TextButton txfControlRight;
+	private TextButton txfControlPush;
+	private TextButton txfControlPull;
+	private TextButton txfControlBomb;
+	private TextButton txfControlPause;
+	private TextButton txfControlQuit;
+	
+	private TextButton buttonToUpdate = null;
+	
 	public ControlMapScreen(BlockBreaker p){
 		super(p);
 		this.prefs = p.getPreferences();
@@ -32,7 +37,8 @@ public class ControlMapScreen extends Scene2DScreen{
 		
 		btnBack.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				parent.changeScreen(BlockBreaker.PREFERENCES);		
+				ControlMapScreen.this.returnScreen = BlockBreaker.PREFERENCES;
+				ControlMapScreen.this.isReturning = true;		
 			}
 		});
 		
@@ -40,11 +46,19 @@ public class ControlMapScreen extends Scene2DScreen{
 			public void clicked(InputEvent e, float x, float y){
 				prefs.setControlsLeft(Keys.LEFT);
 				prefs.setControlsRight(Keys.RIGHT);
-				prefs.setControlsUp(Keys.UP);
-				prefs.setControlsDown(Keys.DOWN);
+				prefs.setControlsPush(Keys.UP);
+				prefs.setControlsPull(Keys.DOWN);
 				prefs.setControlsBomb(Keys.B);
 				prefs.setControlsPause(Keys.P);
 				prefs.setControlsQuit(Keys.ESCAPE);
+				
+				txfControlLeft.setText(Keys.toString(Keys.LEFT));
+				txfControlRight.setText(Keys.toString(Keys.RIGHT));
+				txfControlPush.setText(Keys.toString(Keys.UP));
+				txfControlPull.setText(Keys.toString(Keys.DOWN));
+				txfControlBomb.setText(Keys.toString(Keys.B));
+				txfControlPause .setText(Keys.toString(Keys.P));
+				txfControlQuit.setText(Keys.toString(Keys.ESCAPE));
 				
 			}
 		});
@@ -54,13 +68,13 @@ public class ControlMapScreen extends Scene2DScreen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				prefs.setControlsLeft(Keys.valueOf(txfControlLeft.getText()));
-				prefs.setControlsRight(Keys.valueOf(txfControlRight.getText()));
-				prefs.setControlsUp(Keys.valueOf(txfControlPush.getText()));
-				prefs.setControlsDown(Keys.valueOf(txfControlPull.getText()));
-				prefs.setControlsBomb(Keys.valueOf(txfControlBomb.getText()));
-				prefs.setControlsPause(Keys.valueOf(txfControlPause.getText()));
-				prefs.setControlsQuit(Keys.valueOf(txfControlQuit.getText()));
+				prefs.setControlsLeft(Keys.valueOf(txfControlLeft.getText().toString()));
+				prefs.setControlsRight(Keys.valueOf(txfControlRight.getText().toString()));
+				prefs.setControlsPush(Keys.valueOf(txfControlPush.getText().toString()));
+				prefs.setControlsPull(Keys.valueOf(txfControlPull.getText().toString()));
+				prefs.setControlsBomb(Keys.valueOf(txfControlBomb.getText().toString()));
+				prefs.setControlsPause(Keys.valueOf(txfControlPause.getText().toString()));
+				prefs.setControlsQuit(Keys.valueOf(txfControlQuit.getText().toString()));
 			}
 			
 		});
@@ -73,40 +87,88 @@ public class ControlMapScreen extends Scene2DScreen{
 		Label lblControlPause = new Label("Pause",skin);
 		Label lblControlQuit = new Label("Quit",skin);
 		
-		txfControlLeft = new TextField(Keys.toString(prefs.getControlsLeft()),skin);
-		txfControlRight = new TextField(Keys.toString(prefs.getControlsRight()),skin);
-		txfControlPush = new TextField(Keys.toString(prefs.getControlsUp()),skin);
-		txfControlPull = new TextField(Keys.toString(prefs.getControlsDown()),skin);
-		txfControlBomb = new TextField(Keys.toString(prefs.getControlsBomb()),skin);
-		txfControlPause = new TextField(Keys.toString(prefs.getControlsPause()),skin);
-		txfControlQuit = new TextField(Keys.toString(prefs.getControlsQuit()),skin);
+		txfControlLeft = new TextButton(Keys.toString(prefs.getControlsLeft()),skin);
+		txfControlRight = new TextButton(Keys.toString(prefs.getControlsRight()),skin);
+		txfControlPush = new TextButton(Keys.toString(prefs.getControlsPush()),skin);
+		txfControlPull = new TextButton(Keys.toString(prefs.getControlsPull()),skin);
+		txfControlBomb = new TextButton(Keys.toString(prefs.getControlsBomb()),skin);
+		txfControlPause = new TextButton(Keys.toString(prefs.getControlsPause()),skin);
+		txfControlQuit = new TextButton(Keys.toString(prefs.getControlsQuit()),skin);
 		
-		rootTable.add(lblControlLeft);
-		rootTable.add(txfControlLeft);
-		rootTable.row();
-		rootTable.add(lblControlRight);
-		rootTable.add(txfControlRight);
-		rootTable.row();
-		rootTable.add(lblControlPush);
-		rootTable.add(txfControlPush);
-		rootTable.row();
-		rootTable.add(lblControlPull);
-		rootTable.add(txfControlPull);
-		rootTable.row();
-		rootTable.add(lblControlBomb);
-		rootTable.add(txfControlBomb);
-		rootTable.row();
-		rootTable.add(lblControlPause);
-		rootTable.add(txfControlPause);
-		rootTable.row();
-		rootTable.add(lblControlQuit);
-		rootTable.add(txfControlQuit);
-		rootTable.row();
+		ClickListener cl = new ClickListener(){
+			
+			@Override
+			public void clicked(InputEvent e, float x, float y) {
+				System.out.println("Clicked:"+e.toString());
+				//super.clicked(e, x, y);
+				if(e.getTarget() instanceof TextButton){
+					TextButton tb = (TextButton) e.getTarget();
+					tb.setText("Set Key");
+					buttonToUpdate = tb;
+				}else if(e.getTarget().getParent() instanceof TextButton){
+					TextButton tb = (TextButton) e.getTarget().getParent();
+					tb.setText("Set Key");
+					buttonToUpdate = tb;					
+				}else{
+					System.out.println(e.getTarget());
+				}
+			}
+			
+		};
 		
-		rootTable.add(btnDefault);
-		rootTable.add(btnSave);
-		rootTable.row();
-		rootTable.add(btnBack);
+		InputListener il = new InputListener(){
+			@Override
+			public boolean keyDown(InputEvent event, int keycode) {
+				System.out.println(keycode);
+				if(buttonToUpdate != null){
+					buttonToUpdate.setText(Keys.toString(keycode));
+					buttonToUpdate = null;
+					
+				}
+				return super.keyDown(event, keycode);
+			}
+			
+		};
+		
+		stage.addListener(il);
+		
+		txfControlLeft.addListener(cl);
+		txfControlRight.addListener(cl);
+		txfControlPush.addListener(cl);
+		txfControlPull.addListener(cl);
+		txfControlBomb.addListener(cl);
+		txfControlPause.addListener(cl);
+		txfControlQuit.addListener(cl);
+		
+		
+		Table buttonTable = new Table();
+	    buttonTable.add(btnBack).padRight(15);
+	    buttonTable.add(btnDefault).padRight(15);
+		buttonTable.add(btnSave);
+		
+		displayTable.add(lblControlLeft);
+		displayTable.add(txfControlLeft).width(200);
+		displayTable.row();
+		displayTable.add(lblControlRight);
+		displayTable.add(txfControlRight).width(200);
+		displayTable.row();
+		displayTable.add(lblControlPush);
+		displayTable.add(txfControlPush).width(200);
+		displayTable.row();
+		displayTable.add(lblControlPull);
+		displayTable.add(txfControlPull).width(200);
+		displayTable.row();
+		displayTable.add(lblControlBomb);
+		displayTable.add(txfControlBomb).width(200);
+		displayTable.row();
+		displayTable.add(lblControlPause);
+		displayTable.add(txfControlPause).width(200);
+		displayTable.row();
+		displayTable.add(lblControlQuit);
+		displayTable.add(txfControlQuit).width(200);
+		displayTable.row();
+		displayTable.add(buttonTable);
+
 	}
 
 	@Override

@@ -15,8 +15,8 @@ public class AppPreferences {
 	private static final String PREFS_NAME = "dfour";
 	private static final String CONTROL_LEFT = "Control Left";
 	private static final String CONTROL_RIGHT = "Control Right";
-	private static final String CONTROL_UP = "Control Up";
-	private static final String CONTROL_DOWN = "Control Down";
+	private static final String CONTROL_PUSH = "Control Up";
+	private static final String CONTROL_PULL = "Control Down";
 	private static final String CONTROL_QUIT = "Control Quit";
 	private static final String CONTROL_PAUSE = "Control Pause";
 	private static final String CONTROL_BOMB = "Control Bomb";
@@ -95,6 +95,7 @@ public class AppPreferences {
 	
 	public void setControlsLeft(int keyCode){
 		getPrefs().putInteger(CONTROL_LEFT, keyCode);
+		getPrefs().flush();
 	}
 	
 	public int getControlsLeft(){
@@ -103,30 +104,34 @@ public class AppPreferences {
 	
 	public void setControlsRight(int keyCode){
 		getPrefs().putInteger(CONTROL_RIGHT, keyCode);
+		getPrefs().flush();
 	}
 	
 	public int getControlsRight(){
 		return getPrefs().getInteger(CONTROL_RIGHT, 22);
 	}
 	
-	public void setControlsUp(int keyCode){
-		getPrefs().putInteger(CONTROL_UP, keyCode);
+	public void setControlsPush(int keyCode){
+		getPrefs().putInteger(CONTROL_PUSH, keyCode);
+		getPrefs().flush();
 	}
 	
-	public int getControlsUp(){
-		return getPrefs().getInteger(CONTROL_UP, 19);
+	public int getControlsPush(){
+		return getPrefs().getInteger(CONTROL_PUSH, 19);
 	}
 	
-	public void setControlsDown(int keyCode){
-		getPrefs().putInteger(CONTROL_DOWN, keyCode);
+	public void setControlsPull(int keyCode){
+		getPrefs().putInteger(CONTROL_PULL, keyCode);
+		getPrefs().flush();
 	}
 	
-	public int getControlsDown(){
-		return getPrefs().getInteger(CONTROL_DOWN, 20);
+	public int getControlsPull(){
+		return getPrefs().getInteger(CONTROL_PULL, 20);
 	}
 	
 	public void setControlsQuit(int keyCode){
 		getPrefs().putInteger(CONTROL_QUIT ,keyCode);
+		getPrefs().flush();
 	}
 	
 	public int getControlsQuit(){
@@ -135,6 +140,7 @@ public class AppPreferences {
 	
 	public void setControlsPause(int keyCode){
 		getPrefs().putInteger(CONTROL_PAUSE ,keyCode);
+		getPrefs().flush();
 	}
 	
 	public int getControlsPause(){
@@ -143,6 +149,7 @@ public class AppPreferences {
 	
 	public void setControlsBomb(int keyCode){
 		getPrefs().putInteger(CONTROL_BOMB ,keyCode);
+		getPrefs().flush();
 	}
 	
 	public int getControlsBomb(){

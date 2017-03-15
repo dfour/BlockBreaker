@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -18,10 +19,15 @@ public class Scene2DScreen implements Screen{
 	protected BlockBreaker parent;
 	protected SpriteBatch pb;
 	protected Table rootTable;
-	private int sw;
-	private int sh;
-	private TextureAtlas atlasGui;
-	private AtlasRegion bg;
+	protected Table displayTable;
+	protected int sw;
+	protected int sh;
+	protected TextureAtlas atlasGui;
+	protected AtlasRegion bg;
+	protected float fadeIn = 0.7f;
+	protected float fadeOut = 0.7f;
+	protected boolean isReturning = false;
+	protected int returnScreen;
 	
 	public Scene2DScreen (BlockBreaker p){
 		parent = p;
@@ -36,10 +42,19 @@ public class Scene2DScreen implements Screen{
 
 	@Override
 	public void show() {
+		Image title = new Image(atlasGui.findRegion("blockBreakerTitle"));
+
+		
 		rootTable = new Table();
 		rootTable.setFillParent(true);
 		rootTable.setDebug(BlockBreaker.debug);
-		
+		rootTable.add(title).pad(10);
+		rootTable.row().expandY();
+		displayTable = new Table();
+		displayTable.setDebug(BlockBreaker.debug);
+		rootTable.add(displayTable);
+		stage.addActor(rootTable);
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	@Override
@@ -55,6 +70,17 @@ public class Scene2DScreen implements Screen{
 			}
 		}
 		pb.end();
+		
+		if(fadeIn > 0){
+			fadeIn -= delta;
+			displayTable.setColor(1,1,1,1-fadeIn);
+		}else if(this.isReturning){
+			fadeOut -= delta;
+			displayTable.setColor(1,1,1,fadeOut);
+			if(fadeOut <= 0){
+				parent.changeScreen(returnScreen);
+			}
+		}
 		
 		stage.act();
 		stage.draw();		

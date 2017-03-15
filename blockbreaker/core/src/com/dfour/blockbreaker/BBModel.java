@@ -366,7 +366,7 @@ public class BBModel {
 	}
 
 	private void updateMagnet() {
-		if (controller.isMouse1Down() || controller.isMouse2Down()) {
+		if (controller.isMouse1Down() || controller.isMouse2Down()|| controller.getPush() || controller.getPull()) {
 			this.magnetPower = magnetPower - (this.magnetStrength / 35);
 			if (magnetPower < 0) {
 				magnetPower = 0;
@@ -378,9 +378,9 @@ public class BBModel {
 			}
 		}
 
-		if (controller.isMouse1Down() && magnetPower > 0) {
+		if ((controller.isMouse1Down() || controller.getPull()) && magnetPower > 0) {
 			pad.setImagePull();
-		} else if (controller.isMouse2Down() && magnetPower > 0) {
+		} else if ((controller.isMouse2Down() || controller.getPush()) && magnetPower > 0) {
 			pad.setImagePush();
 		} else {
 			pad.setImageNormal();

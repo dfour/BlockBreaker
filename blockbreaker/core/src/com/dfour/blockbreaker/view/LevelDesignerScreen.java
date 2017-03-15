@@ -83,7 +83,26 @@ public class LevelDesignerScreen implements Screen {
 		table.setDebug(BlockBreaker.debug);
 		
 		
-		
+		ClickListener ldcl = new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				String cobj = LevelDesignerScreen.this.currentObject;
+				ImageButton button = (ImageButton) e.getTarget().getParent();
+				if(cobj.equalsIgnoreCase(BRICK)){
+					button.getImage().setDrawable(brickPic);
+					button.invalidate();
+				}else if(cobj.equalsIgnoreCase(LIGHT)){
+					button.setBackground(lightImage);
+				}else if(cobj.equalsIgnoreCase(LEFT)){
+					button.setBackground(obstacleImage);
+				}else if(cobj.equalsIgnoreCase(RIGHT)){
+					button.setBackground(flipped);
+				}
+				if(e.getButton() == 1){
+					button.setBackground(blank);
+				}
+				button.invalidate();					
+			}
+		};
 		
 		
 		// holds objects to represent level
@@ -92,29 +111,7 @@ public class LevelDesignerScreen implements Screen {
 		for(int i = 0; i< 40; i++){
 			for(int j = 0; j< 30; j++){
 				ImageButton btn = new ImageButton(blank);
-				btn.addListener(new ClickListener() {
-					public void clicked(InputEvent e, float x, float y){
-						String cobj = LevelDesignerScreen.this.currentObject;
-						
-							ImageButton button = (ImageButton) e.getTarget().getParent();
-							if(cobj.equalsIgnoreCase(BRICK)){
-								button.getImage().setDrawable(brickPic);
-								button.invalidate();
-							}else if(cobj.equalsIgnoreCase(LIGHT)){
-								button.setBackground(lightImage);
-							}else if(cobj.equalsIgnoreCase(LEFT)){
-								button.setBackground(obstacleImage);
-							}else if(cobj.equalsIgnoreCase(RIGHT)){
-								button.setBackground(flipped);
-							}
-							
-							if(e.getButton() == 1){
-								button.setBackground(blank);
-							}
-
-							button.invalidate();					
-					}
-				});
+				btn.addListener(ldcl);
 				levelTable.add(btn);
 			}
 			levelTable.row();
@@ -284,5 +281,4 @@ public class LevelDesignerScreen implements Screen {
 	@Override
 	public void dispose() {		
 	}
-
 }

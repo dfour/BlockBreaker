@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.dfour.blockbreaker.BlockBreaker;
 
 public class AppController implements InputProcessor{
-	private boolean left,right,up,down,escape = false;
+	private boolean left,right,push,pull,quit = false;
 	private boolean isMouse1Down = false;
 	private boolean isMouse2Down = false;
 	private boolean isMouse3Down = false;
@@ -29,9 +29,9 @@ public class AppController implements InputProcessor{
 	public boolean keyDown(int keycode) {
 		if(keycode == parent.getPreferences().getControlsLeft()){left = true;return true;}
 		if(keycode == parent.getPreferences().getControlsRight()){right = true;return true;}
-		if(keycode == parent.getPreferences().getControlsUp()){up = true;return true;}
-		if(keycode == parent.getPreferences().getControlsDown()){down = true;return true;}
-		if(keycode == parent.getPreferences().getControlsQuit()){escape = true;return true;}
+		if(keycode == parent.getPreferences().getControlsPush()){push = true;return true;}
+		if(keycode == parent.getPreferences().getControlsPull()){pull = true;return true;}
+		if(keycode == parent.getPreferences().getControlsQuit()){quit = true;return true;}
 		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = true;return true;}
 		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = true;return true;}   
 		return false;
@@ -42,9 +42,9 @@ public class AppController implements InputProcessor{
 		// configurable keys
 		if(keycode == parent.getPreferences().getControlsLeft()){left = false;return true;}
 		if(keycode == parent.getPreferences().getControlsRight()){right = false;return true;}
-		if(keycode == parent.getPreferences().getControlsUp()){up = false;return true;}
-		if(keycode == parent.getPreferences().getControlsDown()){down = false;return true;}
-		if(keycode == parent.getPreferences().getControlsQuit()){escape = false;return true;}
+		if(keycode == parent.getPreferences().getControlsPush()){push = false;return true;}
+		if(keycode == parent.getPreferences().getControlsPull()){pull = false;return true;}
+		if(keycode == parent.getPreferences().getControlsQuit()){quit = false;return true;}
 		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = false;return true;}
 		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = false;return true;} 
 		
@@ -132,20 +132,20 @@ public class AppController implements InputProcessor{
 		return right;
 	}
 	
-	public boolean getUp(){
-		return up;
+	public boolean getPush(){
+		return push;
 	}
 	
-	public boolean getDown(){
-		return down;
+	public boolean getPull(){
+		return pull;
 	}
 	
 	public boolean getEscape(){
-		return escape;
+		return quit;
 	}
 	
 	public void setEscape(boolean esc){
-		escape = esc;
+		quit = esc;
 	}
 	
 	public boolean isMouse1Down(){

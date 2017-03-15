@@ -28,6 +28,8 @@ public class BlockBreaker extends Game {
 	//TODO create bug reporter( ingame or online )
 	//TODO control mapping to allow user to map their own keys (part done)
 	//TODO try make bricks that hit blackhole spin into oblivion
+	//TODO add fading on Scene2DScreen
+	//TODO add title to Scene2DScreen
 	
 	
 	private Screen menu;
@@ -111,6 +113,7 @@ public class BlockBreaker extends Game {
 				break;
 			case CONTROL:
 				this.setScreen(new ControlMapScreen(this));
+				break;
 			case APPLICATION:
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){
 					currentSound.stop();

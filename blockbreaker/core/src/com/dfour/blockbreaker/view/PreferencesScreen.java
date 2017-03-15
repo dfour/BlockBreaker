@@ -1,23 +1,15 @@
 package com.dfour.blockbreaker.view;
 
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -27,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
 /**
  * This is the application settings screen and will be for 
@@ -36,99 +27,19 @@ import com.dfour.blockbreaker.BlockBreaker;
  * @author John Day
  *
  */
-public class PreferencesScreen implements Screen{
+public class PreferencesScreen extends Scene2DScreen {
 	
-	private Stage stage;
-	private Table optionsTable;
-	private BlockBreaker parent;
-	private Skin skin;
 	// private Sprite mainScreen;
-	private Label volumeValue, soundValue,zoomValue;
-	private TextureAtlas atlasGui;
-	private SpriteBatch pb;
-	private int sw;
-	private int sh;
-	private AtlasRegion bg;
-	private Table table;
+	private Label volumeValue, soundValue,lightingQuality;
 	
-	private float fadeIn = 1f;
-	private float fadeOut = 1f;
-	private boolean isReturning = false;
-	
-	public PreferencesScreen(BlockBreaker parent){
-		this.parent = parent;
-		
-		atlasGui = parent.assMan.manager.get("gui/loadingGui.pack");
-		bg = atlasGui.findRegion("background");
-
-	    stage = new Stage(new ScreenViewport());
-		pb = new SpriteBatch();
-		
+	public PreferencesScreen(BlockBreaker p){
+		super(p);
 	}
 	
-	@Override
-	public void render(float delta) {
-		//clear screen
-		Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		pb.begin();
-		// draw brick background
-		for(int i = 0; i < sw; i += 20){
-			for(int j = 0; j < sh; j+= 10){
-				pb.draw(bg, i, j,20,10);
-			}
-		}
-		pb.end();
-		
-		if(fadeIn > 0){
-			fadeIn -= delta;
-			optionsTable.setColor(1,1,1,1-fadeIn);
-		}else if(this.isReturning){
-			fadeOut -= delta;
-			optionsTable.setColor(1,1,1,fadeOut);
-			if(fadeOut <= 0){
-				parent.changeScreen(BlockBreaker.MENU);
-			}
-		}
-
-		stage.act();
-		stage.draw();
-		
-	}
-
-	@Override
-	public void resize(int width, int height) {	
-		sw = width;
-		sh = height;
-		stage.getViewport().update(width, height, true);
-	}
-
 	@Override
 	public void show() {
-		fadeIn = 1f;
-		fadeOut = 1f;
-		table = new Table();
-		table.setFillParent(true);
-		table.setDebug(BlockBreaker.debug);
-		
-		Pixmap pmap = new Pixmap(1,1,Pixmap.Format.RGB888);
-		pmap.setColor(Color.BLACK);
-		pmap.fill();
-		Texture tex = new Texture(pmap);
-		pmap.dispose();
-		optionsTable = new Table();
-		optionsTable.setBackground(new TextureRegionDrawable(new TextureRegion(tex)));
-		optionsTable.setDebug(BlockBreaker.debug);
-		
-		
-		Gdx.input.setInputProcessor(stage);
-		skin = parent.assMan.manager.get("skin/neon-ui.json",Skin.class);
-		
-		
-		
-		
-		
+		super.show();
+	
 		// add inputs to stage to allow changing of preferences
 		final Slider volumeSlider = new Slider( 0f, 1f, 0.1f,false, skin );
         volumeSlider.setValue( parent.getPreferences().getVolume()  );
@@ -188,6 +99,7 @@ public class PreferencesScreen implements Screen{
 	    backButton.addListener( new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				PreferencesScreen.this.returnScreen = BlockBreaker.MENU;
 				PreferencesScreen.this.isReturning = true;		
 			}
 	    });
@@ -198,7 +110,9 @@ public class PreferencesScreen implements Screen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				parent.changeScreen(BlockBreaker.CONTROL);
+				PreferencesScreen.this.returnScreen = BlockBreaker.CONTROL;
+				PreferencesScreen.this.isReturning = true;	
+				
 			}
 	    	
 	    });
@@ -228,53 +142,37 @@ public class PreferencesScreen implements Screen{
 	    //labels
 	    
 	    volumeValue = new Label( null, skin );
-	    zoomValue = new Label( null, skin );
+	    lightingQuality = new Label( null, skin );
 	    soundValue = new Label( null, skin );
         updateVolumeLabel();
         updateScrollLabel();
         updateLightingLabel();
-        Image title = new Image(atlasGui.findRegion("blockBreakerTitle"));
-        table.add(title).pad(10);
-        table.row().expandY();
-        optionsTable.add(new Label("Windowed",skin)).uniformX().align(Align.left);// music label
-        optionsTable.add(windowedCheckbox).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(new Label("Music",skin)).uniformX().align(Align.left);// music label
-        optionsTable.add(musicCheckbox).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(new Label("Sound",skin)).uniformX().align(Align.left);//sound label
-        optionsTable.add(soundEffectsCheckbox).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(volumeValue).uniformX().align(Align.left);// volume label
-        optionsTable.add(volumeSlider).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(soundValue).uniformX().align(Align.left);// Scroll label
-        optionsTable.add(soundSlider).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(zoomValue).uniformX().minWidth(200);// volumZoome label
-        optionsTable.add(lightSlider).align(Align.left);
-        optionsTable.row();
-        optionsTable.add(backButton).center().minHeight(40);
-        optionsTable.add(controlsButton);
-        table.add(optionsTable);
-        stage.addActor(table);
         
-	}
+        Table buttonTable = new Table();
+        buttonTable.add(backButton).padRight(15);
+        buttonTable.add(controlsButton);
 
-	@Override
-	public void hide() {		
-	}
+        displayTable.add(new Label("Windowed",skin)).uniformX().width(325).align(Align.left);// music label
+        displayTable.add(windowedCheckbox).align(Align.left);
+        displayTable.row();
+        displayTable.add(new Label("Music",skin)).uniformX().align(Align.left);// music label
+        displayTable.add(musicCheckbox).align(Align.left);
+        displayTable.row();
+        displayTable.add(new Label("Sound",skin)).uniformX().align(Align.left);//sound label
+        displayTable.add(soundEffectsCheckbox).align(Align.left);
+        displayTable.row();
+        displayTable.add(volumeValue).uniformX().align(Align.left);// volume label
+        displayTable.add(volumeSlider).align(Align.left);
+        displayTable.row();
+        displayTable.add(soundValue).uniformX().align(Align.left);// Scroll label
+        displayTable.add(soundSlider).align(Align.left);
+        displayTable.row();
+        displayTable.add(lightingQuality).uniformX().minWidth(325);// lighting quality label
+        displayTable.add(lightSlider).align(Align.left);
+        displayTable.row();
+        displayTable.add(buttonTable).colspan(2).center();
 
-	@Override
-	public void pause() {		
-	}
-
-	@Override
-	public void resume() {		
-	}
-
-	@Override
-	public void dispose() {	
+        
 	}
 	
 	/**
@@ -291,7 +189,7 @@ public class PreferencesScreen implements Screen{
     {
         float zoom = ( parent.getPreferences().getLightingQuality() * 100 );
         //zoomValue.setText("Zoom: "+ String.format( Locale.US, "%1.0f%%", zoom ) );
-        zoomValue.setText("Lighting Quality: "+ Math.round(zoom)  );
+        lightingQuality.setText("Lighting Quality: "+ Math.round(zoom)  );
     }
 	
 	private void updateScrollLabel()
