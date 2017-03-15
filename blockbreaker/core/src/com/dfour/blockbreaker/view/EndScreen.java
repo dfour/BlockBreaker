@@ -37,7 +37,7 @@ public class EndScreen implements Screen {
 
 	@Override
 	public void show() {
-		controller = new AppController();
+		controller = new AppController(parent);
 		Gdx.input.setInputProcessor(controller);
 
 	}

@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -190,6 +192,17 @@ public class PreferencesScreen implements Screen{
 			}
 	    });
 	    
+	    final TextButton controlsButton = new TextButton ("Controls",skin);
+	    controlsButton.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				parent.changeScreen(BlockBreaker.CONTROL);
+			}
+	    	
+	    });
+	    
 	    final Slider lightSlider = new Slider( 0f, 1f, 0.1f,false, skin );
 	    lightSlider.setValue( parent.getPreferences().getLightingQuality() );
 	    lightSlider.addListener( new EventListener() {
@@ -241,7 +254,8 @@ public class PreferencesScreen implements Screen{
         optionsTable.add(zoomValue).uniformX().minWidth(200);// volumZoome label
         optionsTable.add(lightSlider).align(Align.left);
         optionsTable.row();
-        optionsTable.add(backButton).colspan(2).center().minHeight(40);
+        optionsTable.add(backButton).center().minHeight(40);
+        optionsTable.add(controlsButton);
         table.add(optionsTable);
         stage.addActor(table);
         

@@ -50,6 +50,9 @@ public class LevelDesignerScreen implements Screen {
 	private static final String LEFT = "/";
 	private static final String RIGHT = "\\";
 	private static final String	EMPTY = "-";
+	private static final String SPINNERC = "c";
+	private static final String SPINNERA = "a";
+	private static final String BLACKHOLE = "b";
 	
 	private String currentObject = EMPTY;
 	
@@ -77,7 +80,7 @@ public class LevelDesignerScreen implements Screen {
 		
 		table = new Table();
 		table.setFillParent(true);
-		table.setDebug(true);
+		table.setDebug(BlockBreaker.debug);
 		
 		
 		
@@ -85,7 +88,7 @@ public class LevelDesignerScreen implements Screen {
 		
 		// holds objects to represent level
 		levelTable = new Table();
-		levelTable.setDebug(false);
+		levelTable.setDebug(BlockBreaker.debug);
 		for(int i = 0; i< 40; i++){
 			for(int j = 0; j< 30; j++){
 				ImageButton btn = new ImageButton(blank);
@@ -108,10 +111,8 @@ public class LevelDesignerScreen implements Screen {
 							if(e.getButton() == 1){
 								button.setBackground(blank);
 							}
-						
-						
-						
-						
+
+							button.invalidate();					
 					}
 				});
 				levelTable.add(btn);
@@ -120,56 +121,56 @@ public class LevelDesignerScreen implements Screen {
 		}
 		
 		
-		
-		
-		
-		// holds menu for selecting gui
-		guiTable = new Table();
-		guiTable.setDebug(false);
 		ImageButton btnBrick = new ImageButton(brickPic);
-		
 		btnBrick.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = BRICK;			
 			}
 		});
-		
-		
-		guiTable.add(new Label("Add Items",skin));
-		guiTable.row();
-		guiTable.add(btnBrick);
-		
-		
 		ImageButton btnLight = new ImageButton(lightImage);
-		
 		btnLight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LIGHT;			
 			}
 		});
-		
-		guiTable.row();
-		guiTable.add(btnLight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		ImageButton btnObstacleLeft = new ImageButton(obstacleImage);
 		btnObstacleLeft.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LEFT;			
 			}
 		});
-		guiTable.row();
-		guiTable.add(btnObstacleLeft).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		
-		
-		
 		ImageButton btnObstacleRight= new ImageButton(flipped);
 		btnObstacleRight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = RIGHT;			
 			}
 		});
+		ImageButton btnBack = new ImageButton(skin);
+		btnBack.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				parent.changeScreen(BlockBreaker.MENU);
+			}
+			
+		});
+		
+		
+		// holds menu for selecting gui
+		guiTable = new Table();
+		guiTable.setDebug(false);
+		guiTable.add(new Label("Add Items",skin));
+		guiTable.row();
+		guiTable.add(btnBrick);
+		guiTable.row();
+		guiTable.add(btnLight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.row();
+		guiTable.add(btnObstacleLeft).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		guiTable.row();
 		guiTable.add(btnObstacleRight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		
+		guiTable.row();
+		guiTable.add(btnBack);
 		
 		table.add(levelTable);
 		table.add(guiTable);
@@ -184,7 +185,7 @@ public class LevelDesignerScreen implements Screen {
 		
 		bg = atlasGui.findRegion("background");
 		
-		skin = parent.assMan.manager.get("uiskin.json",Skin.class);
+		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
 		NinePatchDrawable npn = new NinePatchDrawable(atlasGui.createPatch("btn_norm"));
 		NinePatchDrawable npo = new NinePatchDrawable(atlasGui.createPatch("btn_over"));
@@ -269,27 +270,19 @@ public class LevelDesignerScreen implements Screen {
 	}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
+	public void pause() {		
 	}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
+	public void resume() {		
 	}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
+	public void hide() {		
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() {		
 	}
 
 }

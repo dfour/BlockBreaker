@@ -77,12 +77,15 @@ public class BBAssetManager {
 	// Skin
 	public final String skin	= "uiskin.json";
 	public final String neonSkin = "skin/neon-ui.json";
+	public final String bbSkin = "skin/bbskin.json";
 	
 	public void loadSkin(){
 		SkinParameter params = new SkinParameter("uiskin.atlas");
 		manager.load(skin, Skin.class, params);
 		SkinParameter params2 = new SkinParameter("skin/neon-ui.atlas");
 		manager.load(neonSkin, Skin.class, params2);
+		SkinParameter params3 = new SkinParameter("skin/bbskin.atlas");
+		manager.load(bbSkin, Skin.class, params3);
 		
 	}
 

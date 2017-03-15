@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
 import com.dfour.blockbreaker.view.ApplicationScreen;
+import com.dfour.blockbreaker.view.ControlMapScreen;
 import com.dfour.blockbreaker.view.LevelDesignerScreen;
 import com.dfour.blockbreaker.view.LoadingScreen;
 import com.dfour.blockbreaker.view.PreferencesScreen;
@@ -19,13 +20,14 @@ import com.dfour.blockbreaker.view.MenuScreen;
 public class BlockBreaker extends Game {
 	
 	//TODO make level designer
-	//TODO show bomb count(done), score, money in play area ( instead of top corner )
+	//TODO show bomb count(done), score(done), money in play area ( instead of top corner )
 	//TODO finish adding spinners
 	//TODO add obstacles that speed up/slowdown ball
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
 	//TODO create bug reporter( ingame or online )
 	//TODO control mapping to allow user to map their own keys (part done)
+	//TODO try make bricks that hit blackhole spin into oblivion
 	
 	
 	private Screen menu;
@@ -54,6 +56,7 @@ public class BlockBreaker extends Game {
 	public final static int ENDGAME = 3;
 	public final static int LEVEL_DESIGNER = 4;
 	public final static int SHOP = 5;
+	public final static int CONTROL =6;
 	
 	@Override
 	public void create () {
@@ -106,6 +109,8 @@ public class BlockBreaker extends Game {
 				shopScreen = new ShopScreen(this, app.bbModel);
 				this.setScreen(shopScreen);
 				break;
+			case CONTROL:
+				this.setScreen(new ControlMapScreen(this));
 			case APPLICATION:
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){
 					currentSound.stop();

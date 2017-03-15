@@ -12,79 +12,45 @@ public class AppController implements InputProcessor{
 	private boolean isMouse3Down = false;
 	public boolean isDragged = false;
 	public boolean isPauseDown = false;
-	public boolean zoomIn, zoomOut = false;
 	public boolean ffive = false;
 	public boolean fsix = false;
 	public boolean ffour = false;
 	public boolean feight = false;
 	public boolean useBomb = false;
 	private Vector2 mouseLocation;
+	private BlockBreaker parent;
 	
-	public AppController(){
+	public AppController(BlockBreaker p){
 		mouseLocation = new Vector2(0,0);
+		parent = p;
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		switch (keycode)
-        {
-        case Keys.LEFT:
-            left = true;
-            return true;
-        case Keys.RIGHT:
-            right = true;
-            return true;
-        case Keys.UP:
-            up = true;
-            return true;
-        case Keys.DOWN:
-            down = true;
-            return true;
-        case Keys.ESCAPE:
-        	escape = true;
-            return true;
-        case Keys.P:
-        	isPauseDown = true;
-            return true;
-        case Keys.B:
-        	this.useBomb = true;
-            return true;
-        case Keys.PLUS:
-        	zoomIn = true;
-            return true;
-        case Keys.MINUS:
-        	zoomOut = true;
-            return true;
-        }
-        
+		if(keycode == parent.getPreferences().getControlsLeft()){left = true;return true;}
+		if(keycode == parent.getPreferences().getControlsRight()){right = true;return true;}
+		if(keycode == parent.getPreferences().getControlsUp()){up = true;return true;}
+		if(keycode == parent.getPreferences().getControlsDown()){down = true;return true;}
+		if(keycode == parent.getPreferences().getControlsQuit()){escape = true;return true;}
+		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = true;return true;}
+		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = true;return true;}   
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
+		// configurable keys
+		if(keycode == parent.getPreferences().getControlsLeft()){left = false;return true;}
+		if(keycode == parent.getPreferences().getControlsRight()){right = false;return true;}
+		if(keycode == parent.getPreferences().getControlsUp()){up = false;return true;}
+		if(keycode == parent.getPreferences().getControlsDown()){down = false;return true;}
+		if(keycode == parent.getPreferences().getControlsQuit()){escape = false;return true;}
+		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = false;return true;}
+		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = false;return true;} 
+		
+		// non-configurable keys
 		switch (keycode)
         {
-        case Keys.LEFT:
-            left = false;
-            return true;
-        case Keys.RIGHT:
-            right = false;
-            return true;
-        case Keys.UP:
-            up = false;
-            return true;
-        case Keys.DOWN:
-            down = false;
-            return true;
-        case Keys.ESCAPE:
-        	escape = false;
-            return true;
-        case Keys.P:
-        	isPauseDown = false;
-            return true;
-        case Keys.B:
-        	this.useBomb = false;
-            return true;
         case Keys.F3:
         	BlockBreaker.debug = !BlockBreaker.debug;
         	return false;
@@ -106,7 +72,6 @@ public class AppController implements InputProcessor{
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -127,7 +92,6 @@ public class AppController implements InputProcessor{
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		isDragged = false;
-		//System.out.println(button);
 		if(button == 0){
 			isMouse1Down = false;
 		}else if(button == 1){
@@ -137,7 +101,6 @@ public class AppController implements InputProcessor{
 		}
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -146,7 +109,6 @@ public class AppController implements InputProcessor{
 		isDragged = true;
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -154,13 +116,11 @@ public class AppController implements InputProcessor{
 	public boolean mouseMoved(int screenX, int screenY) {
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	

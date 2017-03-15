@@ -75,7 +75,7 @@ public class BBModel {
 	public int level = 0;
 	public int livesLeft = 3;	// initial lives
 	public int bombsLeft = 0;
-	private static final int MAX_LEVELS = 20; //26;
+	private static final int MAX_LEVELS = 28; //26;
 	
 	private float levelTimer;
 	public float baseGuideLazerTimer = 10f;

@@ -116,7 +116,7 @@ public class ApplicationScreen implements Screen {
 	
 	public ApplicationScreen(BlockBreaker p) {
 		parent = p;
-		controller = new AppController();
+		controller = new AppController(p);
 		bbModel = new BBModel(controller,parent.assMan);
 		
 		loadImages();
