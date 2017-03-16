@@ -325,7 +325,7 @@ public class BBModel {
 				brick.body.setType(BodyType.DynamicBody);
 				brick.isStatic = false;
 				int rup = (int) (Math.random() * 100);
-				if (rup > 80) {
+				if (rup > 50) {
 					entFactory.createNewPowerUp(brick.body.getPosition());
 				}
 			}

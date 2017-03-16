@@ -128,7 +128,7 @@ public class ApplicationScreen implements Screen {
 		debugMatrix = new Matrix4(cam.combined);
 		debugMatrix.scl(BBModel.BOX_TO_WORLD);
 		viewport = new ExtendViewport(800, 600, cam);
-		debugRenderer = new Box2DDebugRenderer(true,true,true,true, true, true);
+		debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
 		
 		rayHandler = bbModel.rayHandler;
 		rayHandler.setCombinedMatrix(debugMatrix, 40, 30, 80, 60);

@@ -19,18 +19,19 @@ import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
 	
-	//TODO make level designer
+	//TODO make level designer (part done, added file saving, still need option to play custom in main menu+ loading friends)
 	//TODO show bomb count(done), score(done), money in play area ( instead of top corner )
-	//TODO finish adding spinners
-	//TODO add obstacles that speed up/slowdown ball
+	//TODO finish adding spinners (still need to add images)
+	//TODO add obstacles that speed up/slow down ball
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
-	//TODO create bug reporter( ingame or online )
-	//TODO control mapping to allow user to map their own keys (part done)
-	//TODO try make bricks that hit blackhole spin into oblivion
-	//TODO add fading on Scene2DScreen
-	//TODO add title to Scene2DScreen
-	
+	//TODO create bug reporter( in game or online )
+	//TODO control mapping to allow user to map their own keys (done)
+	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
+    //TODO add brick with hue change that always drops power up
+	//TODO add always magnetic ball upgrade ( mid expensive )
+	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
+	//TODO appscreen fadein
 	
 	private Screen menu;
 	private PreferencesScreen prefs;

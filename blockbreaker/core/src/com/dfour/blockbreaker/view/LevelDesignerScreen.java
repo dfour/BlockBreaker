@@ -2,48 +2,35 @@ package com.dfour.blockbreaker.view;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
 
-public class LevelDesignerScreen implements Screen {
-	
-	// TODO get rid of this stage crap and make my own level designer
-	
-	private BlockBreaker parent;
-	private Stage stage;
-	private SpriteBatch pb;
-	
-	// Stage Items
-	private Table table;
-	private Table levelTable;
-	private Table guiTable;
-	private TextureAtlas atlas;
-	private TextureAtlas atlasGui;
-	private AtlasRegion bg;
-	private Skin skin;
-	private TextButtonStyle textButtonStyle;
-	private int sw;
-	private int sh;
+public class LevelDesignerScreen extends Scene2DScreen {
 	
 	private static final String BRICK = "x";
 	private static final String LIGHT = "s";
@@ -53,109 +40,177 @@ public class LevelDesignerScreen implements Screen {
 	private static final String SPINNERC = "c";
 	private static final String SPINNERA = "a";
 	private static final String BLACKHOLE = "b";
+	private static final int OB_WIDTH = 30;
+	private static final int OB_HEIGHT = 15;
 	
 	private String currentObject = EMPTY;
 	
 	//texs
-	private TextureRegionDrawable brickPic;
-	private TextureRegionDrawable blank;
-	private TextureRegionDrawable lightImage;
-	private TextureRegionDrawable obstacleImage;
-	private TextureRegionDrawable flipped;
+	private TextureRegion brickPic;
+	private TextureRegion blank;
+	private TextureRegion lightImage;
+	private TextureRegion obstacleImage;
+	private TextureRegion flipped;
+	private TextureAtlas atlas;
+	private TextureRegion blackHole;
+	private TextureRegion spinnerc;
+	private TextureRegion spinnera;
 	
-	
-	private static final int OB_WIDTH = 30;
-	private static final int OB_HEIGHT = 15;
-	
-	
-	
-	
+	private Array<LevelBlock> levelMap;
+	private TextureRegion levelTableBackground;
 	
 	public LevelDesignerScreen(BlockBreaker p){
-		parent = p;
-		stage = new Stage(new ScreenViewport());
-		pb = new SpriteBatch();
+		super(p);
+	}
+	
+	@Override
+	public void show(){
+		super.show();
+		levelMap = new Array<LevelBlock>();
 		
 		loadImages();
 		
-		table = new Table();
-		table.setFillParent(true);
-		table.setDebug(BlockBreaker.debug);
-		
-		
-		ClickListener ldcl = new ClickListener() {
-			public void clicked(InputEvent e, float x, float y){
-				String cobj = LevelDesignerScreen.this.currentObject;
-				ImageButton button = (ImageButton) e.getTarget().getParent();
-				if(cobj.equalsIgnoreCase(BRICK)){
-					button.getImage().setDrawable(brickPic);
-					button.invalidate();
-				}else if(cobj.equalsIgnoreCase(LIGHT)){
-					button.setBackground(lightImage);
-				}else if(cobj.equalsIgnoreCase(LEFT)){
-					button.setBackground(obstacleImage);
-				}else if(cobj.equalsIgnoreCase(RIGHT)){
-					button.setBackground(flipped);
+		ClickListener cl = new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				if(event.getTarget() instanceof LevelBlock){
+					LevelBlock lvb = (LevelBlock) event.getTarget();
+					if(currentObject == BRICK){
+						// i dont like this. try find another solution
+						Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
+						float r = (float) Math.random() * 0.7f+ 0.3f;
+						float g = (float) Math.random() * 0.7f+ 0.3f;
+						float b = (float) Math.random() * 0.7f+ 0.3f;
+						pmap.setColor(new Color(r,g,b,0.3f));
+						pmap.fill();
+						pmap.setColor(r,g,b,1f);
+						pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
+						lvb.setImage(new TextureRegion(new Texture(pmap)), BRICK);
+					}else if(currentObject == LIGHT){
+						lvb.setImage(lightImage, LIGHT);
+					}else if(currentObject == LEFT){
+						lvb.setImage(obstacleImage, LEFT);
+					}else if(currentObject == RIGHT){
+						lvb.setImage(flipped, RIGHT);
+					}else if(currentObject == EMPTY){
+						lvb.setImage(blank, EMPTY);
+					}else if(currentObject == SPINNERC){
+						lvb.setImage(spinnerc, SPINNERC);
+					}else if(currentObject == SPINNERA){
+						lvb.setImage(spinnera, SPINNERA);
+					}else if(currentObject == BLACKHOLE){
+						lvb.setImage(blackHole, BLACKHOLE);
+					}
 				}
-				if(e.getButton() == 1){
-					button.setBackground(blank);
-				}
-				button.invalidate();					
+				
 			}
+			
 		};
 		
-		
 		// holds objects to represent level
-		levelTable = new Table();
+		Table levelTable = new Table();
 		levelTable.setDebug(BlockBreaker.debug);
-		for(int i = 0; i< 40; i++){
-			for(int j = 0; j< 30; j++){
-				ImageButton btn = new ImageButton(blank);
-				btn.addListener(ldcl);
-				levelTable.add(btn);
+		levelTable.setBackground(new TextureRegionDrawable(levelTableBackground));
+		for(int i = 0; i< 30; i++){
+			for(int j = 0; j< 39; j++){
+				LevelBlock lvb = new LevelBlock(blank);
+				lvb.setVisible(true);
+				lvb.setBounds(0, 0, 20, 10);
+				lvb.addListener(cl);
+				levelTable.add(lvb);
+				levelMap.add(lvb);
 			}
 			levelTable.row();
 		}
+				
 		
 		
-		ImageButton btnBrick = new ImageButton(brickPic);
+		
+		ImageButton btnBrick = new ImageButton(new TextureRegionDrawable(brickPic));
 		btnBrick.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				currentObject = BRICK;			
+				currentObject = BRICK;		
 			}
 		});
-		ImageButton btnLight = new ImageButton(lightImage);
+		ImageButton btnLight = new ImageButton(new TextureRegionDrawable(lightImage));
 		btnLight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LIGHT;			
 			}
 		});
-		ImageButton btnObstacleLeft = new ImageButton(obstacleImage);
+		ImageButton btnObstacleLeft = new ImageButton(new TextureRegionDrawable(obstacleImage));
 		btnObstacleLeft.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LEFT;			
 			}
 		});
-		ImageButton btnObstacleRight= new ImageButton(flipped);
+		ImageButton btnObstacleRight= new ImageButton(new TextureRegionDrawable(flipped));
 		btnObstacleRight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = RIGHT;			
 			}
 		});
-		ImageButton btnBack = new ImageButton(skin);
+		
+		ImageButton btnSpinnerA= new ImageButton(new TextureRegionDrawable(spinnera));
+		btnSpinnerA.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				currentObject = SPINNERA;			
+			}
+		});
+		
+		ImageButton btnSpinnerC= new ImageButton(new TextureRegionDrawable(spinnerc));
+		btnSpinnerC.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				currentObject = SPINNERC;			
+			}
+		});
+		
+		ImageButton btnBlackHole= new ImageButton(new TextureRegionDrawable(blackHole));
+		btnBlackHole.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				currentObject = BLACKHOLE;			
+			}
+		});
+		
+		
+		TextButton btnBack = new TextButton("Back",skin);
 		btnBack.addListener(new ClickListener(){
 
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				parent.changeScreen(BlockBreaker.MENU);
+				LevelDesignerScreen.this.returnScreen = BlockBreaker.MENU;
+				LevelDesignerScreen.this.isReturning = true;
 			}
 			
 		});
 		
+		TextButton btnSave = new TextButton("Save",skin);
+		btnSave.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				// loop through levelMap and print chars
+				String map = "";
+				int col = 0;
+				for(LevelBlock lvb: levelMap){
+					map+=lvb.obstacle;
+					col++;
+					if(col == 39){
+						col = 0;
+						map+=System.lineSeparator();
+					}
+				}
+				FileHandle file = Gdx.files.external("mymap.map");
+				file.writeString(map, false);
+			}
+			
+		});
 		
-		// holds menu for selecting gui
-		guiTable = new Table();
+		Table guiTable = new Table();
 		guiTable.setDebug(false);
 		guiTable.add(new Label("Add Items",skin));
 		guiTable.row();
@@ -167,42 +222,37 @@ public class LevelDesignerScreen implements Screen {
 		guiTable.row();
 		guiTable.add(btnObstacleRight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		guiTable.row();
+		guiTable.add(btnSpinnerA).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.row();
+		guiTable.add(btnSpinnerC).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.row();
+		guiTable.add(btnBlackHole).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.row();
 		guiTable.add(btnBack);
+		guiTable.row();
+		guiTable.add(btnSave);
 		
-		table.add(levelTable);
-		table.add(guiTable);
-		
-		stage.addActor(table);
-		
+		displayTable.add(levelTable);
+		displayTable.add(guiTable);	
 	}
 	
 	private void loadImages() {
 		atlas = parent.assMan.manager.get("images/images.pack");
-		atlasGui = parent.assMan.manager.get("gui/loadingGui.pack");
-		
-		bg = atlasGui.findRegion("background");
-		
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
-		
-		NinePatchDrawable npn = new NinePatchDrawable(atlasGui.createPatch("btn_norm"));
-		NinePatchDrawable npo = new NinePatchDrawable(atlasGui.createPatch("btn_over"));
-		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("btn_down"));
 
-		textButtonStyle = new TextButtonStyle();
-		textButtonStyle.up = npn;
-		textButtonStyle.down = npd;
-		textButtonStyle.over = npo;
-		textButtonStyle.checked = npd;
-		textButtonStyle.font = parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
 		
 		Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT,Format.RGBA8888);
-		pmap.setColor(Color.BLACK);
+		pmap.setColor(0.4f,0.4f,0.4f,1);
+		pmap.fill();
+		pmap.setColor(0,0,0,0.4f);
 		pmap.drawRectangle(0, 0, OB_WIDTH, OB_HEIGHT);
-		TextureRegion trBlank = new TextureRegion();
-		trBlank.setRegion(new Texture(pmap));
-		pmap.dispose();
+		blank = new TextureRegion(new Texture(pmap));
 		
-		blank = new TextureRegionDrawable(trBlank);
+		pmap = new Pixmap(1,1,Format.RGB888);
+		pmap.setColor(.4f,.4f,.4f,1);
+		pmap.fill();
+		levelTableBackground = new TextureRegion(new Texture(pmap)); 
+		
 		
 		pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
 		float r = (float) Math.random() * 0.7f+ 0.3f;
@@ -212,73 +262,45 @@ public class LevelDesignerScreen implements Screen {
 		pmap.fill();
 		pmap.setColor(r,g,b,1f);
 		pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
+		brickPic = new TextureRegion(new Texture(pmap)); 
 		
-		TextureRegion trbrickPic = new TextureRegion();
-		trbrickPic.setRegion(new Texture(pmap));
 		
-		brickPic = new TextureRegionDrawable(trbrickPic);
+		pmap = new Pixmap(10,10, Format.RGBA8888);
+		pmap.setColor(Color.RED);
+		pmap.fill();
+		spinnerc = new TextureRegion(new Texture(pmap));
+		
+		pmap = new Pixmap(10,10, Format.RGBA8888);
+		pmap.setColor(Color.BLUE);
+		pmap.fill();
+		spinnera = new TextureRegion(new Texture(pmap));
 		
 		pmap.dispose();
 		
-		lightImage = new TextureRegionDrawable(atlas.findRegion("lightBulb"));
-		obstacleImage = new TextureRegionDrawable(atlas.findRegion("obstacle"));
-		
-		TextureRegion trflipped = new TextureRegion(atlas.findRegion("obstacle"));
-		trflipped.flip(true, false);
-		
-		flipped = new TextureRegionDrawable(trflipped);
-		
+		lightImage = atlas.findRegion("lightBulb");
+		obstacleImage = atlas.findRegion("obstacle");
+		flipped = new TextureRegion(atlas.findRegion("obstacle"));
+		blackHole = atlas.findRegion("blackhole");
+		flipped.flip(true, false);
 	}
 	
-	
-
-	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
-		
-	}
-
-	@Override
-	public void render(float delta) {
-		Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		pb.begin();
-		// draw brick background
-		for(int i = 0; i < this.sw; i += 20){
-			for(int j = 0; j < this.sh; j+= 10){
-				pb.draw(bg, i, j,20,10);
-			}
+	private class LevelBlock extends Actor{
+		public String obstacle = "-";
+		private TextureRegion defaultRegion;
+		public LevelBlock (TextureRegion reg){
+			defaultRegion = reg;
 		}
-		pb.end();
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			super.draw(batch, parentAlpha);
+			batch.draw(defaultRegion, getX(), getY(), getOriginX(), getOriginY(),
+		            getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+		}
 		
-		stage.act();
-		stage.draw();
-		
+		public void setImage(TextureRegion region, String type){
+			this.defaultRegion = region;
+			this.obstacle = type;
+		}
 	}
-
-	@Override
-	public void resize(int width, int height) {
-		sw = width;
-		sh = height;
-		pb.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
-		stage.getViewport().update(width, height, true);
-		
-	}
-
-	@Override
-	public void pause() {		
-	}
-
-	@Override
-	public void resume() {		
-	}
-
-	@Override
-	public void hide() {		
-	}
-
-	@Override
-	public void dispose() {		
-	}
+	
 }
