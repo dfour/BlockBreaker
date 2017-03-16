@@ -6,9 +6,12 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
 import com.dfour.blockbreaker.view.ApplicationScreen;
 import com.dfour.blockbreaker.view.ControlMapScreen;
+import com.dfour.blockbreaker.view.CustomMapScreen;
 import com.dfour.blockbreaker.view.LevelDesignerScreen;
 import com.dfour.blockbreaker.view.LoadingScreen;
 import com.dfour.blockbreaker.view.PreferencesScreen;
@@ -18,8 +21,6 @@ import com.dfour.blockbreaker.view.EndScreen;
 import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
-	
-	//TODO make level designer (part done, added file saving, still need option to play custom in main menu+ loading friends)
 	//TODO show bomb count(done), score(done), money in play area ( instead of top corner )
 	//TODO finish adding spinners (still need to add images)
 	//TODO add obstacles that speed up/slow down ball
@@ -32,6 +33,7 @@ public class BlockBreaker extends Game {
 	//TODO add always magnetic ball upgrade ( mid expensive )
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
 	//TODO appscreen fadein
+	//TODO add pause image to hide screen when paused
 	
 	private Screen menu;
 	private PreferencesScreen prefs;
@@ -45,6 +47,9 @@ public class BlockBreaker extends Game {
 	public BBAssetManager assMan = new BBAssetManager();
 	
 	public static boolean debug = false;
+	
+	public static Array<FileHandle> customMaps;
+	public static boolean isCustomMapMode = false;
 	
 	//music
 	private Sound introMusic;
@@ -60,6 +65,7 @@ public class BlockBreaker extends Game {
 	public final static int LEVEL_DESIGNER = 4;
 	public final static int SHOP = 5;
 	public final static int CONTROL =6;
+	public final static int CUSTOM_MAP = 7;
 	
 	@Override
 	public void create () {
@@ -114,6 +120,9 @@ public class BlockBreaker extends Game {
 				break;
 			case CONTROL:
 				this.setScreen(new ControlMapScreen(this));
+				break;
+			case CUSTOM_MAP:
+				this.setScreen(new CustomMapScreen(this));
 				break;
 			case APPLICATION:
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){

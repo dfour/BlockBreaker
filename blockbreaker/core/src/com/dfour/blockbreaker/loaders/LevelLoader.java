@@ -15,7 +15,17 @@ public class LevelLoader {
 	}
 	
 	public void loadLevel(int level){
-		FileHandle file = Gdx.files.internal(folder+"level" + level + ".map");
+		loadLevelFile(folder+"level" + level + ".map", true);
+		
+	}
+	
+	public void loadLevelFile(String filename, boolean internal){
+		FileHandle file = null;
+		if(internal){
+			file = Gdx.files.internal(filename);
+		}else{
+			file = Gdx.files.external(filename);
+		}
 		String text = file.readString().replaceAll("[\n\r]", ""); // remove new lines and carriage returns
 		for (int y = 0; y < 30; y++) { // for each line of 30 lines
 			for (int x = 0; x < 39; x++) { // for each row of 39 chars

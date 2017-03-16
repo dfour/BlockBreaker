@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -58,6 +59,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	
 	private Array<LevelBlock> levelMap;
 	private TextureRegion levelTableBackground;
+	private TextField txfMapName;
 	
 	public LevelDesignerScreen(BlockBreaker p){
 		super(p);
@@ -73,36 +75,19 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		ClickListener cl = new ClickListener(){
 
 			@Override
+			public void enter(InputEvent event, float x, float y, int pointer,Actor fromActor) {
+				super.enter(event, x, y, pointer, fromActor);
+				if(pointer == 0){
+					clicked(event,x,y);
+				}
+			}
+
+			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				if(event.getTarget() instanceof LevelBlock){
 					LevelBlock lvb = (LevelBlock) event.getTarget();
-					if(currentObject == BRICK){
-						// i dont like this. try find another solution
-						Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
-						float r = (float) Math.random() * 0.7f+ 0.3f;
-						float g = (float) Math.random() * 0.7f+ 0.3f;
-						float b = (float) Math.random() * 0.7f+ 0.3f;
-						pmap.setColor(new Color(r,g,b,0.3f));
-						pmap.fill();
-						pmap.setColor(r,g,b,1f);
-						pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
-						lvb.setImage(new TextureRegion(new Texture(pmap)), BRICK);
-					}else if(currentObject == LIGHT){
-						lvb.setImage(lightImage, LIGHT);
-					}else if(currentObject == LEFT){
-						lvb.setImage(obstacleImage, LEFT);
-					}else if(currentObject == RIGHT){
-						lvb.setImage(flipped, RIGHT);
-					}else if(currentObject == EMPTY){
-						lvb.setImage(blank, EMPTY);
-					}else if(currentObject == SPINNERC){
-						lvb.setImage(spinnerc, SPINNERC);
-					}else if(currentObject == SPINNERA){
-						lvb.setImage(spinnera, SPINNERA);
-					}else if(currentObject == BLACKHOLE){
-						lvb.setImage(blackHole, BLACKHOLE);
-					}
+					lvb.setLevelBlock();
 				}
 				
 			}
@@ -118,12 +103,16 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				LevelBlock lvb = new LevelBlock(blank);
 				lvb.setVisible(true);
 				lvb.setBounds(0, 0, 20, 10);
-				lvb.addListener(cl);
+				if(i !=0){
+					lvb.addListener(cl);
+				}
 				levelTable.add(lvb);
 				levelMap.add(lvb);
 			}
 			levelTable.row();
 		}
+		
+		txfMapName = new TextField("map-name",skin);
 				
 		
 		
@@ -204,7 +193,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 						map+=System.lineSeparator();
 					}
 				}
-				FileHandle file = Gdx.files.external("mymap.map");
+				FileHandle file = Gdx.files.external("blockbreaker/custommap/"+txfMapName.getText()+".map");
 				file.writeString(map, false);
 			}
 			
@@ -228,9 +217,11 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		guiTable.row();
 		guiTable.add(btnBlackHole).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		guiTable.row();
-		guiTable.add(btnBack);
+		guiTable.add(txfMapName).fillX();
 		guiTable.row();
-		guiTable.add(btnSave);
+		guiTable.add(btnSave).fillX();
+		guiTable.row();
+		guiTable.add(btnBack).fillX();
 		
 		displayTable.add(levelTable);
 		displayTable.add(guiTable);	
@@ -300,6 +291,35 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		public void setImage(TextureRegion region, String type){
 			this.defaultRegion = region;
 			this.obstacle = type;
+		}
+		
+		public void setLevelBlock(){
+			if(currentObject == BRICK){
+				// i dont like this. try find another solution
+				Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
+				float r = (float) Math.random() * 0.7f+ 0.3f;
+				float g = (float) Math.random() * 0.7f+ 0.3f;
+				float b = (float) Math.random() * 0.7f+ 0.3f;
+				pmap.setColor(new Color(r,g,b,0.3f));
+				pmap.fill();
+				pmap.setColor(r,g,b,1f);
+				pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
+				setImage(new TextureRegion(new Texture(pmap)), BRICK);
+			}else if(currentObject == LIGHT){
+				setImage(lightImage, LIGHT);
+			}else if(currentObject == LEFT){
+				setImage(obstacleImage, LEFT);
+			}else if(currentObject == RIGHT){
+				setImage(flipped, RIGHT);
+			}else if(currentObject == EMPTY){
+				setImage(blank, EMPTY);
+			}else if(currentObject == SPINNERC){
+				setImage(spinnerc, SPINNERC);
+			}else if(currentObject == SPINNERA){
+				setImage(spinnera, SPINNERA);
+			}else if(currentObject == BLACKHOLE){
+				setImage(blackHole, BLACKHOLE);
+			}
 		}
 	}
 	

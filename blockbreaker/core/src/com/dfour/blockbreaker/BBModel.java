@@ -215,7 +215,15 @@ public class BBModel {
 		isFiringLazer = false;
 		lazerTimer = 5f;
 		entFactory.makeBall(false);
-		ll.loadLevel(level);
+		if(BlockBreaker.isCustomMapMode){
+			if(level < BlockBreaker.customMaps.size){
+				ll.loadLevelFile(BlockBreaker.customMaps.get(level).path(), false);
+			}else{
+				gameOver = true;
+			}
+		}else{
+			ll.loadLevel(level);
+		}
 		entFactory.makeWalls(cH,cW);
 		entFactory.makeBin(cW);
 		
@@ -279,10 +287,12 @@ public class BBModel {
 				level += 1;
 				changingLevel = false;
 				levelTimer = 1f;
-				if (level > MAX_LEVELS) {
+				if (level > MAX_LEVELS || BlockBreaker.isCustomMapMode) {
 					gameOver = true;
 				} else {
-					this.showShop = true;
+					if(!gameOver){
+						this.showShop = true;
+					}
 				}
 			}else{
 				levelTimer-= delta;

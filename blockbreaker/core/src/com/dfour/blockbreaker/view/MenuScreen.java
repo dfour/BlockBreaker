@@ -21,10 +21,11 @@ import com.dfour.blockbreaker.BlockBreaker;
 
 public class MenuScreen extends Scene2DScreen {
 
-	private TextButton button;
-	private TextButton button2;
-	private TextButton button3;
-	private TextButton button4;
+	private TextButton btnStart;
+	private TextButton btnPrefs;
+	private TextButton btnQuit;
+	private TextButton btnLevelDesign;
+	private TextButton btnCustomGame;
 
 	public MenuScreen(BlockBreaker p){
 		super(p)	;
@@ -34,52 +35,63 @@ public class MenuScreen extends Scene2DScreen {
 	public void show() {
 		super.show();
 		
-		button = new TextButton("Start", skin);
-		button2 = new TextButton("Preferences", skin);
-		button3 = new TextButton("Exit", skin);
-		button4 = new TextButton("Level Designer", skin);
+		btnStart = new TextButton("Start", skin);
+		btnPrefs = new TextButton("Preferences", skin);
+		btnQuit = new TextButton("Exit", skin);
+		btnLevelDesign = new TextButton("Level Designer", skin);
+		btnCustomGame = new TextButton("Custom Game",skin);
 
-        displayTable.add(button).width(300).height(50);
-        displayTable.row().pad(10, 0, 10, 0);
-        displayTable.add(button4).width(300).height(50);
-        displayTable.row();
-        displayTable.add(button2).width(300).height(50);
-        displayTable.row().pad(10, 0, 10, 0);;
-        displayTable.add(button3).width(300).height(50);
+        displayTable.add(btnStart).width(300).height(50);
+        displayTable.row().pad(10, 0, 0, 0);
+        displayTable.add(btnCustomGame).width(300).height(50);
+        displayTable.row().pad(10, 0, 0, 0);
+        displayTable.add(btnLevelDesign).width(300).height(50);
+        displayTable.row().pad(10, 0, 0, 0);
+        displayTable.add(btnPrefs).width(300).height(50);
+        displayTable.row().pad(10, 0, 0, 0);
+        displayTable.add(btnQuit).width(300).height(50);
 
 		
 
-		button.addListener(new ClickListener() {
+		btnStart.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
+				BlockBreaker.isCustomMapMode = false;
 				MenuScreen.this.returnScreen = BlockBreaker.APPLICATION;
 				MenuScreen.this.isReturning = true;	
 				}
 		});
 		
-		button2.addListener(new ClickListener() {
+		btnPrefs.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				MenuScreen.this.returnScreen = BlockBreaker.PREFERENCES;
 				MenuScreen.this.isReturning = true;	
 			}
 		});
 		
-		button3.addListener(new ClickListener() {
+		btnQuit.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				Gdx.app.exit();
 			}
 		});
 		
-		button4.addListener(new ClickListener() {
+		btnLevelDesign.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				MenuScreen.this.returnScreen = BlockBreaker.LEVEL_DESIGNER;
 				MenuScreen.this.isReturning = true;	
 			}
 		});
 		
-		button.setChecked(false);
-		button2.setChecked(false);
-		button3.setChecked(false);
-		button4.setChecked(false);
+		btnCustomGame.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				MenuScreen.this.returnScreen = BlockBreaker.CUSTOM_MAP;
+				MenuScreen.this.isReturning = true;	
+			}
+		});
+		
+		btnStart.setChecked(false);
+		btnPrefs.setChecked(false);
+		btnQuit.setChecked(false);
+		btnLevelDesign.setChecked(false);
 		
 	}
 }

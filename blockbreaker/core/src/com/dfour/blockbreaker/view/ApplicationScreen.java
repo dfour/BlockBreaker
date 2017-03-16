@@ -171,6 +171,13 @@ public class ApplicationScreen implements Screen {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	    
+	    if(controller.isPauseDown){
+	    	isPaused = !isPaused;
+	    	controller.isPauseDown = false;
+	    	
+	    }
+	    
+	    
 	    if(!isPaused){
 	    	bbModel.doLogic(delta);	
 	    }
@@ -417,7 +424,9 @@ public class ApplicationScreen implements Screen {
 		sb.setColor(1,1,1,currentAlpha);
 		for (int i = effects.size - 1; i >= 0; i--) {
 		    PooledEffect effect = effects.get(i);
-		    effect.draw(sb, delta);
+		    if(!isPaused){
+		    	effect.draw(sb, delta);
+		    }
 		    if (effect.isComplete()) {
 		        effect.free();
 		        effects.removeIndex(i);
