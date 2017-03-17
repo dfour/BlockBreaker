@@ -122,12 +122,12 @@ public class ApplicationScreen implements Screen {
 		loadImages();
 		cam = new OrthographicCamera(800,600);
 		cam.position.x = 400;
-	    cam.position.y = 300;
+	    cam.position.y = 270;
 	    cam.update();
 		
 		debugMatrix = new Matrix4(cam.combined);
 		debugMatrix.scl(BBModel.BOX_TO_WORLD);
-		viewport = new ExtendViewport(800, 600, cam);
+		viewport = new ExtendViewport(800, 660, cam);
 		debugRenderer = new Box2DDebugRenderer(true,true,true,true,true,true);
 		
 		rayHandler = bbModel.rayHandler;
@@ -208,6 +208,7 @@ public class ApplicationScreen implements Screen {
 			//sb.draw(wall, 0, 	0,	800	,10);
 			sb.draw(bottomWall, 0, 	600,800	,-11);
 			sb.draw(leftWall, 800, 	0,	-10	,590);
+			sb.draw(bottomWall, 0, 0,800, -10000 );
 			sb.setColor(1,1,1,currentAlpha);
 			drawGameObjects(delta);
 		sb.end();
@@ -240,7 +241,7 @@ public class ApplicationScreen implements Screen {
 				this.doGameOverStuff(delta);
 				pb.draw(this.gameOver, sw/2 -this.gameOver.getRegionWidth() / 2,sh/2 -this.gameOver.getRegionHeight() / 2);
 				visfont.draw(pb, "Thanks for playing. Updates coming soon.", 100 , sh/2 - 150);
-				visfont.draw(pb, "Visit gamedev.is-sweet.co.uk for more info.", 100 , sh/2 - 160);
+				visfont.draw(pb, "Visit gamedevlopment.blog for more info.", 100 , sh/2 - 160);
 				visfont.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
 			}
 			

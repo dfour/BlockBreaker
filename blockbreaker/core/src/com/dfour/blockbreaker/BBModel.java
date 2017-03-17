@@ -215,6 +215,7 @@ public class BBModel {
 		}
 		
 		gameOver = false;
+		changingLevel = false;
 		entFactory.ballCount = 0;
 		isFiringLazer = false;
 		lazerTimer = 5f;

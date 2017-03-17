@@ -100,7 +100,7 @@ public class EntityFactory {
 	}
 	
 	public Bin makeBin(float cW){
-		Body bod = bodyFactory.makeBoxPolyBody((cW / 2), -0.5f, cW, 3,
+		Body bod = bodyFactory.makeBoxPolyBody((cW / 2), -1f, cW, 3,
 				BodyFactory.RUBBER, BodyType.StaticBody);
 		Bin bin = new Bin(bod);
 		bod.setUserData(bin);

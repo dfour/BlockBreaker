@@ -16,7 +16,7 @@ public class Entity {
 	protected int width;
 	protected int height;
 	protected boolean hasAnimation = false;
-	protected boolean hasDeathanimation = false;
+	protected boolean hasDeathAnimation = false;
 	
 	public Entity(Body b, Texture tex){
 		body = b;

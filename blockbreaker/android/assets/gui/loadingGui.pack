@@ -5,35 +5,35 @@ filter: MipMapLinearLinear,MipMapLinearLinear
 repeat: none
 blockBreakerTitle
   rotate: false
-  xy: 1, 102
+  xy: 2, 109
   size: 960, 145
   orig: 960, 145
   offset: 0, 0
   index: -1
 progressBarSurround
   rotate: false
-  xy: 1, 58
+  xy: 2, 63
   size: 510, 42
   orig: 510, 42
   offset: 0, 0
   index: -1
 loaded
   rotate: false
-  xy: 1, 13
+  xy: 2, 16
   size: 247, 43
   orig: 247, 43
   offset: 0, 0
   index: -1
 loading
   rotate: false
-  xy: 250, 13
+  xy: 253, 16
   size: 247, 43
   orig: 247, 43
   offset: 0, 0
   index: -1
 btn_blue_pink_glossy
   rotate: false
-  xy: 513, 60
+  xy: 516, 65
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -41,7 +41,7 @@ btn_blue_pink_glossy
   index: -1
 btn_down
   rotate: false
-  xy: 640, 60
+  xy: 645, 65
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -49,7 +49,7 @@ btn_down
   index: -1
 btn_norm
   rotate: false
-  xy: 767, 60
+  xy: 774, 65
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -57,7 +57,7 @@ btn_norm
   index: -1
 btn_over
   rotate: false
-  xy: 513, 18
+  xy: 516, 21
   size: 125, 40
   split: 5, 4, 4, 5
   orig: 125, 40
@@ -65,60 +65,159 @@ btn_over
   index: -1
 btn_pink_glossy
   rotate: false
-  xy: 640, 18
+  xy: 645, 21
   size: 125, 40
   orig: 125, 40
   offset: 0, 0
   index: -1
 blockbutton
   rotate: false
-  xy: 963, 211
+  xy: 966, 218
   size: 36, 36
   split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+blockbuttonLarge
+  rotate: false
+  xy: 966, 218
+  size: 36, 36
+  split: 17, 18, 17, 18
   orig: 36, 36
   offset: 0, 0
   index: -1
 blockbuttonlg
   rotate: false
-  xy: 894, 64
+  xy: 903, 69
   size: 36, 36
   split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+blockbuttonlgl
+  rotate: false
+  xy: 903, 69
+  size: 36, 36
+  split: 18, 17, 17, 18
   orig: 36, 36
   offset: 0, 0
   index: -1
 blockbuttonpr
   rotate: false
-  xy: 767, 22
+  xy: 774, 25
   size: 36, 36
   split: 4, 4, 4, 4
   orig: 36, 36
   offset: 0, 0
   index: -1
+darkblockbutton
+  rotate: false
+  xy: 966, 178
+  size: 36, 36
+  split: 4, 4, 4, 4
+  orig: 36, 36
+  offset: 0, 0
+  index: -1
+chkboxempty
+  rotate: false
+  xy: 814, 39
+  size: 42, 22
+  split: 5, 5, 5, 5
+  orig: 42, 22
+  offset: 0, 0
+  index: -1
 progressBarEnd
   rotate: false
-  xy: 963, 177
+  xy: 966, 142
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-progressBarStart
+chkboxfull
   rotate: false
-  xy: 1001, 215
-  size: 21, 32
-  orig: 21, 32
-  offset: 0, 0
-  index: -1
-progressBarMiddle
-  rotate: false
-  xy: 499, 24
-  size: 2, 32
-  orig: 2, 32
+  xy: 860, 39
+  size: 42, 22
+  split: 5, 5, 5, 5
+  orig: 42, 22
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 1, 1
+  xy: 2, 2
   size: 20, 10
   orig: 20, 10
+  offset: 0, 0
+  index: -1
+chkboxover
+  rotate: false
+  xy: 966, 116
+  size: 42, 22
+  split: 5, 5, 5, 5
+  orig: 42, 22
+  offset: 0, 0
+  index: -1
+progressBarStart
+  rotate: false
+  xy: 943, 73
+  size: 21, 32
+  orig: 21, 32
+  offset: 0, 0
+  index: -1
+radioButtonChecked
+  rotate: false
+  xy: 1002, 154
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+radioButtonOver
+  rotate: false
+  xy: 906, 45
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+buttonGrabber
+  rotate: false
+  xy: 26, 2
+  size: 10, 10
+  split: 4, 4, 4, 4
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+progressBarMiddle
+  rotate: false
+  xy: 504, 27
+  size: 2, 32
+  orig: 2, 32
+  offset: 0, 0
+  index: -1
+radioButtonUnChecked
+  rotate: false
+  xy: 968, 92
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+buttonGrabber
+  rotate: false
+  xy: 1002, 142
+  size: 8, 8
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+slider
+  rotate: false
+  xy: 1014, 142
+  size: 8, 8
+  split: 2, 2, 3, 4
+  orig: 8, 8
+  offset: 0, 0
+  index: -1
+listboxbg
+  rotate: false
+  xy: 510, 57
+  size: 2, 2
+  orig: 2, 2
   offset: 0, 0
   index: -1

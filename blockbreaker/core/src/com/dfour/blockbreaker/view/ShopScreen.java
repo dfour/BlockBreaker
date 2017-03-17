@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.dfour.blockbreaker.BBModel;
 import com.dfour.blockbreaker.BlockBreaker;
@@ -177,47 +178,48 @@ public class ShopScreen extends Scene2DScreen{
 		// label for cash
 		updateCash();
 		
-        
+        displayTable.setBackground(new NinePatchDrawable(atlasGui.createPatch("darkblockbutton")));
+        displayTable.pad(30);
+		
         displayTable.add(lblExBall).uniformX().align(Align.left);
         displayTable.add(lblExBallc).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExBall);
+        displayTable.add(btnExBall).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExLazer).uniformX().align(Align.left);
         displayTable.add(lblExLazerc).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExLazer);
+        displayTable.add(btnExLazer).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExGuide).uniformX().align(Align.left);
         displayTable.add(lblExGuidec).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExGuide);
+        displayTable.add(btnExGuide).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExMPower).uniformX().align(Align.left);
         displayTable.add(lblExMPowerc).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExMPower);
+        displayTable.add(btnExMPower).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExMStrength).uniformX().align(Align.left);
         displayTable.add(lblExMStrengthc).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExMStrength);
+        displayTable.add(btnExMStrength).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExRechargeRate).uniformX().align(Align.left);
         displayTable.add(lblExRechargeRatec).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnExRechargeRate);
+        displayTable.add(btnExRechargeRate).fillX().width(100);
         displayTable.row();
         displayTable.add(lblExMagBallOnly).uniformX().align(Align.left);
         displayTable.add(lblExMagBallOnlyc).uniformX().align(Align.right);
         displayTable.add().width(20f);
-        displayTable.add(btnMagBallOnly);
+        displayTable.add(btnMagBallOnly).fillX().width(100);
         displayTable.row();
         displayTable.add(lblCash);
-        displayTable.row();
         displayTable.add(lblScore);
         displayTable.row();
-        displayTable.add(btnDone);
+        displayTable.add(btnDone).colspan(4).center();
         
 	}
 

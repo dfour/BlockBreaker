@@ -21,7 +21,6 @@ import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
 	//TODO show bomb count(done), score(done), money in play area ( instead of top corner )
-	//TODO finish adding spinners (still need to add images)
 	//TODO add obstacles that speed up/slow down ball
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
@@ -32,7 +31,6 @@ public class BlockBreaker extends Game {
 	//TODO add pause image to hide screen when paused
 	//TODO try move all objects into external xml definition files
 	//TODO hide cursor when in game and show when in menus with custom cursor
-	//TODO Unify all drawing methods for all entities
 	//TODO say win or lose if game over
 	
 	private MenuScreen menu;
