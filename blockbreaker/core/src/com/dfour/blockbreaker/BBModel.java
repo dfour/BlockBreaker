@@ -26,6 +26,7 @@ import com.dfour.blockbreaker.entity.EntityFactory;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
 import com.dfour.blockbreaker.entity.Pad;
+import com.dfour.blockbreaker.entity.PowerBrick;
 import com.dfour.blockbreaker.entity.PowerUp;
 import com.dfour.blockbreaker.entity.Spinner;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
@@ -335,7 +336,7 @@ public class BBModel {
 				brick.body.setType(BodyType.DynamicBody);
 				brick.isStatic = false;
 				int rup = (int) (Math.random() * 100);
-				if (rup > 50) {
+				if (rup > 50 || brick instanceof PowerBrick) {
 					entFactory.createNewPowerUp(brick.body.getPosition());
 				}
 			}

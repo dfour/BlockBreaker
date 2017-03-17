@@ -60,6 +60,8 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	private Array<LevelBlock> levelMap;
 	private TextureRegion levelTableBackground;
 	private TextField txfMapName;
+	private Label savedLabel;
+	private float savedLabelTimer = 0;
 	
 	public LevelDesignerScreen(BlockBreaker p){
 		super(p);
@@ -69,7 +71,8 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	public void show(){
 		super.show();
 		levelMap = new Array<LevelBlock>();
-		
+		savedLabel = new Label("Map Saved",skin);
+		savedLabel.setVisible(false);
 		loadImages();
 		
 		ClickListener cl = new ClickListener(){
@@ -176,6 +179,20 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			
 		});
 		
+		TextButton btnClear = new TextButton("Reset",skin);
+		btnClear.addListener(new ClickListener(){
+
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				currentObject = EMPTY;
+				for(LevelBlock lvb: levelMap){
+					lvb.setLevelBlock();
+				}
+			}
+			
+		});
+		
 		TextButton btnSave = new TextButton("Save",skin);
 		btnSave.addListener(new ClickListener(){
 
@@ -195,13 +212,15 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				}
 				FileHandle file = Gdx.files.external("blockbreaker/custommap/"+txfMapName.getText()+".map");
 				file.writeString(map, false);
+				savedLabelTimer = 1f;
+				savedLabel.setVisible(true);
 			}
 			
 		});
 		
 		Table guiTable = new Table();
 		guiTable.setDebug(false);
-		guiTable.add(new Label("Add Items",skin));
+		guiTable.add(new Label("Objects",skin));
 		guiTable.row();
 		guiTable.add(btnBrick);
 		guiTable.row();
@@ -219,7 +238,11 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		guiTable.row();
 		guiTable.add(txfMapName).fillX();
 		guiTable.row();
+		guiTable.add(savedLabel);
+		guiTable.row();
 		guiTable.add(btnSave).fillX();
+		guiTable.row();
+		guiTable.add(btnClear);
 		guiTable.row();
 		guiTable.add(btnBack).fillX();
 		
@@ -227,6 +250,18 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		displayTable.add(guiTable);	
 	}
 	
+	
+	
+	@Override
+	public void render(float delta) {
+		super.render(delta);
+		if(savedLabelTimer > 0){
+			savedLabelTimer-= delta;
+		}else if(savedLabelTimer <= 0 && savedLabel.isVisible()){
+			savedLabel.setVisible(false);
+		}
+	}
+
 	private void loadImages() {
 		atlas = parent.assMan.manager.get("images/images.pack");
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);

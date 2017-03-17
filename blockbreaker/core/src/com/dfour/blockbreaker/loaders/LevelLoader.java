@@ -44,6 +44,8 @@ public class LevelLoader {
 					model.entFactory.addSpinner(x * 2+1, (Math.abs(y - 30)) * 2, false);
 				}else if (coord == 'b'){
 					model.entFactory.addBlackHole(x * 2+1, (Math.abs(y - 30)) * 2);
+				}else if(coord == 'p') {
+					model.entFactory.makePowerBrick(x * 2+1, (Math.abs(y - 30)) * 2);
 				}
 			}
 		}

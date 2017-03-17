@@ -148,6 +148,15 @@ public class EntityFactory {
 		return brick;
 	}
 	
+	public PowerBrick makePowerBrick(float x, float y) {
+		Body brickBody = bodyFactory.makeBoxPolyBody(x + 1f, y, 1.9f, 0.9f,
+				BodyFactory.WOOD, BodyType.StaticBody);
+		PowerBrick pbrick = new PowerBrick(brickBody);
+		bricks.add(pbrick);
+		brickBody.setUserData(pbrick);
+		return pbrick;
+	}
+	
 	// makes a tilted square
 	public Obstacle makeStaticObstacle(float x, float y, boolean flip){
 		Vector2[] verts = new Vector2[4];

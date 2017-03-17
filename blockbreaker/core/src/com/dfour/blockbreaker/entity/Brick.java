@@ -14,8 +14,8 @@ public class Brick extends Entity{
 	public boolean wasEatenByPad = false;
 	public int brickHealth = 5;
 	public boolean gettingLazored = false;
-	private int brickWidth = 20;
-	private int brickHeight = 10;
+	protected int brickWidth = 20;
+	protected int brickHeight = 10;
 	
 	public Brick(Body bod){
 		this(bod,null);
