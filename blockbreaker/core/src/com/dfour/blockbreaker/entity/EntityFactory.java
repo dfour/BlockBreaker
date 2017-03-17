@@ -161,17 +161,17 @@ public class EntityFactory {
 	public Obstacle makeStaticObstacle(float x, float y, boolean flip){
 		Vector2[] verts = new Vector2[4];
 		if(!flip){
-			verts[0] = new Vector2(0,0); 
-			verts[1] = new Vector2(2,2);
-			verts[2] = new Vector2(2.4f,2);
-			verts[3] = new Vector2(0.4f,0);
+			verts[0] = new Vector2(-1.2f,-1f); 
+			verts[1] = new Vector2(1.2f,1f);
+			verts[2] = new Vector2(0.8f,1f);
+			verts[3] = new Vector2(-0.8f,-1f);
 		}else{
-			verts[0] = new Vector2(0,2); 
-			verts[1] = new Vector2(0.4f,2);
-			verts[2] = new Vector2(2.4f,0);
-			verts[3] = new Vector2(2,0);
+			verts[0] = new Vector2(-1.2f,1); 
+			verts[1] = new Vector2(1.2f,-1);
+			verts[2] = new Vector2(0.8f,-1);
+			verts[3] = new Vector2(-0.8f,1);
 		}
-		Body obBody = bodyFactory.makePolygonShapeBody(verts, x, y,  BodyFactory.WOOD, BodyType.StaticBody);
+		Body obBody = bodyFactory.makePolygonShapeBody(verts, x+1, y,  BodyFactory.WOOD, BodyType.StaticBody);
 		Obstacle obstacle = new Obstacle(obBody, atlas.findRegion("obstacle"), flip);
 		obstacles.add(obstacle);
 		return obstacle;
@@ -187,14 +187,14 @@ public class EntityFactory {
 		
 		Body spBody = bodyFactory.makePolygonShapeBody(verts, x, y, BodyFactory.WOOD, BodyType.KinematicBody);
 		//TODO add second spinner fixture to body here
-		Spinner spinny = new Spinner(spBody, null, clockwise);
+		Spinner spinny = new Spinner(spBody, atlas.findRegion("spinner"), clockwise);
 		spinners.add(spinny);
 		return spinny;
 		
 	}
 	
 	public BlackHole addBlackHole(int x, int y) {
-		Body bhbod = bodyFactory.makeCirclePolyBody(x, y, 1, BodyFactory.WOOD, BodyType.StaticBody);
+		Body bhbod = bodyFactory.makeCirclePolyBody(x+1, y, 1, BodyFactory.WOOD, BodyType.StaticBody);
 		bodyFactory.makeSensorFixture(bhbod, 5);
 		BlackHole bh = new BlackHole(bhbod, atlas.findRegion("blackhole"));
 		bhbod.setUserData(bh);

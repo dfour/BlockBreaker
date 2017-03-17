@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 
-public class PowerUp {
+public class PowerUp extends Entity{
 	
 	public static final int MAG_POWER = 0;
 	public static final int MAG_STRENGTH = 1;
@@ -20,14 +20,12 @@ public class PowerUp {
 	public static final int CASH25 = 10;
 	public static final int CASH100 = 11;
 	
-	public Body body;
 	public boolean isDead = false;
 	public boolean wasEatenByPad = false;
-	public Color color;
-	public Sprite sprite;
 	public int type = 0;
 	
 	public PowerUp(Body bod, TextureRegion tex, int type){
+		super(bod,tex);
 		this.type = type;
 		sprite = new Sprite(tex);
 		body = bod;

@@ -10,12 +10,14 @@ public class PowerBrick extends Brick{
 
 	public PowerBrick(Body bod) {
 		super(bod);
-		Pixmap pmap = new Pixmap(brickWidth,brickHeight, Pixmap.Format.RGBA8888);
+		width = 20;
+		height = 10;
+		Pixmap pmap = new Pixmap(width,height, Pixmap.Format.RGBA8888);
 		color = new Color(1,1,1,0.3f);
 		pmap.setColor(color);
 		pmap.fill();
 		pmap.setColor(1,1,1,1);
-		pmap.drawRectangle(0, 0, brickWidth,brickHeight);
+		pmap.drawRectangle(0, 0, width,height);
 		this.sprite = new Sprite(new Texture(pmap));
 		pmap.dispose();
 	}

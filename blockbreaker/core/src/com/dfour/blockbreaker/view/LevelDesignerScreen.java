@@ -22,8 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -93,9 +95,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 					LevelBlock lvb = (LevelBlock) event.getTarget();
 					lvb.setLevelBlock();
 				}
-				
 			}
-			
 		};
 		
 		// holds objects to represent level
@@ -117,57 +117,70 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		}
 		
 		txfMapName = new TextField("map-name",skin);
-				
-		
-		
-		
-		ImageButton btnBrick = new ImageButton(new TextureRegionDrawable(brickPic));
+		ImageButton btnBrick = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnBrick.addListener(new TextTooltip("Normal Brick",skin));
+		btnBrick.getStyle().imageUp = new TextureRegionDrawable(brickPic);
 		btnBrick.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = BRICK;		
 			}
 		});
-		ImageButton btnLight = new ImageButton(new TextureRegionDrawable(lightImage));
+		ImageButton btnLight = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnLight.addListener(new TextTooltip("Light",skin));
+		btnLight.getStyle().imageUp = new TextureRegionDrawable(lightImage);
 		btnLight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LIGHT;			
 			}
 		});
-		ImageButton btnObstacleLeft = new ImageButton(new TextureRegionDrawable(obstacleImage));
+		ImageButton btnObstacleLeft = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnObstacleLeft.addListener(new TextTooltip("Diagonal Platform",skin));
+		btnObstacleLeft.getStyle().imageUp =new TextureRegionDrawable(obstacleImage);
+		btnObstacleLeft.setHeight(10);
 		btnObstacleLeft.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = LEFT;			
 			}
 		});
-		ImageButton btnObstacleRight= new ImageButton(new TextureRegionDrawable(flipped));
+		ImageButton btnObstacleRight= new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnObstacleRight.addListener(new TextTooltip("Reverse Diagonal Platform",skin));
+		btnObstacleRight.getStyle().imageUp = new TextureRegionDrawable(flipped);
 		btnObstacleRight.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = RIGHT;			
 			}
 		});
 		
-		ImageButton btnSpinnerA= new ImageButton(new TextureRegionDrawable(spinnera));
+		ImageButton btnSpinnerA= new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnSpinnerA.addListener(new TextTooltip("Anti-Clockwise Spinner",skin));
+		btnSpinnerA.getStyle().imageUp =new TextureRegionDrawable(spinnera);
 		btnSpinnerA.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = SPINNERA;			
 			}
 		});
 		
-		ImageButton btnSpinnerC= new ImageButton(new TextureRegionDrawable(spinnerc));
+		ImageButton btnSpinnerC= new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnSpinnerC.addListener(new TextTooltip("Clockwise Spinner",skin));
+		btnSpinnerC.getStyle().imageUp =new TextureRegionDrawable(spinnerc);
 		btnSpinnerC.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = SPINNERC;			
 			}
 		});
 		
-		ImageButton btnBlackHole= new ImageButton(new TextureRegionDrawable(blackHole));
+		ImageButton btnBlackHole= new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnBlackHole.addListener(new TextTooltip("Black Hole",skin));
+		btnBlackHole.getStyle().imageUp =new TextureRegionDrawable(blackHole);
 		btnBlackHole.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
 				currentObject = BLACKHOLE;			
 			}
 		});
 		
-		ImageButton btnPowerBrick = new ImageButton(new TextureRegionDrawable(brickPic));
+		ImageButton btnPowerBrick = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnPowerBrick.addListener(new TextTooltip("Power Up Brick",skin));
+		btnPowerBrick.getStyle().imageUp = new TextureRegionDrawable(brickPic);
 		btnPowerBrick.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
@@ -177,7 +190,18 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			
 		});
 		
+		TextButton btnRemove = new TextButton("Erase",skin);
+		btnRemove.addListener(new TextTooltip("Remove Blocks",skin));
+		btnRemove.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				currentObject = EMPTY;
+			}
+		});
+		
 		TextButton btnBack = new TextButton("Back",skin);
+		btnBack.addListener(new TextTooltip("Back to Menu",skin));
 		btnBack.addListener(new ClickListener(){
 
 			@Override
@@ -190,6 +214,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		});
 		
 		TextButton btnClear = new TextButton("Reset",skin);
+		btnClear.addListener(new TextTooltip("Clear Map",skin));
 		btnClear.addListener(new ClickListener(){
 
 			@Override
@@ -204,6 +229,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		});
 		
 		TextButton btnSave = new TextButton("Save",skin);
+		btnSave.addListener(new TextTooltip("Save Map",skin));
 		btnSave.addListener(new ClickListener(){
 
 			@Override
@@ -222,7 +248,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				}
 				FileHandle file = Gdx.files.external("blockbreaker/custommap/"+txfMapName.getText()+".map");
 				file.writeString(map, false);
-				savedLabelTimer = 1f;
+				savedLabelTimer = 5f;
 				savedLabel.setVisible(true);
 			}
 			
@@ -230,36 +256,28 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		
 		Table guiTable = new Table();
 		guiTable.setDebug(false);
-		guiTable.add(new Label("Objects",skin));
+		guiTable.add(new Label("Objects",skin)).colspan(6);
 		guiTable.row();
-		guiTable.add(btnBrick);
+		guiTable.add(btnBrick).height(50).width(125);
+		guiTable.add(btnLight).height(50).width(125);
+		guiTable.add(btnObstacleLeft).height(50).width(125);
+		guiTable.add(btnSpinnerA).height(50).width(125);
+		guiTable.add(btnRemove).height(50).width(125);
+		guiTable.add(txfMapName).height(50).width(125);
+		guiTable.add(btnClear).height(50).width(125);
 		guiTable.row();
-		guiTable.add(btnLight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.add(btnPowerBrick).height(50).width(125);
+		guiTable.add(btnBlackHole).height(50).width(125);
+		guiTable.add(btnObstacleRight).height(50).width(125);
+		guiTable.add(btnSpinnerC).height(50).width(125);
+		guiTable.add(btnSave).height(50).width(125).colspan(2).right();
+		guiTable.add(btnBack).height(50).width(125);
 		guiTable.row();
-		guiTable.add(btnObstacleLeft).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(btnObstacleRight).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(btnSpinnerA).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(btnSpinnerC).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(btnBlackHole).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(btnPowerBrick).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
-		guiTable.row();
-		guiTable.add(txfMapName).fillX();
-		guiTable.row();
-		guiTable.add(savedLabel);
-		guiTable.row();
-		guiTable.add(btnSave).fillX();
-		guiTable.row();
-		guiTable.add(btnClear);
-		guiTable.row();
-		guiTable.add(btnBack).fillX();
+		guiTable.add(savedLabel).colspan(6);
 		
-		displayTable.add(levelTable);
-		displayTable.add(guiTable);	
+		displayTable.add(levelTable).pad(10);
+		displayTable.row();
+		displayTable.add(guiTable).pad(10);
 	}
 	
 	
@@ -381,7 +399,8 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				pmap.fill();
 				pmap.setColor(1,1,1,1);
 				pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
-				setImage(null,POWER_BRICK);
+				setImage(new TextureRegion(new Texture(pmap)),POWER_BRICK);
+				pmap.dispose();
 			}
 		}
 	}

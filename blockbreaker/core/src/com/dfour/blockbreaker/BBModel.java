@@ -158,8 +158,8 @@ public class BBModel {
 					Brick brick = (Brick) fixture.getBody().getUserData();
 					brickLazoredLeft = brick;
 				} else if(fixture.isSensor()){
-					// return max 1f to ignore
-					return 1f;
+					//return 1f;
+					return -1;
 				}else {
 				
 					brickLazoredLeft = null;
@@ -176,7 +176,8 @@ public class BBModel {
 					Brick brick = (Brick) fixture.getBody().getUserData();
 					brickLazoredRight = brick;
 				} else if(fixture.isSensor()){
-					return 1f;
+					//return 1f;
+					return -1;
 				} else {
 					brickLazoredRight = null;
 				}
@@ -217,7 +218,7 @@ public class BBModel {
 		entFactory.ballCount = 0;
 		isFiringLazer = false;
 		lazerTimer = 5f;
-		entFactory.makeBall(false);
+		entFactory.makeBall(eternalMagBall);
 		if(BlockBreaker.isCustomMapMode){
 			if(level < BlockBreaker.customMaps.size){
 				ll.loadLevelFile(BlockBreaker.customMaps.get(level).path(), false);
@@ -256,7 +257,7 @@ public class BBModel {
 			}
 		}
 		if(BlockBreaker.debug){
-			System.out.println("Pad Offset is :"+padOffset);
+			//System.out.println("Pad Offset is :"+padOffset);
 		}
 		Vector3 mousePosition = cam.unproject(new Vector3(controller.getMousePosition(), 0));
 		if(lastMousePos != null){
@@ -439,7 +440,9 @@ public class BBModel {
 				} else { // last ball, attach to pad
 					if(this.livesLeft > 0){
 						ball.isAttached = true;
-						ball.setNormalBall(atlas.findRegion("ball"));
+						if(!eternalMagBall){
+							ball.setNormalBall(atlas.findRegion("ball"));
+						}
 						ball.isDead = false;
 						this.livesLeft-=1;
 					}else{

@@ -122,135 +122,163 @@ ball_lazer_pup
   orig: 32, 32
   offset: 0, 0
   index: -1
-bomb_pup
+bombl
   rotate: false
   xy: 273, 179
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-cash100_pup
+bomb_pup
   rotate: false
   xy: 1, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-cash10_pup
+cash100_pup
   rotate: false
   xy: 904, 755
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-cash25_pup
+cash10_pup
   rotate: false
   xy: 982, 821
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-cash5_pup
+cash25_pup
   rotate: false
   xy: 611, 273
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-extra_ball_pup
+cash5_pup
   rotate: false
   xy: 620, 471
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-extra_mag_ball_pup
+extra_ball_pup
   rotate: false
   xy: 654, 505
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-lazer_pup
+extra_mag_ball_pup
   rotate: false
   xy: 273, 145
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-lightBulb
+lazer_pup
   rotate: false
   xy: 307, 179
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-mag_power_pup
+lightBulb
   rotate: false
   xy: 1, 1
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-mag_strength_pup
+mag_power_pup
   rotate: false
   xy: 35, 35
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-particle
+mag_strength_pup
   rotate: false
   xy: 904, 721
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pesquare
+particle
   rotate: false
   xy: 938, 755
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-pre_particle
+pesquare
   rotate: false
   xy: 645, 273
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-score_pup
+pre_particle
   rotate: false
   xy: 620, 437
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+score_pup
+  rotate: false
+  xy: 654, 471
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+spinner
+  rotate: false
+  xy: 688, 505
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+brick
+  rotate: false
+  xy: 495, 213
+  size: 40, 20
+  orig: 40, 20
+  offset: 0, 0
+  index: -1
+brickoff
+  rotate: false
+  xy: 223, 69
+  size: 40, 20
+  orig: 40, 20
+  offset: 0, 0
+  index: -1
 ball
-  rotate: false
-  xy: 495, 217
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-bomb
-  rotate: false
-  xy: 223, 73
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
-mag_ball
   rotate: false
   xy: 611, 255
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
+bomb
+  rotate: false
+  xy: 982, 803
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+mag_ball
+  rotate: false
+  xy: 273, 127
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 background
   rotate: false
-  xy: 982, 809
+  xy: 307, 167
   size: 20, 10
   orig: 20, 10
   offset: 0, 0

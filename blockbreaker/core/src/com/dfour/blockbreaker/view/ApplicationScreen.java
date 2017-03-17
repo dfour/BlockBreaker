@@ -325,28 +325,30 @@ public class ApplicationScreen implements Screen {
 
 	private void drawGameObjects(float delta) {
 		for(Brick brick :bbModel.entFactory.bricks ){
-			brick.sprite.draw(sb,currentAlpha);
+			brick.draw(sb,currentAlpha);
 		}
 		for(LightBall lBalls :bbModel.entFactory.lightBalls ){
-			lBalls.sprite.draw(sb,currentAlpha);
+			lBalls.update();
+			lBalls.draw(sb,currentAlpha);
 		}
 		for(Ball ball :bbModel.entFactory.balls){
-			ball.sprite.draw(sb,currentAlpha);
+			ball.draw(sb,currentAlpha);
 		}
 		for(PowerUp pup :bbModel.entFactory.pups){
-			pup.sprite.draw(sb,currentAlpha);
+			pup.draw(sb,currentAlpha);
 		}
 		for(Bomb bomb :bbModel.entFactory.bombs){
-			bomb.sprite.draw(sb,currentAlpha);
+			bomb.draw(sb,currentAlpha);
 		}
 		for(Obstacle obsstacle :bbModel.entFactory.obstacles){
-			obsstacle.sprite.draw(sb,currentAlpha);
+			obsstacle.update();
+			obsstacle.draw(sb,currentAlpha);
 		}
 		for(Spinner spinner :bbModel.entFactory.spinners){
-			spinner.sprite.draw(sb,currentAlpha);
+			spinner.draw(sb,currentAlpha);
 		}
 		for(BlackHole blackHole : bbModel.entFactory.blackHoles){
-			blackHole.sprite.draw(sb,currentAlpha);
+			blackHole.draw(sb,currentAlpha);
 			if(!blackHole.hasPartyEffect){
 				bbModel.blackHolePE.add(blackHole.body.getPosition());
 				blackHole.hasPartyEffect = true;

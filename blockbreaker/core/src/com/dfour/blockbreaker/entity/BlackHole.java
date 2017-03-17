@@ -1,9 +1,5 @@
 package com.dfour.blockbreaker.entity;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -16,30 +12,13 @@ public class BlackHole extends Entity{
 	private Array<Body> bodiesInGravity = new Array<Body>();
 
 	public BlackHole(Body bod, AtlasRegion atlasRegion ){
-		this.body = bod;
-		if(null == atlasRegion){
-			Pixmap pmap = new Pixmap(20,20, Pixmap.Format.RGBA8888);
-			pmap.setColor(Color.BLACK);
-			pmap.fillCircle(10, 10,10);
-			sprite = new Sprite(new Texture(pmap));
-			pmap.dispose();
-			
-		}else{
-			sprite = new Sprite(atlasRegion);
-		}
-		sprite.setX(bod.getPosition().x);
-		sprite.setY(bod.getPosition().y);
-		
-		sprite.setOriginCenter();
+		super(bod,atlasRegion);
 		sprite.setScale(0.35f);
-		sprite.setPosition(
-				(body.getPosition().x) * BBModel.BOX_TO_WORLD -(64/2), 
-				(body.getPosition().y) * BBModel.BOX_TO_WORLD -(64/2));
-
 	}
 	
 	@Override
 	public void update(){
+		super.update();
 		for(Body body : bodiesInGravity){
 			float velx = this.body.getPosition().x - body.getPosition().x;
 			float vely = this.body.getPosition().y - body.getPosition().y;

@@ -35,11 +35,11 @@ public class MenuScreen extends Scene2DScreen {
 	public void show() {
 		super.show();
 		
-		btnStart = new TextButton("Start", skin);
-		btnPrefs = new TextButton("Preferences", skin);
-		btnQuit = new TextButton("Exit", skin);
-		btnLevelDesign = new TextButton("Level Designer", skin);
-		btnCustomGame = new TextButton("Custom Game",skin);
+		btnStart = new TextButton("Start", skin, "Large");
+		btnPrefs = new TextButton("Preferences", skin, "Large");
+		btnQuit = new TextButton("Exit", skin, "Large");
+		btnLevelDesign = new TextButton("Level Designer", skin, "Large");
+		btnCustomGame = new TextButton("Custom Game",skin, "Large");
 
         displayTable.add(btnStart).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);

@@ -29,6 +29,4 @@ public class BBUtils {
 	    String bs = Integer.toHexString((int)(b * 256));
 	    return rs + gs + bs;
 	}
-	
-
 }

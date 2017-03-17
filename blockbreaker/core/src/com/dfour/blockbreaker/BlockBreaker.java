@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -28,14 +27,15 @@ public class BlockBreaker extends Game {
 	//TODO finish designing end screen
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
-    //TOD add brick with hue change that always drops power up (done, needs testing, added to level designer too, also needs testing)
-	//TOD add always magnetic ball upgrade (Done needs testing)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
 	//TODO appscreen fadein
 	//TODO add pause image to hide screen when paused
 	//TODO try move all objects into external xml definition files
+	//TODO hide cursor when in game and show when in menus with custom cursor
+	//TODO Unify all drawing methods for all entities
+	//TODO say win or lose if game over
 	
-	private Screen menu;
+	private MenuScreen menu;
 	private PreferencesScreen prefs;
 	private AppPreferences preferences;
 	private ApplicationScreen app;
