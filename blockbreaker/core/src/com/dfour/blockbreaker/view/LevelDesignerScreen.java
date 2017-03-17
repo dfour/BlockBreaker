@@ -41,6 +41,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	private static final String SPINNERC = "c";
 	private static final String SPINNERA = "a";
 	private static final String BLACKHOLE = "b";
+	private static final String POWER_BRICK = "p";
 	private static final int OB_WIDTH = 30;
 	private static final int OB_HEIGHT = 15;
 	
@@ -166,6 +167,15 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			}
 		});
 		
+		ImageButton btnPowerBrick = new ImageButton(new TextureRegionDrawable(brickPic));
+		btnPowerBrick.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				currentObject = POWER_BRICK;
+			}
+			
+		});
 		
 		TextButton btnBack = new TextButton("Back",skin);
 		btnBack.addListener(new ClickListener(){
@@ -235,6 +245,8 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		guiTable.add(btnSpinnerC).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		guiTable.row();
 		guiTable.add(btnBlackHole).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
+		guiTable.row();
+		guiTable.add(btnPowerBrick).width(OB_WIDTH).height(OB_HEIGHT).pad(10, 0, 0, 0);
 		guiTable.row();
 		guiTable.add(txfMapName).fillX();
 		guiTable.row();
@@ -319,6 +331,14 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
 			super.draw(batch, parentAlpha);
+			if(this.obstacle == POWER_BRICK){
+				float r = (float) Math.random() * 0.7f+ 0.3f;
+				float g = (float) Math.random() * 0.7f+ 0.3f;
+				float b = (float) Math.random() * 0.7f+ 0.3f;
+				batch.setColor(r,g,b,1);
+			}else{
+				batch.setColor(1,1,1,1);
+			}
 			batch.draw(defaultRegion, getX(), getY(), getOriginX(), getOriginY(),
 		            getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 		}
@@ -340,6 +360,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				pmap.setColor(r,g,b,1f);
 				pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
 				setImage(new TextureRegion(new Texture(pmap)), BRICK);
+				pmap.dispose();
 			}else if(currentObject == LIGHT){
 				setImage(lightImage, LIGHT);
 			}else if(currentObject == LEFT){
@@ -354,6 +375,13 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				setImage(spinnera, SPINNERA);
 			}else if(currentObject == BLACKHOLE){
 				setImage(blackHole, BLACKHOLE);
+			}else if(currentObject == POWER_BRICK){
+				Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
+				pmap.setColor(new Color(1,1,1,0.3f));
+				pmap.fill();
+				pmap.setColor(1,1,1,1);
+				pmap.drawRectangle(0, 0, OB_WIDTH,OB_HEIGHT);
+				setImage(null,POWER_BRICK);
 			}
 		}
 	}

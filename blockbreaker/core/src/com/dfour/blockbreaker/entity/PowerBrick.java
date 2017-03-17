@@ -11,11 +11,10 @@ public class PowerBrick extends Brick{
 	public PowerBrick(Body bod) {
 		super(bod);
 		Pixmap pmap = new Pixmap(brickWidth,brickHeight, Pixmap.Format.RGBA8888);
-		float w = 0.7f+ 0.3f;
-		color = new Color(w,w,w,0.3f);
+		color = new Color(1,1,1,0.3f);
 		pmap.setColor(color);
 		pmap.fill();
-		pmap.setColor(w,w,w,1f);
+		pmap.setColor(1,1,1,1);
 		pmap.drawRectangle(0, 0, brickWidth,brickHeight);
 		this.sprite = new Sprite(new Texture(pmap));
 		pmap.dispose();
@@ -24,6 +23,7 @@ public class PowerBrick extends Brick{
 	@Override
 	public void update() {
 		super.update();
+		// TODO change from random colour to hue cycle using BButils
 		float r = (float) Math.random() * 0.7f+ 0.3f;
 		float g = (float) Math.random() * 0.7f+ 0.3f;
 		float b = (float) Math.random() * 0.7f+ 0.3f;

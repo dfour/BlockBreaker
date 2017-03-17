@@ -10,6 +10,9 @@ public class Entity {
 	public Body body;
 	protected int width;
 	protected int height;
+	protected boolean hasAnimation = false;
+	protected boolean hasDeathanimation = false;
+	
 	
 	protected void update(){
 		sprite.setPosition(body.getPosition().x - width/2f, body.getPosition().y - height/2f);

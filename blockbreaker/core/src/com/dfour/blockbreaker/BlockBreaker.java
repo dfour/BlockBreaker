@@ -27,10 +27,9 @@ public class BlockBreaker extends Game {
 	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
 	//TODO create bug reporter( in game or online )
-	//TODO control mapping to allow user to map their own keys (done)
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
-    //TODO add brick with hue change that always drops power up (done, needs testing)
-	//TODO add always magnetic ball upgrade ( mid expensive )
+    //TOD add brick with hue change that always drops power up (done, needs testing, added to level designer too, also needs testing)
+	//TOD add always magnetic ball upgrade (Done needs testing)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
 	//TODO appscreen fadein
 	//TODO add pause image to hide screen when paused

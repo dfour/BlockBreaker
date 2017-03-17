@@ -1,50 +1,37 @@
 package com.dfour.blockbreaker.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BBModel;
 import com.dfour.blockbreaker.BlockBreaker;
 
 public class ShopScreen extends Scene2DScreen{
 
 	private BBModel bbModel;
-	
-	
 	private TextButton btnExBall;
 	private TextButton btnExLazer;
 	private TextButton btnExGuide;
 	private TextButton btnExMPower;
 	private TextButton btnExMStrength;
 	private TextButton btnExRechargeRate;
+	private TextButton btnMagBallOnly;
 	private Label lblExBall;
 	private Label lblExLazer;
 	private Label lblExGuide;
 	private Label lblExMPower;
 	private Label lblExMStrength;
 	private Label lblExRechargeRate;
+	private Label lblExMagBallOnly;
 	private Label lblExBallc;
 	private Label lblExLazerc;
 	private Label lblExGuidec;
 	private Label lblExMPowerc;
 	private Label lblExMStrengthc;
 	private Label lblExRechargeRatec;
+	private Label lblExMagBallOnlyc;
 	private Label lblCash;
 	private Label lblScore;
 	private TextButton btnDone;
@@ -138,6 +125,22 @@ public class ShopScreen extends Scene2DScreen{
 			}
 		});
 		
+		btnMagBallOnly = new TextButton("$5000",skin);
+		btnMagBallOnly.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				if(bbModel.removeCash(5000)){
+					bbModel.eternalMagBall = true;
+					updateCash();
+					btnMagBallOnly.setText("Purchased");
+					lblExMagBallOnlyc.setText("Purchased");
+					btnMagBallOnly.setDisabled(true);
+				}
+			}
+			
+		});
+		
 		btnDone = new TextButton("Done", skin);
 		btnDone.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
@@ -157,6 +160,7 @@ public class ShopScreen extends Scene2DScreen{
 		lblExMPower = new Label("More Magnet Power Storage",skin);
 		lblExMStrength = new Label("Stronger Magnets",skin);
 		lblExRechargeRate = new Label("Faster Magnet Power Recharge",skin);
+		lblExMagBallOnly = new Label("Magnetic Balls",skin);
 		
 		lblExBallc = new Label(bbModel.livesLeft+" Lives",skin);
 		lblExLazerc = new Label(bbModel.baseLazerTimer+" Seconds",skin);
@@ -164,6 +168,11 @@ public class ShopScreen extends Scene2DScreen{
 		lblExMPowerc = new Label(bbModel.baseMagnetPower+" Units",skin);
 		lblExMStrengthc = new Label(bbModel.baseMagnetStrength+" Units",skin);
 		lblExRechargeRatec = new Label(bbModel.magnetRechargeRate*60+" Units per Second",skin);
+		if(bbModel.eternalMagBall){
+			lblExMagBallOnlyc = new Label("Purchased",skin);
+		}else{
+			lblExMagBallOnlyc = new Label("Not Purchased",skin);
+		}
 		
 		// label for cash
 		updateCash();
@@ -198,6 +207,11 @@ public class ShopScreen extends Scene2DScreen{
         displayTable.add(lblExRechargeRatec).uniformX().align(Align.right);
         displayTable.add().width(20f);
         displayTable.add(btnExRechargeRate);
+        displayTable.row();
+        displayTable.add(lblExMagBallOnly).uniformX().align(Align.left);
+        displayTable.add(lblExMagBallOnlyc).uniformX().align(Align.right);
+        displayTable.add().width(20f);
+        displayTable.add(btnMagBallOnly);
         displayTable.row();
         displayTable.add(lblCash);
         displayTable.row();

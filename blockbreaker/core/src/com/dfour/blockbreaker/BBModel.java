@@ -76,6 +76,7 @@ public class BBModel {
 	public int level = 0;
 	public int livesLeft = 3;	// initial lives
 	public int bombsLeft = 0;
+	public boolean eternalMagBall = false;
 	private static final int MAX_LEVELS = 28; //26;
 	
 	private float levelTimer;
@@ -209,6 +210,7 @@ public class BBModel {
 			cash = 500000;
 			magnetRechargeRate = 1;
 			score = 0;
+			eternalMagBall = false;
 		}
 		
 		gameOver = false;
@@ -402,7 +404,7 @@ public class BBModel {
 		
 		// add balls
 		if (this.needToAddBall) {
-			if (nextBallIsMag) {
+			if (nextBallIsMag || eternalMagBall) {
 				entFactory.makeBall(true);
 				nextBallIsMag = false;
 			}else{
