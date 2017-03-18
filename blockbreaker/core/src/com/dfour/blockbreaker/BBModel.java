@@ -100,6 +100,14 @@ public class BBModel {
 	public Array<Vector2> explosions = new Array<Vector2>();
 	public Array<Vector2> pupExplosions = new Array<Vector2>();
 	public Array<Vector2> blackHolePE = new Array<Vector2>();
+	public Array<Vector2> cashPEToShow = new Array<Vector2>();
+	public Array<Vector2> magBallPEToShow = new Array<Vector2>(); 
+	public Array<Vector2> bombFText= new Array<Vector2>(); 
+	public Array<Vector2> ballFText= new Array<Vector2>(); 
+	public Array<Vector2> guideFText= new Array<Vector2>(); 
+	public Array<Vector2> laserFtext= new Array<Vector2>(); 
+	public Array<Vector2> magPowerFText= new Array<Vector2>(); 
+	public Array<Vector2> magStrFText= new Array<Vector2>(); 
 	
 	private Vector3 lastMousePos;
 	public Pad pad;
@@ -116,6 +124,8 @@ public class BBModel {
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;
+	
+	
 	
 
 	public BBModel(AppController cont, BBAssetManager ass) {

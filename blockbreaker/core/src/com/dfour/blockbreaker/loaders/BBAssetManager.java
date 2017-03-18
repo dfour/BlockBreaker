@@ -41,6 +41,15 @@ public class BBAssetManager {
 	public final String lazerPE			="particles/lazer.pe";
 	public final String pupGetEffectPE	="particles/pupGetEffect.pe";
 	public final String laserHitPE		="particles/laserHitSparks.pe";
+	public final String cashPE			="particles/cash.pe";
+	public final String magballPE		="particles/magballpe.pe";
+	public final String bombPE			="particles/bombpe.pe";
+	public final String ballPlusOnePE	="particles/ballplusone.pe";
+	public final String guideLaserPE	="particles/guidelaser.pe";
+	public final String laserPlusPE		="particles/laserplus.pe";
+	public final String magPowerPlusPE	="particles/magpowerplus.pe";
+	public final String magStrPlus		="particles/magstrplus.pe";
+	public final String scorePlus		="particles/scoreplus.pe";
 	
 	public void loadParticleEffects(){
 		ParticleEffectParameter pep = new ParticleEffectParameter(); 
@@ -51,6 +60,15 @@ public class BBAssetManager {
 		manager.load(pupGetEffectPE, ParticleEffect.class, pep);
 		manager.load(laserHitPE, ParticleEffect.class, pep);
 		manager.load(blackHolePE, ParticleEffect.class, pep);
+		manager.load(cashPE, ParticleEffect.class, pep);
+		manager.load(magballPE, ParticleEffect.class, pep);
+		manager.load(bombPE, ParticleEffect.class, pep);
+		manager.load(ballPlusOnePE, ParticleEffect.class, pep);
+		manager.load(guideLaserPE, ParticleEffect.class, pep);
+		manager.load(laserPlusPE, ParticleEffect.class, pep);
+		manager.load(magPowerPlusPE, ParticleEffect.class, pep);
+		manager.load(magStrPlus, ParticleEffect.class, pep);
+		manager.load(scorePlus, ParticleEffect.class, pep);
 	}
 	
 	//Sounds
@@ -75,15 +93,15 @@ public class BBAssetManager {
 	}
 	
 	// Skin
-	public final String skin	= "uiskin.json";
-	public final String neonSkin = "skin/neon-ui.json";
+	//public final String skin	= "uiskin.json";
+	//public final String neonSkin = "skin/neon-ui.json";
 	public final String bbSkin = "skin/bbskin.json";
 	
 	public void loadSkin(){
-		SkinParameter params = new SkinParameter("uiskin.atlas");
-		manager.load(skin, Skin.class, params);
-		SkinParameter params2 = new SkinParameter("skin/neon-ui.atlas");
-		manager.load(neonSkin, Skin.class, params2);
+		//SkinParameter params = new SkinParameter("uiskin.atlas");
+		//manager.load(skin, Skin.class, params);
+		//SkinParameter params2 = new SkinParameter("skin/neon-ui.atlas");
+		//.load(neonSkin, Skin.class, params2);
 		SkinParameter params3 = new SkinParameter("skin/bbskin.atlas");
 		manager.load(bbSkin, Skin.class, params3);
 		

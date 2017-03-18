@@ -116,29 +116,51 @@ public class BBContactListener implements ContactListener {
 			PowerUp pup = (PowerUp) fix.getBody().getUserData();
 			switch(pup.type){
 			case PowerUp.MAG_POWER:
-				parent.getMagPowerUp(); break;
+				parent.getMagPowerUp();
+				parent.magPowerFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.BALL:
-				parent.getExtraBall(false); break;
+				parent.getExtraBall(false);
+				parent.ballFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.MAG_STRENGTH:
-				parent.getMagStrengthPowerUP(); break;
+				parent.getMagStrengthPowerUP(); 
+				parent.magStrFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.LAZER:
-				parent.getLazerPowerUp(); break;
+				parent.getLazerPowerUp(); 
+				parent.laserFtext.add(pup.body.getPosition());
+				break;
 			case PowerUp.MAG_BALL:
-				parent.getExtraBall(true); break;
+				parent.getExtraBall(true);
+				parent.magBallPEToShow.add(pup.body.getPosition());
+				break;
 			case PowerUp.SCORE:
 				parent.score+= 10; break;
 			case PowerUp.GUIDE_LAZER:
-				parent.addGuidLazer(); break;
+				parent.addGuidLazer(); 
+				parent.guideFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.BOMB:
-				parent.addBombPowerUp(); break;
+				parent.addBombPowerUp(); 
+				parent.bombFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.CASH5:
-				parent.addCash(5); break;
+				parent.addCash(5); 
+				parent.cashPEToShow.add(pup.body.getPosition());
+				break;
 			case PowerUp.CASH10:
-				parent.addCash(10); break;
+				parent.addCash(10); 
+				parent.cashPEToShow.add(pup.body.getPosition());
+				break;
 			case PowerUp.CASH25:
-				parent.addCash(25); break;
+				parent.addCash(25); 
+				parent.cashPEToShow.add(pup.body.getPosition());
+				break;
 			case PowerUp.CASH100:
-				parent.addCash(100); break;
+				parent.addCash(100);
+				parent.cashPEToShow.add(pup.body.getPosition());
+				break;
 			}
 			pup.isDead = true;
 		}
