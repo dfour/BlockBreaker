@@ -107,7 +107,8 @@ public class BBModel {
 	public Array<Vector2> guideFText= new Array<Vector2>(); 
 	public Array<Vector2> laserFtext= new Array<Vector2>(); 
 	public Array<Vector2> magPowerFText= new Array<Vector2>(); 
-	public Array<Vector2> magStrFText= new Array<Vector2>(); 
+	public Array<Vector2> magStrFText= new Array<Vector2>();
+	public Array<Vector2> scoreFText = new Array<Vector2>();
 	
 	private Vector3 lastMousePos;
 	public Pad pad;
@@ -121,6 +122,7 @@ public class BBModel {
 	public static final int EXPLOSION_SOUND = 0;
 	public static final int BOING_SOUND = 1;
 	public static final int PING_SOUND = 2;
+	
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;

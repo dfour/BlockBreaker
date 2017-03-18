@@ -50,6 +50,7 @@ public class BBAssetManager {
 	public final String magPowerPlusPE	="particles/magpowerplus.pe";
 	public final String magStrPlus		="particles/magstrplus.pe";
 	public final String scorePlus		="particles/scoreplus.pe";
+	public final String ghostTail		="particles/ballghosttail.pe";
 	
 	public void loadParticleEffects(){
 		ParticleEffectParameter pep = new ParticleEffectParameter(); 
@@ -69,6 +70,7 @@ public class BBAssetManager {
 		manager.load(magPowerPlusPE, ParticleEffect.class, pep);
 		manager.load(magStrPlus, ParticleEffect.class, pep);
 		manager.load(scorePlus, ParticleEffect.class, pep);
+		manager.load(ghostTail,ParticleEffect.class,pep);
 	}
 	
 	//Sounds

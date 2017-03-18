@@ -136,7 +136,9 @@ public class BBContactListener implements ContactListener {
 				parent.magBallPEToShow.add(pup.body.getPosition());
 				break;
 			case PowerUp.SCORE:
-				parent.score+= 10; break;
+				parent.score+= 10;
+				parent.scoreFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.GUIDE_LAZER:
 				parent.addGuidLazer(); 
 				parent.guideFText.add(pup.body.getPosition());
