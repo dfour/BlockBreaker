@@ -30,11 +30,10 @@ public class BlockBreaker extends Game {
 	//TODO add pause image to hide screen when paused
 	//TODO try move all objects into external xml definition files
 	//TODO hide cursor when in game and show when in menus with custom cursor
-	//TODO say win or lose if game over
 	//TODO sticky pad/ tractor beam
 	//TODO negative power ups such as drunk/slow/angled
 	//TODO add larger pad mechanic
-	//TODO make ball ghost trail
+	//TODO fix bug where you can but magnetic balls more than once
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;
@@ -132,6 +131,7 @@ public class BlockBreaker extends Game {
 					currentSongId = currentSound.loop(preferences.getVolume());
 				}
 				if(app == null) app = new ApplicationScreen(this);
+				app.fadeIn = 1f;
 				this.setScreen(app);
 				break;
 			case ENDGAME:

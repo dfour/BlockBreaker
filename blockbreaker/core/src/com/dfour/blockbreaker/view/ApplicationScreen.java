@@ -57,6 +57,7 @@ public class ApplicationScreen implements Screen {
 	private BitmapFont visfont;
 	private BitmapFont tekfont;
 	private TextureRegion gameOver;
+	private TextureRegion gameOverwin;
 	
 	private ParticleEffect sparks;
 	private ParticleEffect explosion;
@@ -136,7 +137,7 @@ public class ApplicationScreen implements Screen {
 	private TextureAtlas atlasGui;
 	private TextureAtlas atlasLazor;
 	
-	private float fadeIn = 1f;
+	public float fadeIn = 1f;
 	private float fadeOut = 1f;
 	private float currentAlpha = 1f;
 	private boolean isReturning;
@@ -279,7 +280,11 @@ public class ApplicationScreen implements Screen {
 			}
 			if(bbModel.gameOver){
 				this.doGameOverStuff(delta);
-				pb.draw(this.gameOver, sw/2 -this.gameOver.getRegionWidth() / 2,sh/2 -this.gameOver.getRegionHeight() / 2);
+				if(bbModel.gameOverWin){
+					pb.draw(gameOverwin, sw/2 -gameOverwin.getRegionWidth() / 2,sh/2 -gameOverwin.getRegionHeight() / 2);
+				}else{
+					pb.draw(gameOver, sw/2 -gameOver.getRegionWidth() / 2,sh/2 -gameOver.getRegionHeight() / 2);
+				}
 				visfont.draw(pb, "Thanks for playing. Updates coming soon.", 100 , sh/2 - 150);
 				visfont.draw(pb, "Visit gamedevlopment.blog for more info.", 100 , sh/2 - 160);
 				visfont.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
@@ -300,6 +305,7 @@ public class ApplicationScreen implements Screen {
 			removeConstantPE();
 			bbModel.showShop = false;
 			nextScreen = BlockBreaker.SHOP;
+			fadeOut = 1f;
 			isReturning = true;
 		}
 		
@@ -565,6 +571,7 @@ public class ApplicationScreen implements Screen {
 		visfont 		= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
 		tekfont 		= parent.assMan.manager.get("font/tekton.fnt", BitmapFont.class);
 		gameOver 		= atlas.findRegion("gameover");
+		gameOverwin		= atlas.findRegion("gameoverwin");
 		lazerStartBg 	= atlasLazor.findRegion("lazorStart");
 		lazerStartOver 	= atlasLazor.findRegion("lazorStartOver");
 		lazerMidBg 		= atlasLazor.findRegion("laser");

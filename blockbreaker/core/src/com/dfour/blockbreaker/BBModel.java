@@ -89,6 +89,7 @@ public class BBModel {
 	public boolean needToAddBall = false;
 	public boolean isFiringLazer = false;
 	public boolean gameOver = false;
+	public boolean gameOverWin = false;
 	public boolean showShop = false;
 	public boolean nextBallIsMag = false;
 	private boolean changingLevel = false;
@@ -227,6 +228,7 @@ public class BBModel {
 		}
 		
 		gameOver = false;
+		gameOverWin = false;
 		changingLevel = false;
 		entFactory.ballCount = 0;
 		isFiringLazer = false;
@@ -286,7 +288,7 @@ public class BBModel {
 		debugFeatures();
 		updateLazer(delta);
 		updateBombs();
-		world.step(delta / 5, 3, 3);
+		world.step(delta / 4, 3, 3);
 		updateBalls();
 		updateMagnet();
 		updatePowerUps();
@@ -306,6 +308,7 @@ public class BBModel {
 				levelTimer = 1f;
 				if (level > MAX_LEVELS || BlockBreaker.isCustomMapMode) {
 					gameOver = true;
+					gameOverWin = true;
 				} else {
 					if(!gameOver){
 						this.showShop = true;
