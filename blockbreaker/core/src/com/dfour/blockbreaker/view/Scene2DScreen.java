@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
 
@@ -52,6 +53,8 @@ public class Scene2DScreen implements Screen{
 		rootTable.row().expandY();
 		displayTable = new Table();
 		displayTable.setDebug(BlockBreaker.debug);
+		displayTable.setBackground(new NinePatchDrawable(atlasGui.createPatch("darkblockbutton")));
+	    displayTable.pad(30);
 		rootTable.add(displayTable);
 		stage.addActor(rootTable);
 		Gdx.input.setInputProcessor(stage);

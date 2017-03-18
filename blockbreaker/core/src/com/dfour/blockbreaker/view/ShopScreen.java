@@ -178,9 +178,6 @@ public class ShopScreen extends Scene2DScreen{
 		// label for cash
 		updateCash();
 		
-        displayTable.setBackground(new NinePatchDrawable(atlasGui.createPatch("darkblockbutton")));
-        displayTable.pad(30);
-		
         displayTable.add(lblExBall).uniformX().align(Align.left);
         displayTable.add(lblExBallc).uniformX().align(Align.right);
         displayTable.add().width(20f);

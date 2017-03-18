@@ -146,28 +146,28 @@ public class ControlMapScreen extends Scene2DScreen{
 	    buttonTable.add(btnDefault).padRight(15);
 		buttonTable.add(btnSave);
 		
-		displayTable.add(lblControlLeft);
+		displayTable.add(lblControlLeft).width(200);
 		displayTable.add(txfControlLeft).width(200);
 		displayTable.row();
-		displayTable.add(lblControlRight);
+		displayTable.add(lblControlRight).width(200);
 		displayTable.add(txfControlRight).width(200);
 		displayTable.row();
-		displayTable.add(lblControlPush);
+		displayTable.add(lblControlPush).width(200);
 		displayTable.add(txfControlPush).width(200);
 		displayTable.row();
-		displayTable.add(lblControlPull);
+		displayTable.add(lblControlPull).width(200);
 		displayTable.add(txfControlPull).width(200);
 		displayTable.row();
-		displayTable.add(lblControlBomb);
+		displayTable.add(lblControlBomb).width(200);
 		displayTable.add(txfControlBomb).width(200);
 		displayTable.row();
-		displayTable.add(lblControlPause);
+		displayTable.add(lblControlPause).width(200);
 		displayTable.add(txfControlPause).width(200);
 		displayTable.row();
-		displayTable.add(lblControlQuit);
+		displayTable.add(lblControlQuit).width(200);
 		displayTable.add(txfControlQuit).width(200);
-		displayTable.row();
-		displayTable.add(buttonTable);
+		displayTable.row().padTop(20);
+		displayTable.add(buttonTable).colspan(2);
 
 	}
 

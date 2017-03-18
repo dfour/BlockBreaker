@@ -169,7 +169,7 @@ public class PreferencesScreen extends Scene2DScreen {
         displayTable.row();
         displayTable.add(lightingQuality).uniformX().minWidth(325);// lighting quality label
         displayTable.add(lightSlider).align(Align.left);
-        displayTable.row();
+        displayTable.row().padTop(20);
         displayTable.add(buttonTable).colspan(2).center();
 
         

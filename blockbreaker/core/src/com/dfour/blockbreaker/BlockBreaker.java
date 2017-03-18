@@ -32,7 +32,6 @@ public class BlockBreaker extends Game {
 	//TODO try move all objects into external xml definition files
 	//TODO hide cursor when in game and show when in menus with custom cursor
 	//TODO say win or lose if game over
-	//TODO text that floats/fades when you get a score(maybe particle effect)
 	//TODO sticky pad/ tractor beam
 	//TODO negative power ups such as drunk/slow/angled
 	//TODO add larger pad mechanic
