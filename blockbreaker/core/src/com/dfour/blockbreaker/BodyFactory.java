@@ -17,6 +17,7 @@ public class BodyFactory {
 	public static final int WOOD = 1;
 	public static final int RUBBER = 2;
 	public static final int FLOATER = 3;
+	public static final int ICE = 4;
 										
 	/** //  **acebsp
 	public static final short CATEGORY_PLAYER 			= 0b00000001;
@@ -151,6 +152,10 @@ public class BodyFactory {
 			break;
 		case FLOATER:
 			fixtureDef.density = 1f;
+			fixtureDef.friction = 0f;
+			fixtureDef.restitution = 1f;
+		case ICE:
+			fixtureDef.density = 2f;
 			fixtureDef.friction = 0f;
 			fixtureDef.restitution = 1f;
 			default:

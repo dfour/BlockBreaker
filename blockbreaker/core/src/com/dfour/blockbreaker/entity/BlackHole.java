@@ -13,7 +13,7 @@ public class BlackHole extends Entity{
 
 	public BlackHole(Body bod, AtlasRegion atlasRegion ){
 		super(bod,atlasRegion);
-		sprite.setScale(0.35f);
+		sprite.setScale(0.5f);
 	}
 	
 	@Override
@@ -27,8 +27,7 @@ public class BlackHole extends Entity{
 				velx = velx / length;
 				vely = vely / length;
 			}
-
-			body.applyForceToCenter(new Vector2(velx * 150, vely * 150), true);	
+			body.applyForceToCenter(new Vector2(velx * (75 - length * 2), vely * (75 - length * 2)), true);	
 		}
 		
 	}

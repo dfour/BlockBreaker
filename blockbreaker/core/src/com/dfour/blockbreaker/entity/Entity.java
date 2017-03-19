@@ -2,6 +2,7 @@ package com.dfour.blockbreaker.entity;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -16,7 +17,10 @@ public class Entity {
 	protected int width;
 	protected int height;
 	protected boolean hasAnimation = false;
+	protected Animation normalAnimation;
+	protected float normalAnimationScale = 1f;
 	protected boolean hasDeathAnimation = false;
+	protected float stateTime = 0f;
 	
 	public Entity(Body b, Texture tex){
 		body = b;
@@ -42,6 +46,12 @@ public class Entity {
 		updateSprite();
 	}
 	
+	public Entity(Body b, Animation anim){
+		body = b;
+		hasAnimation = true;
+		normalAnimation = anim;
+	}
+	
 	public Entity(Body b){
 		body = b;
 	}
@@ -53,14 +63,21 @@ public class Entity {
 	}
 	
 	protected void update(){
-		sprite.setPosition(body.getPosition().x * BBModel.BOX_TO_WORLD - width/2f, 
-						   body.getPosition().y * BBModel.BOX_TO_WORLD - height/2f);
-		sprite.setRotation(body.getAngle() * 57.2958f);
+		if(!hasAnimation){
+			sprite.setPosition(body.getPosition().x * BBModel.BOX_TO_WORLD - width/2f, 
+					body.getPosition().y * BBModel.BOX_TO_WORLD - height/2f);
+			sprite.setRotation(body.getAngle() * 57.2958f);
+		}
+		
 	}
 	
-	public void draw(SpriteBatch sb, float alpha){
+	public void draw(SpriteBatch sb, float alpha, float delta){
+		stateTime+= delta;
 		if(hasAnimation){
 			// draw animation
+			sb.draw(normalAnimation.getKeyFrame(stateTime,true), 
+					(body.getPosition().x * BBModel.BOX_TO_WORLD - width/2f), 
+					(body.getPosition().y * BBModel.BOX_TO_WORLD - height/2f),width,height);
 		}else{
 			//draw image
 			sprite.draw(sb,alpha);

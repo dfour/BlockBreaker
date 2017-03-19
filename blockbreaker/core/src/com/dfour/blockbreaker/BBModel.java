@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -457,7 +458,7 @@ public class BBModel {
 					if(this.livesLeft > 0){
 						ball.isAttached = true;
 						if(!eternalMagBall){
-							ball.setNormalBall(atlas.findRegion("ball"));
+							ball.setNormalBall(new Animation(0.1f,atlas.findRegions("ballanim")));
 						}
 						ball.isDead = false;
 						this.livesLeft-=1;
@@ -501,7 +502,7 @@ public class BBModel {
 				pad.lazLightRight.setActive(true);
 			} else {
 				isFiringLazer = false;
-				lazerTimer = 5f;
+				lazerTimer = baseLazerTimer;
 			}
 			
 			world.rayCast(
@@ -641,7 +642,7 @@ public class BBModel {
 
 	public void getLazerPowerUp() {
 		this.isFiringLazer = true;
-		this.lazerTimer += 4f;
+		this.lazerTimer = baseLazerTimer;
 	}
 
 	public void empty() {

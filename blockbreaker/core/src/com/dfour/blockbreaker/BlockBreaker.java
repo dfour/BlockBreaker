@@ -34,6 +34,8 @@ public class BlockBreaker extends Game {
 	//TODO negative power ups such as drunk/slow/angled
 	//TODO add larger pad mechanic
 	//TODO fix bug where you can but magnetic balls more than once
+	//TODO add pause menu  (with buttons n stuffs for the pressings)
+	//TODO make GUI class that overlays application screen using stage
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;

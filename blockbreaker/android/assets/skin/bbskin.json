@@ -78,6 +78,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: visitor_medium
 		fontColor: NeonAqua
 	}
+	small: {
+		font: visitor
+		fontColor: NeonAqua
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {
@@ -96,6 +100,11 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-vertical: {
 		background: chkboxempty
 		knobBefore: chkboxfull
+	}
+	big: {
+		background: pbouter
+		knobBefore: fullpbstart
+		knobAfter: emptypbend
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {

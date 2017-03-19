@@ -50,19 +50,10 @@ public class EntityFactory {
 				BodyFactory.RUBBER, BodyType.KinematicBody);
 		bodyFactory.addCircleFixture(padBody, -5, 0, 1f, BodyFactory.RUBBER);
 		bodyFactory.addCircleFixture(padBody, 5, 0, 1f, BodyFactory.RUBBER);
-
-		TextureRegion[] texs = new TextureRegion[6];
-		texs[0] = new TextureRegion(atlas.findRegion("hover", 1));
-		texs[1] = new TextureRegion(atlas.findRegion("hover", 2));
-		texs[2] = new TextureRegion(atlas.findRegion("hover", 3));
-		texs[3] = new TextureRegion(atlas.findRegion("hover", 4));
-		texs[4] = new TextureRegion(atlas.findRegion("hover", 5));
-		texs[5] = new TextureRegion(atlas.findRegion("hover", 6));
-
 		pad = new Pad(padBody, atlas.createSprite("paddel"),
 				atlas.createSprite("paddel-magnet-pull"),
 				atlas.createSprite("paddel-magnet-push"), new Animation(0.05f,
-						texs));
+						atlas.findRegions("hover")));
 		padBody.setUserData(pad);
 		
 		pad.lazLightLeft = lf.addChainLight(new float[] { -5.5f, 0, -5, 0, -4.5f, 0 });
@@ -112,7 +103,7 @@ public class EntityFactory {
 		ballCount+=1;
 		Body ballBody = bodyFactory.makeCirclePolyBody(32, 15, 0.5f,
 				BodyFactory.RUBBER, BodyType.DynamicBody);
-		Ball ball = new Ball(ballBody, atlas.findRegion("ball"));
+		Ball ball = new Ball(ballBody, new Animation(0.1f,atlas.findRegions("ballanim")));
 		ballBody.setUserData(ball);
 		ballBody.setGravityScale(0);
 		ballBody.setLinearDamping(0);
@@ -121,7 +112,7 @@ public class EntityFactory {
 		ball.light = light;
 		ball.light.setDistance(LightFactory.LIGHT_SIZE_LOW);
 		if(isMag) {
-			ball.setMagBall(atlas.findRegion("mag_ball"));
+			ball.setMagBall(new Animation(0.1f,atlas.findRegions("magballanim")));
 		}
 		balls.add(ball);
 		return ball;
@@ -171,7 +162,7 @@ public class EntityFactory {
 			verts[2] = new Vector2(0.8f,-1);
 			verts[3] = new Vector2(-0.8f,1);
 		}
-		Body obBody = bodyFactory.makePolygonShapeBody(verts, x+1, y,  BodyFactory.WOOD, BodyType.StaticBody);
+		Body obBody = bodyFactory.makePolygonShapeBody(verts, x+1, y,  BodyFactory.ICE, BodyType.StaticBody);
 		Obstacle obstacle = new Obstacle(obBody, atlas.findRegion("obstacle"), flip);
 		obstacles.add(obstacle);
 		return obstacle;
@@ -195,7 +186,7 @@ public class EntityFactory {
 	
 	public BlackHole addBlackHole(int x, int y) {
 		Body bhbod = bodyFactory.makeCirclePolyBody(x+1, y, 1, BodyFactory.WOOD, BodyType.StaticBody);
-		bodyFactory.makeSensorFixture(bhbod, 5);
+		bodyFactory.makeSensorFixture(bhbod, 10);
 		BlackHole bh = new BlackHole(bhbod, atlas.findRegion("blackhole"));
 		bhbod.setUserData(bh);
 		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts

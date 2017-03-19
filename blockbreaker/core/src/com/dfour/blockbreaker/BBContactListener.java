@@ -82,7 +82,8 @@ public class BBContactListener implements ContactListener {
 
 	private void bombHitSomething(Bomb bomb, Fixture fb) {
 		System.out.println("Bomb hit something");
-		if(fb.getBody().getType() == BodyType.StaticBody){
+		if(fb.getBody().getType() == BodyType.StaticBody
+				&& !fb.isSensor()){
 			parent.createBlast(bomb); // only go off for static bricks
 		}
 	}

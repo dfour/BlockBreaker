@@ -21,11 +21,19 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.dfour.blockbreaker.BBModel;
 import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
+import com.dfour.blockbreaker.IconBar;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
 import com.dfour.blockbreaker.entity.BlackHole;
@@ -55,7 +63,6 @@ public class ApplicationScreen implements Screen {
 	private boolean isPaused = false;
 	private TextureRegion background;
 	private BitmapFont visfont;
-	private BitmapFont tekfont;
 	private TextureRegion gameOver;
 	private TextureRegion gameOverwin;
 	
@@ -131,6 +138,7 @@ public class ApplicationScreen implements Screen {
 	public static final int SCORE_FTEXT = 14;
 	
 	public static final int GHOST_TAIL = 15;
+	public static final int MAGGHOST_TAIL = 16;
 	
 	private float gameOverTimer = 5f;
 	private TextureAtlas atlas;
@@ -144,8 +152,19 @@ public class ApplicationScreen implements Screen {
 	private int nextScreen;
 	private ParticleEffect ghostTailEffect;
 	private ParticleEffectPool partyGhostTailPool;
-
-	
+	private ParticleEffect magGhostTailEffect;
+	private ParticleEffectPool partyMagGhostTailPool;
+	private Stage stage;
+	private Table displayTable;
+	private Skin skin;
+	private IconBar magnetBar;
+	private IconBar laserBar;
+	private Label scoreCountLabel;
+	private Label cashCountLabel;
+	private IconBar guideBar;
+	private Label bombCountLabel;
+	private Label magnetRechargeRateLabel;
+	private Label magnetUnitsTotal;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -173,6 +192,73 @@ public class ApplicationScreen implements Screen {
 		pb = new SpriteBatch();
 		
 		createEffects();
+		
+		
+		stage = new Stage(new ExtendViewport(800,660));
+		displayTable = new Table();
+		displayTable.setDebug(true);
+		displayTable.setFillParent(true);
+		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
+		
+		Table buttonTable = new Table();
+		buttonTable.setDebug(true);
+		buttonTable.setWidth(800);
+		buttonTable.setHeight(60);
+		buttonTable.pad(10);
+		buttonTable.setBackground(new NinePatchDrawable(atlasGui.createPatch("darkblockbutton")));
+		
+		Image magnetImage = new Image(atlas.findRegion("magnet"));
+		Image laserImage = new Image(atlas.findRegion("lasericon"));
+		Image laserGuideImage = new Image(atlas.findRegion("laserguideicon"));
+		magnetBar = new IconBar(magnetImage,skin);
+		laserBar = new IconBar(laserImage,skin);
+		guideBar = new IconBar(laserGuideImage,skin);
+		laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
+		Label scoreTextLabel = new Label("Score:",skin,"small");
+		Label cashTextLabel = new Label ("Cash:",skin,"small");
+		Label bombTextLabel = new Label ("Bombs:",skin,"small");
+		magnetRechargeRateLabel = new Label ("Recharge Rate: "+(bbModel.magnetRechargeRate * 60)+"/s",skin,"small");
+		magnetUnitsTotal = new Label (bbModel.magnetPower+"/"+bbModel.baseMagnetPower,skin,"small");
+		scoreCountLabel = new Label(""+bbModel.score,skin,"small");
+		scoreCountLabel.setAlignment(Align.right);
+		cashCountLabel = new Label("$"+bbModel.cash,skin,"small");
+		bombCountLabel = new Label(""+bbModel.bombsLeft,skin,"small");
+		
+		
+		buttonTable.add(magnetBar).expandX().align(Align.left).padTop(5);
+		buttonTable.add(magnetUnitsTotal).width(75).padTop(5);
+		buttonTable.add(magnetRechargeRateLabel).width(150).padTop(5);
+		buttonTable.add().width(100).padTop(5);
+		buttonTable.add(scoreTextLabel).width(50).align(Align.left).padTop(5);
+		buttonTable.add(scoreCountLabel).width(50).align(Align.right).padTop(5);
+		buttonTable.row();
+		buttonTable.add(laserBar).expandX().align(Align.left);
+		buttonTable.add();
+		buttonTable.add();
+		buttonTable.add().width(100);
+		buttonTable.add(cashTextLabel).align(Align.left);
+		buttonTable.add(cashCountLabel).align(Align.right);
+		buttonTable.row();
+		buttonTable.add(guideBar).expandX().align(Align.left);
+		buttonTable.add();
+		buttonTable.add();
+		buttonTable.add().width(100);
+		buttonTable.add(bombTextLabel).align(Align.left);
+		buttonTable.add(bombCountLabel).align(Align.right);
+		
+		displayTable.add().width(800).height(600);
+		displayTable.row();
+		displayTable.add(buttonTable).center().height(60).width(800);
+		
+		
+		
+		stage.addActor(displayTable);
+		
+		
+		
+		
+		
+		
 	}
 
 	@Override
@@ -197,6 +283,7 @@ public class ApplicationScreen implements Screen {
 		debugMatrix = viewport.getCamera().combined.cpy();
 		debugMatrix.scl(BBModel.BOX_TO_WORLD);
 		bbModel.cam = cam;
+		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
@@ -214,7 +301,15 @@ public class ApplicationScreen implements Screen {
 	    
 	    
 	    if(!isPaused){
-	    	bbModel.doLogic(delta);	
+	    	bbModel.doLogic(delta);
+	    	magnetBar.updateProgress((bbModel.magnetPower/(float)bbModel.baseMagnetPower));
+	    	laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
+	    	guideBar.updateProgress((bbModel.guideLazerTimer/ bbModel.baseGuideLazerTimer));
+	    	magnetRechargeRateLabel.setText("Recharge Rate: "+(bbModel.magnetRechargeRate * 60)+"/s");
+			magnetUnitsTotal.setText(bbModel.magnetPower+"/"+bbModel.baseMagnetPower);
+	    	scoreCountLabel.setText(bbModel.score+"");
+	    	cashCountLabel.setText("$"+bbModel.cash);
+	    	bombCountLabel.setText(""+bbModel.bombsLeft);
 	    }
 	    
 	    if(fadeIn > 0){
@@ -228,7 +323,9 @@ public class ApplicationScreen implements Screen {
 			}
 		}
 	    
-	    addParticleEffects();
+	    if(!isPaused){
+	    	addParticleEffects();
+	    }
 	    
 		sb.setProjectionMatrix(cam.combined); // set SpriteBatch Matrix
 		
@@ -279,27 +376,18 @@ public class ApplicationScreen implements Screen {
 				visfont.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
 			}
 			if(bbModel.gameOver){
-				this.doGameOverStuff(delta);
 				if(bbModel.gameOverWin){
+					this.doGameOverStuff(delta, true);
 					pb.draw(gameOverwin, sw/2 -gameOverwin.getRegionWidth() / 2,sh/2 -gameOverwin.getRegionHeight() / 2);
 				}else{
+					this.doGameOverStuff(delta, false);
 					pb.draw(gameOver, sw/2 -gameOver.getRegionWidth() / 2,sh/2 -gameOver.getRegionHeight() / 2);
 				}
-				visfont.draw(pb, "Thanks for playing. Updates coming soon.", 100 , sh/2 - 150);
-				visfont.draw(pb, "Visit gamedevlopment.blog for more info.", 100 , sh/2 - 160);
-				visfont.draw(pb, "Press Escape to return to the menu and try and beat your score of "+bbModel.score+"00", 100 , sh/2 - 170);
 			}
-			
-			if(bbModel.magnetPower > 0){
-				pb.setColor(BBUtils.hsvToRgba(((bbModel.magnetPower/(float)bbModel.baseMagnetPower)* 0.35f), 0.9f,0.9f,0.5f));
-				pb.draw(magnetPowerBar, 39, 20,(bbModel.magnetPower/(float)bbModel.baseMagnetPower) * 521 ,10);
-				pb.setColor(new Color(1,1,1,0.5f));
-			}
-			tekfont.draw(pb,"Score: "+bbModel.score+"00",700,35);
-			pb.draw(magnetPowerBarOverlay,15,15,550,20);
-			pb.draw(bombIcon,17,35,16,16);
-			visfont.draw(pb,bbModel.bombsLeft+"",40,45);
 		pb.end();
+		
+		stage.act();
+		stage.draw();
 		
 		if(bbModel.showShop){
 			removeConstantPE();
@@ -309,7 +397,7 @@ public class ApplicationScreen implements Screen {
 			isReturning = true;
 		}
 		
-		if(controller.getEscape()){
+		if(controller.getEscape() && this.isPaused){
 			controller.setEscape(false);
 			nextScreen = BlockBreaker.MENU;
 			isReturning = true;
@@ -374,30 +462,30 @@ public class ApplicationScreen implements Screen {
 
 	private void drawGameObjects(float delta) {
 		for(Brick brick :bbModel.entFactory.bricks ){
-			brick.draw(sb,currentAlpha);
+			brick.draw(sb,currentAlpha,delta);
 		}
 		for(LightBall lBalls :bbModel.entFactory.lightBalls ){
 			lBalls.update();
-			lBalls.draw(sb,currentAlpha);
+			lBalls.draw(sb,currentAlpha,delta);
 		}
 		for(Ball ball :bbModel.entFactory.balls){
-			ball.draw(sb,currentAlpha);
+			ball.draw(sb,currentAlpha,delta);
 		}
 		for(PowerUp pup :bbModel.entFactory.pups){
-			pup.draw(sb,currentAlpha);
+			pup.draw(sb,currentAlpha,delta);
 		}
 		for(Bomb bomb :bbModel.entFactory.bombs){
-			bomb.draw(sb,currentAlpha);
+			bomb.draw(sb,currentAlpha,delta);
 		}
 		for(Obstacle obsstacle :bbModel.entFactory.obstacles){
 			obsstacle.update();
-			obsstacle.draw(sb,currentAlpha);
+			obsstacle.draw(sb,currentAlpha,delta);
 		}
 		for(Spinner spinner :bbModel.entFactory.spinners){
-			spinner.draw(sb,currentAlpha);
+			spinner.draw(sb,currentAlpha,delta);
 		}
 		for(BlackHole blackHole : bbModel.entFactory.blackHoles){
-			blackHole.draw(sb,currentAlpha);
+			blackHole.draw(sb,currentAlpha,delta);
 			if(!blackHole.hasPartyEffect){
 				bbModel.blackHolePE.add(blackHole.body.getPosition());
 				blackHole.hasPartyEffect = true;
@@ -410,7 +498,11 @@ public class ApplicationScreen implements Screen {
 
 	private void addParticleEffects() {
 		for(Ball ball :bbModel.entFactory.balls){
-			addPartyEffect(ball.body.getPosition(),GHOST_TAIL);
+			if(ball.isMagBall){
+				addPartyEffect(ball.body.getPosition(),MAGGHOST_TAIL);
+			}else{
+				addPartyEffect(ball.body.getPosition(),GHOST_TAIL);
+			}
 		}
 	    addParticleEffectArray(bbModel.magPowerFText,MAGPOWER_FTEXT);
 	    addParticleEffectArray(bbModel.laserFtext,LASER_FTEXT);
@@ -490,14 +582,7 @@ public class ApplicationScreen implements Screen {
 
 	
 	private void drawLazor(float x, float y, float length){
-		if(controller.isMouse1Down()){
-			sb.setColor(.2f,1f,.2f,currentAlpha);
-		}else if(controller.isMouse2Down()){
-			sb.setColor(1f,.2f,.2f,currentAlpha);
-		}else{
-			sb.setColor(.2f,.2f,1f,currentAlpha);
-		}
-		
+		sb.setColor(BBUtils.hsvToRgba(((bbModel.lazerTimer / bbModel.baseLazerTimer) * 0.4f), 1, 1, 0.75f));
 		if(length < 0){
 			length = 0;
 		}
@@ -540,16 +625,19 @@ public class ApplicationScreen implements Screen {
 		case MAGSTR_FTEXT :effect = partyMagStrPool.obtain();break;
 		case SCORE_FTEXT: effect = partyScorePlusPool.obtain(); break;
 		case GHOST_TAIL: effect = partyGhostTailPool.obtain(); break;
+		case MAGGHOST_TAIL: effect = partyMagGhostTailPool.obtain(); break;
 		default:	 	effect = partySparksPool.obtain(); break;
 		}
 		effect.setPosition(pos.x * BBModel.BOX_TO_WORLD, pos.y * BBModel.BOX_TO_WORLD);
 		effects.add(effect);	
 	}
 	
-	private void doGameOverStuff(float delta) {
+	private void doGameOverStuff(float delta, boolean win) {
 		float x = (float) Math.random() * 80;
 		float y = (float) Math.random() * 60;
-		this.addPartyEffect(new Vector2(x,y), (int)(Math.random()*3)+1);
+		if(win){
+			this.addPartyEffect(new Vector2(x,y), (int)(Math.random()*3)+1);
+		}
 		gameOverTimer-= delta;
 		if(gameOverTimer < 0){
 			parent.changeScreen(BlockBreaker.ENDGAME);
@@ -569,7 +657,6 @@ public class ApplicationScreen implements Screen {
 		
 		background 		= atlasGui.findRegion("background");
 		visfont 		= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
-		tekfont 		= parent.assMan.manager.get("font/tekton.fnt", BitmapFont.class);
 		gameOver 		= atlas.findRegion("gameover");
 		gameOverwin		= atlas.findRegion("gameoverwin");
 		lazerStartBg 	= atlasLazor.findRegion("lazorStart");
@@ -616,6 +703,7 @@ public class ApplicationScreen implements Screen {
 		magStrPlusEffect = parent.assMan.manager.get("particles/magstrplus.pe",ParticleEffect.class);
 		scorePlusEffect = parent.assMan.manager.get("particles/scoreplus.pe",ParticleEffect.class);
 		ghostTailEffect = parent.assMan.manager.get("particles/ballghosttail.pe",ParticleEffect.class);
+		magGhostTailEffect = parent.assMan.manager.get("particles/magballghosttail.pe",ParticleEffect.class);
 		
 
 		
@@ -632,6 +720,7 @@ public class ApplicationScreen implements Screen {
 		cashEffect.scaleEffect(1/3f);
 		//magBallEffect.scaleEffect(1/3f);
 		ghostTailEffect.scaleEffect(1/3f);
+		magGhostTailEffect.scaleEffect(1/3f);
 		
 		//create object pools
 		partySparksPool = new ParticleEffectPool(sparks, 5, 20);
@@ -650,6 +739,7 @@ public class ApplicationScreen implements Screen {
 		partyMagStrPool = new ParticleEffectPool(magStrPlusEffect,2,20);
 		partyScorePlusPool = new ParticleEffectPool(scorePlusEffect,2,20);
 		partyGhostTailPool = new ParticleEffectPool(ghostTailEffect,2,100);
+		partyMagGhostTailPool = new ParticleEffectPool(magGhostTailEffect,2,100);
 		
 				
 	}
