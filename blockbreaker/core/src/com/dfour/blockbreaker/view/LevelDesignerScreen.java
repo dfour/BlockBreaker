@@ -44,8 +44,12 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	private static final String SPINNERA = "a";
 	private static final String BLACKHOLE = "b";
 	private static final String POWER_BRICK = "p";
+	private static final String SPEEDZONE = ">";
+	private static final String SLOWZONE = "<";
 	private static final int OB_WIDTH = 30;
 	private static final int OB_HEIGHT = 15;
+	private static final int BTNW = 50;
+	private static final int BTNH = 50;
 	
 	private String currentObject = EMPTY;
 	
@@ -65,6 +69,8 @@ public class LevelDesignerScreen extends Scene2DScreen {
 	private TextField txfMapName;
 	private Label savedLabel;
 	private float savedLabelTimer = 0;
+	private TextureRegion speeduppic;
+	private TextureRegion slowdownpic;
 	
 	public LevelDesignerScreen(BlockBreaker p){
 		super(p);
@@ -117,6 +123,21 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		}
 		
 		txfMapName = new TextField("map-name",skin);
+		txfMapName.addListener(new ClickListener(){
+
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				if(txfMapName.getText().equalsIgnoreCase("map-name")){
+					txfMapName.setText("");
+				}
+				return super.touchDown(event, x, y, pointer, button);
+			}	
+		});
+		
+		
+		
+		
 		ImageButton btnBrick = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
 		btnBrick.addListener(new TextTooltip("Normal Brick",skin));
 		btnBrick.getStyle().imageUp = new TextureRegionDrawable(brickPic);
@@ -190,6 +211,30 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			
 		});
 		
+		ImageButton btnSpeedZone = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnSpeedZone.addListener(new TextTooltip("Speed Up Zone",skin));
+		btnSpeedZone.getStyle().imageUp = new TextureRegionDrawable(speeduppic);
+		btnSpeedZone.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				currentObject = SPEEDZONE;
+			}
+			
+		});
+		
+		ImageButton btnSlowZone = new ImageButton(new ImageButtonStyle(skin.get(ImageButtonStyle.class)));
+		btnSlowZone.addListener(new TextTooltip("Slow Down Zone",skin));
+		btnSlowZone.getStyle().imageUp = new TextureRegionDrawable(slowdownpic);
+		btnSlowZone.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				currentObject = SLOWZONE;
+			}
+			
+		});
+		
 		TextButton btnRemove = new TextButton("Erase",skin);
 		btnRemove.addListener(new TextTooltip("Remove Blocks",skin));
 		btnRemove.addListener(new ClickListener(){
@@ -258,22 +303,24 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		guiTable.setDebug(false);
 		guiTable.add(new Label("Objects",skin)).colspan(6);
 		guiTable.row();
-		guiTable.add(btnBrick).height(50).width(125);
-		guiTable.add(btnLight).height(50).width(125);
-		guiTable.add(btnObstacleLeft).height(50).width(125);
-		guiTable.add(btnSpinnerA).height(50).width(125);
-		guiTable.add(btnRemove).height(50).width(125);
-		guiTable.add(txfMapName).height(50).width(125);
-		guiTable.add(btnClear).height(50).width(125);
+		guiTable.add(btnBrick).height(BTNH).width(BTNW);
+		guiTable.add(btnLight).height(BTNH).width(BTNW);
+		guiTable.add(btnObstacleLeft).height(BTNH).width(BTNW);
+		guiTable.add(btnSpinnerA).height(BTNH).width(BTNW);
+		guiTable.add(btnSpeedZone).height(BTNH).width(BTNW);
+		guiTable.add(btnRemove).height(BTNH).width(BTNW*2);
+		guiTable.add(txfMapName).height(BTNH).width(BTNW*2);
+		guiTable.add(btnClear).height(BTNH).width(BTNW*2);
 		guiTable.row();
-		guiTable.add(btnPowerBrick).height(50).width(125);
-		guiTable.add(btnBlackHole).height(50).width(125);
-		guiTable.add(btnObstacleRight).height(50).width(125);
-		guiTable.add(btnSpinnerC).height(50).width(125);
-		guiTable.add(btnSave).height(50).width(125).colspan(2).right();
-		guiTable.add(btnBack).height(50).width(125);
+		guiTable.add(btnPowerBrick).height(BTNH).width(BTNW);
+		guiTable.add(btnBlackHole).height(BTNH).width(BTNW);
+		guiTable.add(btnObstacleRight).height(BTNH).width(BTNW);
+		guiTable.add(btnSpinnerC).height(BTNH).width(BTNW);
+		guiTable.add(btnSlowZone).height(BTNH).width(BTNW);
+		guiTable.add(btnSave).height(BTNH).width(BTNW*2).colspan(2).right();
+		guiTable.add(btnBack).height(BTNH).width(BTNW*2);
 		guiTable.row();
-		guiTable.add(savedLabel).colspan(6);
+		guiTable.add(savedLabel).colspan(8);
 		
 		displayTable.add(levelTable).pad(10);
 		displayTable.row();
@@ -324,15 +371,17 @@ public class LevelDesignerScreen extends Scene2DScreen {
 		pmap = new Pixmap(10,10, Format.RGBA8888);
 		pmap.setColor(Color.RED);
 		pmap.fill();
-		spinnerc = new TextureRegion(new Texture(pmap));
+		slowdownpic = new TextureRegion(new Texture(pmap));
 		
 		pmap = new Pixmap(10,10, Format.RGBA8888);
 		pmap.setColor(Color.BLUE);
 		pmap.fill();
-		spinnera = new TextureRegion(new Texture(pmap));
+		speeduppic = new TextureRegion(new Texture(pmap));
 		
 		pmap.dispose();
 		
+		spinnera = atlas.findRegion("spinner");
+		spinnerc = spinnera;
 		lightImage = atlas.findRegion("lightBulb");
 		obstacleImage = atlas.findRegion("obstacle");
 		flipped = new TextureRegion(atlas.findRegion("obstacle"));
@@ -393,6 +442,10 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				setImage(spinnera, SPINNERA);
 			}else if(currentObject == BLACKHOLE){
 				setImage(blackHole, BLACKHOLE);
+			}else if(currentObject == SPEEDZONE){
+				setImage(speeduppic,SPEEDZONE );
+			}else if(currentObject == SLOWZONE){
+				setImage(slowdownpic, SLOWZONE);
 			}else if(currentObject == POWER_BRICK){
 				Pixmap pmap = new Pixmap(OB_WIDTH,OB_HEIGHT, Pixmap.Format.RGBA8888);
 				pmap.setColor(new Color(1,1,1,0.3f));

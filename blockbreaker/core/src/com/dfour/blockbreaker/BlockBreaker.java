@@ -24,7 +24,6 @@ public class BlockBreaker extends Game {
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
-	//TODO add pause image to hide screen when paused
 	//TODO try move all objects into external xml definition files
 	//TODO hide cursor when in game and show when in menus with custom cursor
 	//TODO sticky pad/ tractor beam

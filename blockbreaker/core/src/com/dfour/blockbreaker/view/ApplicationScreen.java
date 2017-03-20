@@ -3,6 +3,7 @@ package com.dfour.blockbreaker.view;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,11 +22,14 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -169,6 +173,8 @@ public class ApplicationScreen implements Screen {
 	private Label laserCountLabel;
 	private Label laserGuideCountLabel;
 	private Label livesCountLabel;
+	private Table pauseMenuTable;
+	private InputMultiplexer imp;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -204,12 +210,50 @@ public class ApplicationScreen implements Screen {
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
+		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("darkblockbutton"));
+		
+		pauseMenuTable = new Table();
+		pauseMenuTable.setDebug(true);
+		pauseMenuTable.setBackground(npd);
+		pauseMenuTable.setVisible(false);
+		
+		imp = new InputMultiplexer();
+		imp.addProcessor(0, stage);
+		imp.addProcessor(1,controller);
+		
+		TextButton btnResume = new TextButton("Resume Play",skin);
+		btnResume.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				pauseMenuTable.setVisible(false);
+				isPaused = false;
+			}
+		});
+		
+		TextButton btnQuit = new TextButton("Quit Level",skin);
+		btnQuit.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				quitToMenu();
+			}
+		});
+		
+		
+		
+		pauseMenuTable.add(btnResume);
+		pauseMenuTable.row();
+		pauseMenuTable.add(btnQuit);
+		
+		
+		
 		Table buttonTable = new Table();
 		buttonTable.setDebug(false);
 		buttonTable.setWidth(800);
 		buttonTable.setHeight(60);
 		buttonTable.pad(10);
-		buttonTable.setBackground(new NinePatchDrawable(atlasGui.createPatch("darkblockbutton")));
+		buttonTable.setBackground(npd);
 		
 		Image magnetImage = new Image(atlas.findRegion("magnet"));
 		Image laserImage = new Image(atlas.findRegion("lasericon"));
@@ -260,7 +304,7 @@ public class ApplicationScreen implements Screen {
 		buttonTable.add(scoreCountLabel).align(Align.right);
 		
 		
-		displayTable.add().width(800).height(600);
+		displayTable.add(pauseMenuTable).width(800).height(600);
 		displayTable.row();
 		displayTable.add(buttonTable).center().height(60).width(800);
 		
@@ -277,7 +321,7 @@ public class ApplicationScreen implements Screen {
 
 	@Override
 	public void show() {
-		Gdx.input.setInputProcessor(controller);
+		Gdx.input.setInputProcessor(imp);
 		if(bbModel.gameOver){
 			bbModel.level = 0;
 		}
@@ -310,6 +354,9 @@ public class ApplicationScreen implements Screen {
 	    if(controller.isPauseDown){
 	    	isPaused = !isPaused;
 	    	controller.isPauseDown = false;
+	    	if(isPaused){
+	    		pauseMenuTable.setVisible(true);
+	    	}
 	    	
 	    }
 	    
@@ -416,12 +463,17 @@ public class ApplicationScreen implements Screen {
 		}
 		
 		if(controller.getEscape() && this.isPaused){
-			controller.setEscape(false);
-			nextScreen = BlockBreaker.MENU;
-			isReturning = true;
-			bbModel.level = 0;
-			bbModel.empty();
+			quitToMenu();
 		}
+	}
+	
+	private void quitToMenu(){
+		removeConstantPE();
+		controller.setEscape(false);
+		nextScreen = BlockBreaker.MENU;
+		isReturning = true;
+		bbModel.level = 0;
+		bbModel.empty();
 	}
 	
 	private void removeConstantPE() {
