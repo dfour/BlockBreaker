@@ -12,6 +12,7 @@ public class Ball extends Entity{
 	public boolean isAttached = true; 
 	public int MAX_SPEED = 100;
 	public boolean isMagBall = false;
+	public float speedModifier = 1f;
 	public PointLight light;
 	
 	public Ball(Body bod, AtlasRegion atlasRegion){
@@ -21,8 +22,8 @@ public class Ball extends Entity{
 	
 	public Ball(Body bod, Animation anim){
 		super(bod,anim);
-		this.width = anim.getKeyFrame(0).getRegionWidth() /2 ;
-		this.height = anim.getKeyFrame(0).getRegionHeight() /2;
+		this.width = anim.getKeyFrame(0).getRegionWidth()/2;
+		this.height = anim.getKeyFrame(0).getRegionHeight()/2;
 	}
 	
 	public void setMagBall(Animation anim){
@@ -48,7 +49,7 @@ public class Ball extends Entity{
 		Vector2 vel = body.getLinearVelocity();
 		float speed = vel.len();
 		if ( speed > MAX_SPEED ) {
-			body.setLinearVelocity( vel.scl(MAX_SPEED /speed));
+			body.setLinearVelocity( vel.scl((MAX_SPEED * speedModifier) /speed));
 		}
 	}
 }

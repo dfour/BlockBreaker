@@ -20,9 +20,6 @@ import com.dfour.blockbreaker.view.EndScreen;
 import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
-	//TODO show bomb count(done), score(done), money in play area ( instead of top corner )
-	//TODO add obstacles that speed up/slow down ball
-	//TODO add obstacles that make ball veer right/left (spin)
 	//TODO finish designing end screen
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
@@ -33,9 +30,11 @@ public class BlockBreaker extends Game {
 	//TODO sticky pad/ tractor beam
 	//TODO negative power ups such as drunk/slow/angled
 	//TODO add larger pad mechanic
-	//TODO fix bug where you can but magnetic balls more than once
 	//TODO add pause menu  (with buttons n stuffs for the pressings)
 	//TODO make GUI class that overlays application screen using stage
+	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
+	//TODO add release ball key to prefs
+	//TODO make pad top curved for more player control
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;

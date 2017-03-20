@@ -12,6 +12,7 @@ import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
+import com.dfour.blockbreaker.entity.LocalEffectEntity;
 import com.dfour.blockbreaker.entity.Pad;
 import com.dfour.blockbreaker.entity.PowerUp;
 
@@ -59,25 +60,22 @@ public class BBContactListener implements ContactListener {
 			bombHitSomething((Bomb) fb.getBody().getUserData(),fa);
 		}
 		
-		if(fa.getBody().getUserData() instanceof BlackHole){
+		if(fa.getBody().getUserData() instanceof LocalEffectEntity){
 			if(fa.isSensor()){
-				BlackHoleHitSomething((BlackHole) fa.getBody().getUserData(),fb);
+				inLocalEffectRange((LocalEffectEntity) fa.getBody().getUserData(),fb);
 			}else{
 				objectInVoid(fb);
 			}
-		}else if(fb.getBody().getUserData() instanceof BlackHole){
+		}else if(fb.getBody().getUserData() instanceof LocalEffectEntity){
 			if(fb.isSensor()){
-				BlackHoleHitSomething((BlackHole) fb.getBody().getUserData(),fa);
+				inLocalEffectRange((LocalEffectEntity) fb.getBody().getUserData(),fa);
 			}else{
 				objectInVoid(fa);
 			}
 		}
 	}
-	private void BlackHoleHitSomething(BlackHole blackHole, Fixture fb) {
-		System.out.println("Hit blackhole");
-		
-		blackHole.gravitise(fb.getBody());
-		
+	private void inLocalEffectRange(LocalEffectEntity lee, Fixture fb) {		
+		lee.addToEffectedObjects(fb.getBody());
 	}
 
 	private void bombHitSomething(Bomb bomb, Fixture fb) {
@@ -185,7 +183,7 @@ public class BBContactListener implements ContactListener {
 			parent.playSound(BBModel.PING_SOUND);
 		}else if(fix.getBody().getUserData() instanceof Pad){
 			parent.playSound(BBModel.BOING_SOUND);
-		}else{
+		}else if(!fix.isSensor()){
 			parent.playSound(BBModel.PING_SOUND);
 		}
 	}
@@ -197,17 +195,14 @@ public class BBContactListener implements ContactListener {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
-		if(fa.getBody().getUserData() instanceof BlackHole){
-			BlackHoleLeftSomething((BlackHole) fa.getBody().getUserData(),fb);
-		}else if(fb.getBody().getUserData() instanceof BlackHole){
-			BlackHoleLeftSomething((BlackHole) fb.getBody().getUserData(),fa);
+		if(fa.getBody().getUserData() instanceof LocalEffectEntity){
+			outOfLocalEffectRange((LocalEffectEntity) fa.getBody().getUserData(),fb);
+		}else if(fb.getBody().getUserData() instanceof LocalEffectEntity){
+			outOfLocalEffectRange((LocalEffectEntity) fb.getBody().getUserData(),fa);
 		}
 	}
-	private void BlackHoleLeftSomething(BlackHole blackHole, Fixture fb) {
-		System.out.println("Hit blackhole");
-		//apply force towards black hole to colliding object
-		blackHole.unGravitise(fb.getBody());
-		
+	private void outOfLocalEffectRange(LocalEffectEntity lee, Fixture fb) {
+		lee.removeFromEffectedObjects(fb.getBody());
 	}
 
 	@Override

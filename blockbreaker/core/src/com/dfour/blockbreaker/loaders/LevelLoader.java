@@ -46,6 +46,10 @@ public class LevelLoader {
 					model.entFactory.addBlackHole(x * 2+1, (Math.abs(y - 30)) * 2);
 				}else if(coord == 'p') {
 					model.entFactory.makePowerBrick(x * 2+1, (Math.abs(y - 30)) * 2);
+				}else if(coord == '>') {
+					model.entFactory.makeSpeedZone(x * 2+1, (Math.abs(y - 30)) * 2);
+				}else if(coord == '<') {
+					model.entFactory.makeSlowZone(x * 2+1, (Math.abs(y - 30)) * 2);
 				}
 			}
 		}

@@ -14,7 +14,7 @@ public class IconBar extends Table {
 		this.add(im);
 		pb = new ProgressBar(0, 100, 0.1f, false, skin,"big");
 		pb.setFillParent(true);
-		this.add(pb).width(300);
+		this.add(pb).width(275);
 		
 	}
 

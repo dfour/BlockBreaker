@@ -131,7 +131,7 @@ public class ShopScreen extends Scene2DScreen{
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				if(bbModel.removeCash(5000)){
+				if(bbModel.removeCash(5000) && !bbModel.eternalMagBall){
 					bbModel.eternalMagBall = true;
 					updateCash();
 					btnMagBallOnly.setText("Purchased");

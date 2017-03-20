@@ -41,6 +41,7 @@ import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
+import com.dfour.blockbreaker.entity.LocalEffectEntity;
 import com.dfour.blockbreaker.entity.Obstacle;
 import com.dfour.blockbreaker.entity.PowerUp;
 import com.dfour.blockbreaker.entity.Spinner;
@@ -165,6 +166,9 @@ public class ApplicationScreen implements Screen {
 	private Label bombCountLabel;
 	private Label magnetRechargeRateLabel;
 	private Label magnetUnitsTotal;
+	private Label laserCountLabel;
+	private Label laserGuideCountLabel;
+	private Label livesCountLabel;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -196,12 +200,12 @@ public class ApplicationScreen implements Screen {
 		
 		stage = new Stage(new ExtendViewport(800,660));
 		displayTable = new Table();
-		displayTable.setDebug(true);
+		displayTable.setDebug(false);
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
 		Table buttonTable = new Table();
-		buttonTable.setDebug(true);
+		buttonTable.setDebug(false);
 		buttonTable.setWidth(800);
 		buttonTable.setHeight(60);
 		buttonTable.pad(10);
@@ -217,34 +221,44 @@ public class ApplicationScreen implements Screen {
 		Label scoreTextLabel = new Label("Score:",skin,"small");
 		Label cashTextLabel = new Label ("Cash:",skin,"small");
 		Label bombTextLabel = new Label ("Bombs:",skin,"small");
-		magnetRechargeRateLabel = new Label ("Recharge Rate: "+(bbModel.magnetRechargeRate * 60)+"/s",skin,"small");
-		magnetUnitsTotal = new Label (bbModel.magnetPower+"/"+bbModel.baseMagnetPower,skin,"small");
+		Label livesTextLabel = new Label ("Lives Left: ",skin,"small");
+		magnetUnitsTotal = new Label (bbModel.magnetPower+" / "+bbModel.baseMagnetPower,skin,"small");
 		scoreCountLabel = new Label(""+bbModel.score,skin,"small");
-		scoreCountLabel.setAlignment(Align.right);
 		cashCountLabel = new Label("$"+bbModel.cash,skin,"small");
 		bombCountLabel = new Label(""+bbModel.bombsLeft,skin,"small");
+		laserCountLabel = new Label(""+bbModel.lazerTimer,skin,"small");
+		laserGuideCountLabel = new Label(""+bbModel.guideLazerTimer,skin,"small");
+		livesCountLabel = new Label(""+bbModel.livesLeft,skin,"small");
 		
+		bombCountLabel.setAlignment(Align.right);
+		magnetUnitsTotal.setAlignment(Align.right);
+		laserCountLabel.setAlignment(Align.right);
+		laserGuideCountLabel.setAlignment(Align.right);
+		livesTextLabel.setAlignment(Align.right);
 		
 		buttonTable.add(magnetBar).expandX().align(Align.left).padTop(5);
-		buttonTable.add(magnetUnitsTotal).width(75).padTop(5);
-		buttonTable.add(magnetRechargeRateLabel).width(150).padTop(5);
-		buttonTable.add().width(100).padTop(5);
-		buttonTable.add(scoreTextLabel).width(50).align(Align.left).padTop(5);
-		buttonTable.add(scoreCountLabel).width(50).align(Align.right).padTop(5);
+		buttonTable.add(magnetUnitsTotal).width(100).padTop(5);
+		buttonTable.add(livesTextLabel).width(125).padTop(5);
+		buttonTable.add(livesCountLabel).width(150).padTop(5);
+		buttonTable.add(bombTextLabel).width(50).align(Align.left).padTop(5);
+		buttonTable.add(bombCountLabel).width(50).align(Align.left).padTop(5);
 		buttonTable.row();
+		
 		buttonTable.add(laserBar).expandX().align(Align.left);
+		buttonTable.add(laserCountLabel);
 		buttonTable.add();
-		buttonTable.add();
-		buttonTable.add().width(100);
+		buttonTable.add().width(150);
 		buttonTable.add(cashTextLabel).align(Align.left);
 		buttonTable.add(cashCountLabel).align(Align.right);
 		buttonTable.row();
+		
 		buttonTable.add(guideBar).expandX().align(Align.left);
+		buttonTable.add(laserGuideCountLabel);
 		buttonTable.add();
-		buttonTable.add();
-		buttonTable.add().width(100);
-		buttonTable.add(bombTextLabel).align(Align.left);
-		buttonTable.add(bombCountLabel).align(Align.right);
+		buttonTable.add().width(150);
+		buttonTable.add(scoreTextLabel).align(Align.left);
+		buttonTable.add(scoreCountLabel).align(Align.right);
+		
 		
 		displayTable.add().width(800).height(600);
 		displayTable.row();
@@ -305,11 +319,13 @@ public class ApplicationScreen implements Screen {
 	    	magnetBar.updateProgress((bbModel.magnetPower/(float)bbModel.baseMagnetPower));
 	    	laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
 	    	guideBar.updateProgress((bbModel.guideLazerTimer/ bbModel.baseGuideLazerTimer));
-	    	magnetRechargeRateLabel.setText("Recharge Rate: "+(bbModel.magnetRechargeRate * 60)+"/s");
-			magnetUnitsTotal.setText(bbModel.magnetPower+"/"+bbModel.baseMagnetPower);
+			magnetUnitsTotal.setText(bbModel.magnetPower+" / "+bbModel.baseMagnetPower+" @ "+(bbModel.magnetRechargeRate * 60));
 	    	scoreCountLabel.setText(bbModel.score+"");
 	    	cashCountLabel.setText("$"+bbModel.cash);
 	    	bombCountLabel.setText(""+bbModel.bombsLeft);
+	    	laserCountLabel.setText((int)bbModel.lazerTimer+" seconds");
+	    	laserGuideCountLabel.setText((int)bbModel.guideLazerTimer+" seconds");
+	    	livesCountLabel.setText(""+bbModel.livesLeft);
 	    }
 	    
 	    if(fadeIn > 0){
@@ -321,6 +337,8 @@ public class ApplicationScreen implements Screen {
 			if(fadeOut <= 0){
 				parent.changeScreen(nextScreen);
 			}
+		}else{
+			currentAlpha = 1;  // set alpha to 1(fixes display bug when lagging during fade in)
 		}
 	    
 	    if(!isPaused){
@@ -401,6 +419,7 @@ public class ApplicationScreen implements Screen {
 			controller.setEscape(false);
 			nextScreen = BlockBreaker.MENU;
 			isReturning = true;
+			bbModel.level = 0;
 			bbModel.empty();
 		}
 	}
@@ -484,11 +503,11 @@ public class ApplicationScreen implements Screen {
 		for(Spinner spinner :bbModel.entFactory.spinners){
 			spinner.draw(sb,currentAlpha,delta);
 		}
-		for(BlackHole blackHole : bbModel.entFactory.blackHoles){
-			blackHole.draw(sb,currentAlpha,delta);
-			if(!blackHole.hasPartyEffect){
-				bbModel.blackHolePE.add(blackHole.body.getPosition());
-				blackHole.hasPartyEffect = true;
+		for(LocalEffectEntity lee : bbModel.entFactory.localEffectEntities){
+			lee.draw(sb,currentAlpha,delta);
+			if(!lee.hasPartyEffect){
+				bbModel.blackHolePE.add(lee.body.getPosition());
+				lee.hasPartyEffect = true;
 			}
 		}
 		

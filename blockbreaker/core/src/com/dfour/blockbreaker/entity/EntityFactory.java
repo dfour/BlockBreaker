@@ -31,7 +31,7 @@ public class EntityFactory {
 	public Array<Obstacle> obstacles = new Array<Obstacle>();
 	public Array<Body> walls = new Array<Body>();
 	public Array<Spinner> spinners = new Array<Spinner>();
-	public Array<BlackHole> blackHoles = new Array<BlackHole>();
+	public Array<LocalEffectEntity> localEffectEntities = new Array<LocalEffectEntity>();
 	
 	public int ballCount;
 
@@ -119,12 +119,26 @@ public class EntityFactory {
 	}
 	
 	public LightBall makeLight(float x, float y){
+		x+=1f;
 		Body lightBody = bodyFactory.makeCirclePolyBody(x, y, // location
 				0.6f, // size
 				BodyFactory.RUBBER, BodyType.StaticBody);
 		LightBall lBall = new LightBall(lightBody,
 				atlas.findRegion("lightBulb"));
 		lBall.light = lf.addPointLight(x, y);
+		lBall.light.setDistance(LightFactory.LIGHT_SIZE_LOW);
+		lightBalls.add(lBall);
+		return lBall;
+	}
+	
+	private LightBall makeLight(float x, float y, Color col){
+		x+=1f;
+		Body lightBody = bodyFactory.makeCirclePolyBody(x, y, // location
+				0.6f, // size
+				BodyFactory.RUBBER, BodyType.StaticBody);
+		LightBall lBall = new LightBall(lightBody,
+				atlas.findRegion("lightBulb"),col);
+		lBall.light = lf.addPointLight(x, y, col);
 		lBall.light.setDistance(LightFactory.LIGHT_SIZE_LOW);
 		lightBalls.add(lBall);
 		return lBall;
@@ -190,8 +204,30 @@ public class EntityFactory {
 		BlackHole bh = new BlackHole(bhbod, atlas.findRegion("blackhole"));
 		bhbod.setUserData(bh);
 		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts
-		blackHoles.add(bh);
+		localEffectEntities.add(bh);
 		return bh;
+	}
+	
+	public SpeedZone makeSpeedZone(int x, int y) {
+		makeLight(x, y, new Color(Color.BLUE));
+		Body bhbod = bodyFactory.makeCirclePolyBody(x+1, y, 20, BodyFactory.WOOD, BodyType.KinematicBody);
+		bodyFactory.makeAllFixturesSensors(bhbod);
+		SpeedZone sz = new SpeedZone(bhbod, atlas.findRegion("effectrange"),2f);
+		bhbod.setUserData(sz);
+		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts
+		localEffectEntities.add(sz);
+		return sz;		
+	}
+	
+	public SpeedZone makeSlowZone(int x, int y) {
+		makeLight(x, y, new Color(Color.RED));
+		Body bhbod = bodyFactory.makeCirclePolyBody(x+1, y, 20, BodyFactory.WOOD, BodyType.KinematicBody);
+		bodyFactory.makeAllFixturesSensors(bhbod);
+		SpeedZone sz = new SpeedZone(bhbod, atlas.findRegion("effectrange"),0.5f);
+		bhbod.setUserData(sz);
+		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts
+		localEffectEntities.add(sz);
+		return sz;		
 	}
 	
 	public Bomb addBomb() {
@@ -275,11 +311,8 @@ public class EntityFactory {
 		obstacles.clear();
 		explosionParticles.clear();
 		spinners.clear();
-		blackHoles.clear();
+		localEffectEntities.clear();
 	}
-
-
-
 }
 
 

@@ -11,7 +11,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.dfour.blockbreaker.BBModel;
 
 public class Entity {
-	public Color color;
+	protected Color color = Color.WHITE;
 	public Sprite sprite;
 	public Body body;
 	protected int width;
@@ -50,6 +50,8 @@ public class Entity {
 		body = b;
 		hasAnimation = true;
 		normalAnimation = anim;
+		this.width = anim.getKeyFrame(0).getRegionWidth();
+		this.height = anim.getKeyFrame(0).getRegionHeight();
 	}
 	
 	public Entity(Body b){
@@ -82,7 +84,6 @@ public class Entity {
 			//draw image
 			sprite.draw(sb,alpha);
 		}
-		
 	}
 
 }

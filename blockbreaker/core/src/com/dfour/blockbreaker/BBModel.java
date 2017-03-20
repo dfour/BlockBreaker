@@ -26,6 +26,7 @@ import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.EntityFactory;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
+import com.dfour.blockbreaker.entity.LocalEffectEntity;
 import com.dfour.blockbreaker.entity.Pad;
 import com.dfour.blockbreaker.entity.PowerBrick;
 import com.dfour.blockbreaker.entity.PowerUp;
@@ -222,7 +223,7 @@ public class BBModel {
 			bombsLeft = 0;
 			baseGuideLazerTimer = 10f;
 			baseLazerTimer = 5f;
-			cash = 500000;
+			cash = 50000000;
 			magnetRechargeRate = 1;
 			score = 0;
 			eternalMagBall = false;
@@ -328,8 +329,8 @@ public class BBModel {
 			spinner.update();
 		}
 		
-		for (BlackHole blackHole : entFactory.blackHoles){
-			blackHole.update();
+		for (LocalEffectEntity lee : entFactory.localEffectEntities){
+			lee.update();
 		}
 		
 	}
@@ -362,9 +363,7 @@ public class BBModel {
 			}
 
 			if (brick.isStatic == false) {
-				if ((controller.isMouse1Down() || controller.isMouse2Down())) {
-					this.applyMagnetism(brick.body, pad.body.getPosition());
-				}
+				this.applyMagnetism(brick.body, pad.body.getPosition());
 			}
 
 			if (brick.isDead) {
@@ -388,16 +387,13 @@ public class BBModel {
 				world.destroyBody(pup.body);
 				entFactory.pups.removeValue(pup, true);
 			} else {
-				if ((controller.isMouse1Down() || controller.isMouse2Down())
-						&& magnetPower > 0) {
-					this.applyMagnetism(pup.body, pad.body.getPosition());
-				}
+				this.applyMagnetism(pup.body, pad.body.getPosition());
 			}
 		}
 	}
 
 	private void updateMagnet() {
-		if (controller.isMouse1Down() || controller.isMouse2Down()|| controller.getPush() || controller.getPull()) {
+		if (controller.isMouse1Down() || controller.isMouse2Down() || controller.getPush() || controller.getPull()) {
 			this.magnetPower = magnetPower - (this.magnetStrength / 35);
 			if (magnetPower < 0) {
 				magnetPower = 0;
@@ -444,8 +440,7 @@ public class BBModel {
 				}
 			}
 			ball.update();
-			if ((controller.isMouse1Down() || controller.isMouse2Down())
-					&& magnetPower > 0 && ball.isMagBall) {
+			if(ball.isMagBall){
 				this.applyMagnetism(ball.body, pad.body.getPosition());
 			}
 			if (ball.isDead) { // dead ball, check count
@@ -605,20 +600,23 @@ public class BBModel {
 	}
 
 	private void applyMagnetism(Body body, Vector2 vector) {
-		float velx = vector.x - body.getPosition().x;
-		float vely = vector.y - body.getPosition().y;
-		float length = (float) Math.sqrt(velx * velx + vely * vely);
-		if (length != 0) {
-			velx = velx / length;
-			vely = vely / length;
-		}
-		if (magnetPower > 0) {
-			if (controller.isMouse1Down()) {
-				body.applyForceToCenter(new Vector2(velx * magnetStrength, vely
-						* magnetStrength), true);
-			} else {
-				body.applyForceToCenter(new Vector2(velx * -magnetStrength,
-						vely * -magnetStrength), true);
+		if ((controller.isMouse1Down() || controller.isMouse2Down()|| controller.getPush() || controller.getPull())
+				&& magnetPower > 0) {
+			float velx = vector.x - body.getPosition().x;
+			float vely = vector.y - body.getPosition().y;
+			float length = (float) Math.sqrt(velx * velx + vely * vely);
+			if (length != 0) {
+				velx = velx / length;
+				vely = vely / length;
+			}
+			if (magnetPower > 0) {
+				if (controller.isMouse1Down() || controller.getPull()) {
+					body.applyForceToCenter(new Vector2(velx * magnetStrength, vely
+							* magnetStrength), true);
+				} else {
+					body.applyForceToCenter(new Vector2(velx * -magnetStrength,
+							vely * -magnetStrength), true);
+				}
 			}
 		}
 	}
