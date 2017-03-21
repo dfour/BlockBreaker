@@ -24,16 +24,15 @@ public class BlockBreaker extends Game {
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
-	//TODO try move all objects into external xml definition files
-	//TODO hide cursor when in game and show when in menus with custom cursor
+	//DONTBOTHER try move all objects into external xml definition files (and make obstacles use interfaces(one for each action: magnetise, explode etc))
+	//TODO NEEDS TESTING hide cursor when in game and show when in menus with custom cursor
 	//TODO sticky pad/ tractor beam
 	//TODO negative power ups such as drunk/slow/angled
 	//TODO add larger pad mechanic
-	//TODO add pause menu  (with buttons n stuffs for the pressings)
 	//TODO make GUI class that overlays application screen using stage
 	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
 	//TODO add release ball key to prefs
-	//TODO make pad top curved for more player control
+	//TODO look into changing box2d step size to alter time
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;

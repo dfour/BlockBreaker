@@ -6,9 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -40,7 +43,6 @@ import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.IconBar;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
-import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
@@ -105,9 +107,6 @@ public class ApplicationScreen implements Screen {
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
 	
 	private Texture expParty;
-	private Texture magnetPowerBar;
-	private TextureRegion magnetPowerBarOverlay;
-	private TextureRegion bombIcon;
 	private TextureRegion leftWall;
 	private TextureRegion bottomWall;
 	
@@ -168,13 +167,15 @@ public class ApplicationScreen implements Screen {
 	private Label cashCountLabel;
 	private IconBar guideBar;
 	private Label bombCountLabel;
-	private Label magnetRechargeRateLabel;
 	private Label magnetUnitsTotal;
 	private Label laserCountLabel;
 	private Label laserGuideCountLabel;
 	private Label livesCountLabel;
 	private Table pauseMenuTable;
 	private InputMultiplexer imp;
+	
+	private Cursor inGame;
+	private SystemCursor inMenu;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -209,6 +210,9 @@ public class ApplicationScreen implements Screen {
 		displayTable.setDebug(false);
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
+		
+		inGame = Gdx.graphics.newCursor(new Pixmap(1,1,Format.RGBA8888), 1, 1);
+		inMenu = Cursor.SystemCursor.Arrow;
 		
 		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("darkblockbutton"));
 		
@@ -328,6 +332,7 @@ public class ApplicationScreen implements Screen {
 		bbModel.init();
 		isPaused = false;
 		isReturning = false;
+		Gdx.graphics.setCursor(inGame);
 	}
 	
 	@Override
@@ -356,6 +361,9 @@ public class ApplicationScreen implements Screen {
 	    	controller.isPauseDown = false;
 	    	if(isPaused){
 	    		pauseMenuTable.setVisible(true);
+	    		Gdx.graphics.setSystemCursor(inMenu);
+	    	}else{
+	    		Gdx.graphics.setCursor(inGame);
 	    	}
 	    	
 	    }
@@ -382,6 +390,7 @@ public class ApplicationScreen implements Screen {
 			fadeOut -= delta;
 			currentAlpha = fadeOut;
 			if(fadeOut <= 0){
+				Gdx.graphics.setSystemCursor(inMenu);
 				parent.changeScreen(nextScreen);
 			}
 		}else{
@@ -737,8 +746,6 @@ public class ApplicationScreen implements Screen {
 		lazerEndBg 		= atlasLazor.findRegion("lazorEnd");
 		lazerEndOver 	= atlasLazor.findRegion("lazorEndOver");
 		lazerAllOver 	= atlasLazor.findRegion("lazorAllOver");
-		magnetPowerBarOverlay = atlas.findRegion("magpowerbar");
-		bombIcon = atlas.findRegion("bomb");
 		leftWall = atlas.findRegion("leftwall");
 		bottomWall = atlas.findRegion("bottomwall");
 		
@@ -746,11 +753,6 @@ public class ApplicationScreen implements Screen {
 		pmap.setColor(1,1,1,1);
 		pmap.fillCircle(3, 3, 2);
 		expParty = new Texture(pmap);	
-		
-		pmap = new Pixmap(10,10, Pixmap.Format.RGBA4444);
-		pmap.setColor(Color.WHITE);
-		pmap.fill();
-		magnetPowerBar = new Texture(pmap);
 		pmap.dispose();
 		
 		

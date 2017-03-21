@@ -8,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.dfour.blockbreaker.entity.Ball;
 import com.dfour.blockbreaker.entity.Bin;
-import com.dfour.blockbreaker.entity.BlackHole;
 import com.dfour.blockbreaker.entity.Bomb;
 import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;

@@ -2,7 +2,6 @@ package com.dfour.blockbreaker.entity;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.dfour.blockbreaker.BBModel;
 
 public class Spinner extends Entity {
 	

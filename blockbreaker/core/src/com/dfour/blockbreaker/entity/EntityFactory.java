@@ -45,11 +45,32 @@ public class EntityFactory {
 	
 	
 	public Pad makePad(float x, float y){
-		Body padBody = bodyFactory.makeBoxPolyBody(x, y, // location
-				10, 0.5f, // size
-				BodyFactory.RUBBER, BodyType.KinematicBody);
-		bodyFactory.addCircleFixture(padBody, -5, 0, 1f, BodyFactory.RUBBER);
-		bodyFactory.addCircleFixture(padBody, 5, 0, 1f, BodyFactory.RUBBER);
+		
+		
+		// old pad
+		//Body padBody = bodyFactory.makeBoxPolyBody(x, y, // location
+		//		10, 0.5f, // size
+		//		BodyFactory.RUBBER, BodyType.KinematicBody);
+		
+		//new pad
+		
+		Vector2[] verts = new Vector2[8];
+		verts[0] = new Vector2(-5,-0.5f); 
+		verts[1] = new Vector2(-5,0.2f);
+		verts[2] = new Vector2(-4,0.4f);
+		verts[3] = new Vector2(-2,0.6f);
+		verts[4] = new Vector2(2,0.6f);
+		verts[5] = new Vector2(4,0.4f);
+		verts[6] = new Vector2(5,0.2f);
+		verts[7] = new Vector2(5,-0.5f);
+		
+		Body padBody = bodyFactory.makePolygonShapeBody(verts, x, y,  BodyFactory.RUBBER, BodyType.KinematicBody);
+		
+		
+		
+		
+		bodyFactory.addCircleFixture(padBody, -5, 0, 0.5f, BodyFactory.RUBBER);
+		bodyFactory.addCircleFixture(padBody, 5, 0, 0.5f, BodyFactory.RUBBER);
 		pad = new Pad(padBody, atlas.createSprite("paddel"),
 				atlas.createSprite("paddel-magnet-pull"),
 				atlas.createSprite("paddel-magnet-push"), new Animation(0.05f,
