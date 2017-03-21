@@ -2,6 +2,7 @@ package com.dfour.blockbreaker;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 
 public class AppPreferences {
@@ -20,6 +21,7 @@ public class AppPreferences {
 	private static final String CONTROL_QUIT = "Control Quit";
 	private static final String CONTROL_PAUSE = "Control Pause";
 	private static final String CONTROL_BOMB = "Control Bomb";
+	private static final String CONTROL_RELEASE = "Control Release";
 	
 
 	protected Preferences getPrefs() {
@@ -99,7 +101,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsLeft(){
-		return getPrefs().getInteger(CONTROL_LEFT, 21);
+		return getPrefs().getInteger(CONTROL_LEFT, Keys.LEFT);
 	}
 	
 	public void setControlsRight(int keyCode){
@@ -108,7 +110,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsRight(){
-		return getPrefs().getInteger(CONTROL_RIGHT, 22);
+		return getPrefs().getInteger(CONTROL_RIGHT, Keys.RIGHT);
 	}
 	
 	public void setControlsPush(int keyCode){
@@ -117,7 +119,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsPush(){
-		return getPrefs().getInteger(CONTROL_PUSH, 19);
+		return getPrefs().getInteger(CONTROL_PUSH, Keys.UP);
 	}
 	
 	public void setControlsPull(int keyCode){
@@ -126,7 +128,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsPull(){
-		return getPrefs().getInteger(CONTROL_PULL, 20);
+		return getPrefs().getInteger(CONTROL_PULL, Keys.DOWN);
 	}
 	
 	public void setControlsQuit(int keyCode){
@@ -135,7 +137,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsQuit(){
-		return getPrefs().getInteger(CONTROL_QUIT, 131);
+		return getPrefs().getInteger(CONTROL_QUIT, Keys.ESCAPE);
 	}
 	
 	public void setControlsPause(int keyCode){
@@ -144,7 +146,7 @@ public class AppPreferences {
 	}
 	
 	public int getControlsPause(){
-		return getPrefs().getInteger(CONTROL_PAUSE, 44);
+		return getPrefs().getInteger(CONTROL_PAUSE, Keys.P);
 	}
 	
 	public void setControlsBomb(int keyCode){
@@ -153,7 +155,16 @@ public class AppPreferences {
 	}
 	
 	public int getControlsBomb(){
-		return getPrefs().getInteger(CONTROL_BOMB, 30);
+		return getPrefs().getInteger(CONTROL_BOMB, Keys.B);
+	}
+	
+	public void setControlsRelease(int keyCode){
+		getPrefs().putInteger(CONTROL_RELEASE ,keyCode);
+		getPrefs().flush();
+	}
+	
+	public int getControlsRelease(){
+		return getPrefs().getInteger(CONTROL_RELEASE, Keys.SPACE);
 	}
 	
 	

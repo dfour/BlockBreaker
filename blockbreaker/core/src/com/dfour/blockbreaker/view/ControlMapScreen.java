@@ -19,8 +19,10 @@ public class ControlMapScreen extends Scene2DScreen{
 	private TextButton txfControlBomb;
 	private TextButton txfControlPause;
 	private TextButton txfControlQuit;
+	private TextButton txfControlRelease;
 	
 	private TextButton buttonToUpdate = null;
+	
 	
 	public ControlMapScreen(BlockBreaker p){
 		super(p);
@@ -50,14 +52,17 @@ public class ControlMapScreen extends Scene2DScreen{
 				prefs.setControlsBomb(Keys.B);
 				prefs.setControlsPause(Keys.P);
 				prefs.setControlsQuit(Keys.ESCAPE);
+				prefs.setControlsRelease(Keys.SPACE);
 				
 				txfControlLeft.setText(Keys.toString(Keys.LEFT));
 				txfControlRight.setText(Keys.toString(Keys.RIGHT));
 				txfControlPush.setText(Keys.toString(Keys.UP));
 				txfControlPull.setText(Keys.toString(Keys.DOWN));
 				txfControlBomb.setText(Keys.toString(Keys.B));
+				txfControlRelease.setText(Keys.toString(Keys.SPACE));
 				txfControlPause .setText(Keys.toString(Keys.P));
 				txfControlQuit.setText(Keys.toString(Keys.ESCAPE));
+				
 				
 			}
 		});
@@ -72,6 +77,7 @@ public class ControlMapScreen extends Scene2DScreen{
 				prefs.setControlsPush(Keys.valueOf(txfControlPush.getText().toString()));
 				prefs.setControlsPull(Keys.valueOf(txfControlPull.getText().toString()));
 				prefs.setControlsBomb(Keys.valueOf(txfControlBomb.getText().toString()));
+				prefs.setControlsRelease(Keys.valueOf(txfControlRelease.getText().toString()));
 				prefs.setControlsPause(Keys.valueOf(txfControlPause.getText().toString()));
 				prefs.setControlsQuit(Keys.valueOf(txfControlQuit.getText().toString()));
 			}
@@ -83,6 +89,7 @@ public class ControlMapScreen extends Scene2DScreen{
 		Label lblControlPush = new Label("Push",skin);
 		Label lblControlPull = new Label("Pull",skin);
 		Label lblControlBomb = new Label("Bomb",skin);
+		Label lblControlRelease = new Label("Release",skin);
 		Label lblControlPause = new Label("Pause",skin);
 		Label lblControlQuit = new Label("Quit",skin);
 		
@@ -91,6 +98,7 @@ public class ControlMapScreen extends Scene2DScreen{
 		txfControlPush = new TextButton(Keys.toString(prefs.getControlsPush()),skin);
 		txfControlPull = new TextButton(Keys.toString(prefs.getControlsPull()),skin);
 		txfControlBomb = new TextButton(Keys.toString(prefs.getControlsBomb()),skin);
+		txfControlRelease = new TextButton(Keys.toString(prefs.getControlsRelease()),skin);
 		txfControlPause = new TextButton(Keys.toString(prefs.getControlsPause()),skin);
 		txfControlQuit = new TextButton(Keys.toString(prefs.getControlsQuit()),skin);
 		
@@ -122,11 +130,9 @@ public class ControlMapScreen extends Scene2DScreen{
 				if(buttonToUpdate != null){
 					buttonToUpdate.setText(Keys.toString(keycode));
 					buttonToUpdate = null;
-					
 				}
 				return super.keyDown(event, keycode);
 			}
-			
 		};
 		
 		stage.addListener(il);
@@ -136,9 +142,9 @@ public class ControlMapScreen extends Scene2DScreen{
 		txfControlPush.addListener(cl);
 		txfControlPull.addListener(cl);
 		txfControlBomb.addListener(cl);
+		txfControlRelease.addListener(cl);
 		txfControlPause.addListener(cl);
 		txfControlQuit.addListener(cl);
-		
 		
 		Table buttonTable = new Table();
 	    buttonTable.add(btnBack).padRight(15);
@@ -160,6 +166,9 @@ public class ControlMapScreen extends Scene2DScreen{
 		displayTable.add(lblControlBomb).width(200);
 		displayTable.add(txfControlBomb).width(200);
 		displayTable.row();
+		displayTable.add(lblControlRelease).width(200);
+		displayTable.add(txfControlRelease).width(200);
+		displayTable.row();
 		displayTable.add(lblControlPause).width(200);
 		displayTable.add(txfControlPause).width(200);
 		displayTable.row();
@@ -167,7 +176,6 @@ public class ControlMapScreen extends Scene2DScreen{
 		displayTable.add(txfControlQuit).width(200);
 		displayTable.row().padTop(20);
 		displayTable.add(buttonTable).colspan(2);
-
 	}
 
 	@Override

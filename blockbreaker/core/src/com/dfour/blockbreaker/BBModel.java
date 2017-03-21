@@ -431,11 +431,12 @@ public class BBModel {
 			if (ball.isAttached) {
 				ball.body.setTransform(pad.body.getPosition().x, 7, 0); 
 				ball.body.setLinearVelocity(0, 0);
-				if (controller.isMouse1Down()) {
+				if (controller.isMouse1Down() || controller.isReleaseDown) {
 					ball.isAttached = false; // release ball
 					float x = (float) ((Math.random() * 10) - 5);
 					// System.out.println("X ball i s"+x);
 					ball.body.applyForceToCenter(x, 10, true); 
+					controller.isReleaseDown = false;
 				}
 			}
 			ball.update();

@@ -10,6 +10,7 @@ public class AppController implements InputProcessor{
 	private boolean isMouse1Down = false;
 	private boolean isMouse2Down = false;
 	private boolean isMouse3Down = false;
+	public boolean isReleaseDown = false;
 	public boolean isDragged = false;
 	public boolean isPauseDown = false;
 	public boolean ffive = false;
@@ -34,6 +35,7 @@ public class AppController implements InputProcessor{
 		if(keycode == parent.getPreferences().getControlsQuit()){quit = true;return true;}
 		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = true;return true;}
 		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = true;return true;}   
+		if(keycode == parent.getPreferences().getControlsRelease()){isReleaseDown = true;return true;}   
 		return false;
 	}
 
@@ -47,6 +49,7 @@ public class AppController implements InputProcessor{
 		if(keycode == parent.getPreferences().getControlsQuit()){quit = false;return true;}
 		if(keycode == parent.getPreferences().getControlsPause()){isPauseDown = false;return true;}
 		if(keycode == parent.getPreferences().getControlsBomb()){useBomb = false;return true;} 
+		if(keycode == parent.getPreferences().getControlsRelease()){isReleaseDown = false;return true;} 
 		
 		// non-configurable keys
 		switch (keycode)

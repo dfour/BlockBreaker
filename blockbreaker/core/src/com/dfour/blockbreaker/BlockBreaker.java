@@ -31,7 +31,7 @@ public class BlockBreaker extends Game {
 	//TODO add larger pad mechanic
 	//TODO make GUI class that overlays application screen using stage
 	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
-	//TODO add release ball key to prefs
+	//TODO NEEDS TESTING add release ball key to prefs
 	//TODO look into changing box2d step size to alter time
 	
 	private MenuScreen menu;
