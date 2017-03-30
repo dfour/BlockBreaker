@@ -211,7 +211,7 @@ public class ApplicationScreen implements Screen {
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
-		inGame = Gdx.graphics.newCursor(new Pixmap(1,1,Format.RGBA8888), 1, 1);
+		inGame = Gdx.graphics.newCursor(new Pixmap(1,1,Format.RGBA8888), 0, 0);
 		inMenu = Cursor.SystemCursor.Arrow;
 		
 		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("darkblockbutton"));

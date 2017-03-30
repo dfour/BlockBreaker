@@ -80,13 +80,20 @@ public class BBModel {
 	public boolean eternalMagBall = false;
 	private static final int MAX_LEVELS = 28; //26;
 	
+	
 	private float levelTimer;
 	public float baseGuideLazerTimer = 10f;
 	public float guideLazerTimer = 10f;
 	public float baseLazerTimer = 5f;
 	public float lazerTimer = 5f;
+	public float drunkTimer = 5f;
+	public float slowTimer = 5f;
 	private float padOffset = 0;
 	
+	private float padSpeed = 12f;
+	
+	public boolean isDrunk = false;
+	public boolean isSlow = false;
 	public boolean needToAddBall = false;
 	public boolean isFiringLazer = false;
 	public boolean gameOver = false;
@@ -128,6 +135,7 @@ public class BBModel {
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;
+	
 	
 	
 	
@@ -254,24 +262,28 @@ public class BBModel {
 		guideLazerTimer = baseGuideLazerTimer;
 		
 	}
-
+	
 	public void doLogic(float delta) {
 		// TODO check pad offset stuff
 		if(controller.getLeft()){
 			Gdx.input.setCursorPosition(sw/2,300);
 			controller.overrideMouseLocation(sw/2,300);
-			padOffset-=12f;
-			if(padOffset < -335){
-				padOffset = -335;
+			if(isDrunk){
+				padOffset+=padSpeed;
+			}else{
+				padOffset-=padSpeed;
 			}
+			
 		}else if(controller.getRight()){
 			Gdx.input.setCursorPosition(sw/2,300);
 			controller.overrideMouseLocation(sw/2,300);
-			padOffset+=12f;
-			if(padOffset > 335){
-				padOffset = 335;
+			if(isDrunk){
+				padOffset-=padSpeed;
+			}else{
+				padOffset+=padSpeed;
 			}
 		}
+		MathUtils.clamp(padOffset, -335, 335);
 		if(BlockBreaker.debug){
 			//System.out.println("Pad Offset is :"+padOffset);
 		}
@@ -282,7 +294,14 @@ public class BBModel {
 			}
 		}
 		float screenx = MathUtils.clamp((mousePosition.x + padOffset) * WORLD_TO_BOX, 6.5f, 73.5f);
-		pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
+		if(isDrunk){
+			screenx =  80 - screenx;
+		}
+		if(isSlow){
+			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.05f), 5);
+		}else{
+			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
+		}
 		
 		lastMousePos = mousePosition.cpy();
 		
@@ -300,6 +319,23 @@ public class BBModel {
 		if (entFactory.bricks.size < 1 && !changingLevel) {
 			levelTimer = 1f;
 			changingLevel = true;
+		}
+		
+		if(isDrunk){
+			drunkTimer -= delta;
+			if(drunkTimer <= 0){
+				isDrunk = false;
+				drunkTimer = 5f;
+			}
+		}
+		
+		if(isSlow){
+			slowTimer -= delta;
+			if(slowTimer <= 0){
+				isSlow = false;
+				slowTimer = 5f;
+				padSpeed = 12f;
+			}
 		}
 		
 		if(changingLevel){
@@ -702,5 +738,14 @@ public class BBModel {
 
 	public void addCash(int cashAmount) {
 		this.cash+=cashAmount;	
+	}
+
+	public void isDrunk() {
+		isDrunk = true;
+	}
+
+	public void isSlow() {
+		isSlow = true;
+		padSpeed= 7f;
 	}
 }

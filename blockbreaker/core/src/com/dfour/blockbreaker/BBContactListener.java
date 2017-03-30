@@ -161,6 +161,10 @@ public class BBContactListener implements ContactListener {
 				parent.addCash(100);
 				parent.cashPEToShow.add(pup.body.getPosition());
 				break;
+			case PowerUp.DRUNK:
+				parent.isDrunk();
+			case PowerUp.SLOW:
+				parent.isSlow();
 			}
 			pup.isDead = true;
 		}

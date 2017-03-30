@@ -27,7 +27,7 @@ public class BlockBreaker extends Game {
 	//DONTBOTHER try move all objects into external xml definition files (and make obstacles use interfaces(one for each action: magnetise, explode etc))
 	//TODO NEEDS TESTING hide cursor when in game and show when in menus with custom cursor
 	//TODO sticky pad/ tractor beam
-	//TODO negative power ups such as drunk/slow/angled
+	//TODO DONE needs images and testing ------------- negative power ups such as drunk/slow
 	//TODO add larger pad mechanic
 	//TODO make GUI class that overlays application screen using stage
 	//TODO add continue button (saving score and cash in preferences ?? possible cheat)

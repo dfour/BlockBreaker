@@ -18,6 +18,8 @@ public class PowerUp extends Entity{
 	public static final int CASH10 = 9;
 	public static final int CASH25 = 10;
 	public static final int CASH100 = 11;
+	public static final int DRUNK = 12;
+	public static final int SLOW = 13;
 	
 	public boolean isDead = false;
 	public boolean wasEatenByPad = false;
