@@ -88,6 +88,7 @@ public class BBModel {
 	public float lazerTimer = 5f;
 	public float drunkTimer = 5f;
 	public float slowTimer = 5f;
+	public float stickyTimer = 30f;
 	private float padOffset = 0;
 	
 	private float padSpeed = 12f;
@@ -118,6 +119,9 @@ public class BBModel {
 	public Array<Vector2> magPowerFText= new Array<Vector2>(); 
 	public Array<Vector2> magStrFText= new Array<Vector2>();
 	public Array<Vector2> scoreFText = new Array<Vector2>();
+	public Array<Vector2> slowFText = new Array<Vector2>();
+	public Array<Vector2> drunkFText = new Array<Vector2>();
+	public Array<Vector2> stickyFText = new Array<Vector2>();
 	
 	private Vector3 lastMousePos;
 	public Pad pad;
@@ -135,6 +139,7 @@ public class BBModel {
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;
+	
 	
 	
 	
@@ -264,7 +269,6 @@ public class BBModel {
 	}
 	
 	public void doLogic(float delta) {
-		// TODO check pad offset stuff
 		if(controller.getLeft()){
 			Gdx.input.setCursorPosition(sw/2,300);
 			controller.overrideMouseLocation(sw/2,300);
@@ -285,7 +289,7 @@ public class BBModel {
 		}
 		MathUtils.clamp(padOffset, -335, 335);
 		if(BlockBreaker.debug){
-			//System.out.println("Pad Offset is :"+padOffset);
+			System.out.println("Pad Offset is :"+padOffset);
 		}
 		Vector3 mousePosition = cam.unproject(new Vector3(controller.getMousePosition(), 0));
 		if(lastMousePos != null){
@@ -335,6 +339,14 @@ public class BBModel {
 				isSlow = false;
 				slowTimer = 5f;
 				padSpeed = 12f;
+			}
+		}
+		
+		if(pad.isStickyPad){
+			stickyTimer -= delta;
+			if(stickyTimer <= 0){
+				pad.isStickyPad = false;
+				stickyTimer = 30f;
 			}
 		}
 		
@@ -465,7 +477,7 @@ public class BBModel {
 		
 		for (Ball ball : entFactory.balls) {
 			if (ball.isAttached) {
-				ball.body.setTransform(pad.body.getPosition().x, 7, 0); 
+				ball.body.setTransform(pad.body.getPosition().x+ball.xOffset, pad.body.getPosition().y+ball.yOffset, 0); 
 				ball.body.setLinearVelocity(0, 0);
 				if (controller.isMouse1Down() || controller.isReleaseDown) {
 					ball.isAttached = false; // release ball
@@ -604,6 +616,11 @@ public class BBModel {
 			// System.out.println("making a brick");
 			entFactory.makeBrick(10, 10);
 			controller.ffour = false;
+		}
+		
+		if(controller.fseven){
+			controller.fseven = false;
+			entFactory.createNewPowerUp(new Vector2(10,10));
 		}
 		
 		if (controller.fsix) {
@@ -747,5 +764,18 @@ public class BBModel {
 	public void isSlow() {
 		isSlow = true;
 		padSpeed= 7f;
+	}
+
+	public void ballHitPad(Ball ball) {
+		if(pad.isStickyPad){
+			ball.isAttached = true;
+			ball.xOffset = ball.body.getPosition().x - pad.body.getPosition().x;
+			ball.yOffset = ball.body.getPosition().y - pad.body.getPosition().y;
+		}
+	}
+
+	public void isSticky() {
+		pad.isStickyPad = true;
+		
 	}
 }

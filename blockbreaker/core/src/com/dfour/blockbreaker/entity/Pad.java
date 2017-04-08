@@ -22,6 +22,8 @@ public class Pad  {
 	
 	public ChainLight lazLightLeft;
 	public ChainLight lazLightRight;
+	
+	public boolean isStickyPad = false;
 
 	public Pad(Body bod, Sprite normal, Sprite pull, Sprite push,Animation hover){
 		super();

@@ -285,7 +285,7 @@ public class EntityFactory {
 		Body pupBody = bodyFactory.makeCirclePolyBody(position.x, position.y,
 				1f, BodyFactory.RUBBER, BodyType.DynamicBody);
 		TextureRegion tex;
-		int type = (int) (Math.random() * 12);
+		int type = (int) (Math.random() * 15);
 		if (type == PowerUp.MAG_POWER) {
 			tex = atlas.findRegion("mag_power_pup");
 		} else if (type == PowerUp.MAG_STRENGTH) {
@@ -310,6 +310,12 @@ public class EntityFactory {
 			tex = atlas.findRegion("cash25_pup");
 		} else if (type == PowerUp.CASH100) {
 			tex = atlas.findRegion("cash100_pup");
+		}else if (type == PowerUp.SLOW) {
+			tex = atlas.findRegion("slow_pup");
+		}else if (type == PowerUp.DRUNK) {
+			tex = atlas.findRegion("drunk_pup");
+		} else if (type == PowerUp.STICKY) {
+			tex = atlas.findRegion("sticky_pup");
 		} else {
 			tex = null;
 		}

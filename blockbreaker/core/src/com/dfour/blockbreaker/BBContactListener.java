@@ -48,9 +48,9 @@ public class BBContactListener implements ContactListener {
 		}
 		
 		if(fa.getBody().getUserData() instanceof Ball){
-			ballHitSomething((Ball) fa.getUserData(),fb);
+			ballHitSomething((Ball) fa.getBody().getUserData(),fb);
 		}else if(fb.getBody().getUserData() instanceof Ball){
-			ballHitSomething((Ball) fb.getUserData(),fa);
+			ballHitSomething((Ball) fb.getBody().getUserData(),fa);
 		}
 		
 		if(fa.getBody().getUserData() instanceof Bomb){
@@ -163,8 +163,16 @@ public class BBContactListener implements ContactListener {
 				break;
 			case PowerUp.DRUNK:
 				parent.isDrunk();
+				parent.drunkFText.add(pup.body.getPosition());
+				break;
 			case PowerUp.SLOW:
 				parent.isSlow();
+				parent.slowFText.add(pup.body.getPosition());
+				break;
+			case PowerUp.STICKY:
+				parent.isSticky();
+				parent.stickyFText.add(pup.body.getPosition());
+				break;
 			}
 			pup.isDead = true;
 		}
@@ -185,7 +193,11 @@ public class BBContactListener implements ContactListener {
 		if(fix.getUserData() instanceof Brick){
 			parent.playSound(BBModel.PING_SOUND);
 		}else if(fix.getBody().getUserData() instanceof Pad){
-			parent.playSound(BBModel.BOING_SOUND);
+			if(!ball.isAttached){
+				// no sound for attached balls
+				parent.ballHitPad(ball);
+				parent.playSound(BBModel.BOING_SOUND);
+			}
 		}else if(!fix.isSensor()){
 			parent.playSound(BBModel.PING_SOUND);
 		}

@@ -88,6 +88,9 @@ public class ApplicationScreen implements Screen {
 	private ParticleEffect magPowerPlusEffect;
 	private ParticleEffect magStrPlusEffect;
 	private ParticleEffect scorePlusEffect;
+	private ParticleEffect slowEffect;
+	private ParticleEffect drunkEffect;
+	private ParticleEffect stickyEffect;
 
 	private ParticleEffectPool partySparksPool;
 	private ParticleEffectPool partyExplosionPool;
@@ -104,6 +107,11 @@ public class ApplicationScreen implements Screen {
 	private ParticleEffectPool partyMagPowerPool;
 	private ParticleEffectPool partyMagStrPool;
 	private ParticleEffectPool partyScorePlusPool;
+	private ParticleEffectPool partySlowPool;
+	private ParticleEffectPool partyDrunkPool;
+	private ParticleEffectPool partyStickyPool;
+	
+	
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
 	
 	private Texture expParty;
@@ -140,6 +148,9 @@ public class ApplicationScreen implements Screen {
 	public static final int MAGPOWER_FTEXT = 12;
 	public static final int MAGSTR_FTEXT = 13;
 	public static final int SCORE_FTEXT = 14;
+	public static final int SLOW_FTEXT = 17;
+	public static final int DRUNK_FTEXT = 18;
+	public static final int STICKYPAD_FTEXT = 19;
 	
 	public static final int GHOST_TAIL = 15;
 	public static final int MAGGHOST_TAIL = 16;
@@ -240,15 +251,16 @@ public class ApplicationScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
+				isPaused = false;
 				quitToMenu();
 			}
 		});
 		
 		
 		
-		pauseMenuTable.add(btnResume);
+		pauseMenuTable.add(btnResume).width(250).pad(5);
 		pauseMenuTable.row();
-		pauseMenuTable.add(btnQuit);
+		pauseMenuTable.add(btnQuit).width(250).pad(5);
 		
 		
 		
@@ -307,20 +319,11 @@ public class ApplicationScreen implements Screen {
 		buttonTable.add(scoreTextLabel).align(Align.left);
 		buttonTable.add(scoreCountLabel).align(Align.right);
 		
-		
 		displayTable.add(pauseMenuTable).width(800).height(600);
 		displayTable.row();
 		displayTable.add(buttonTable).center().height(60).width(800);
 		
-		
-		
 		stage.addActor(displayTable);
-		
-		
-		
-		
-		
-		
 	}
 
 	@Override
@@ -596,6 +599,9 @@ public class ApplicationScreen implements Screen {
 	    addParticleEffectArray(bbModel.explosions,EXPLOSION);
 	    addParticleEffectArray(bbModel.sparks,SPARK);
 	    addParticleEffectArray(bbModel.scoreFText,SCORE_FTEXT);
+	    addParticleEffectArray(bbModel.slowFText,SLOW_FTEXT);
+	    addParticleEffectArray(bbModel.drunkFText,DRUNK_FTEXT);
+	    addParticleEffectArray(bbModel.stickyFText,STICKYPAD_FTEXT);
 		
 	}
 	
@@ -704,6 +710,11 @@ public class ApplicationScreen implements Screen {
 		case MAGPOWER_FTEXT :effect = partyMagPowerPool.obtain();break;
 		case MAGSTR_FTEXT :effect = partyMagStrPool.obtain();break;
 		case SCORE_FTEXT: effect = partyScorePlusPool.obtain(); break;
+		
+		case DRUNK_FTEXT: effect = partyDrunkPool.obtain(); break;
+		case SLOW_FTEXT: effect = partySlowPool.obtain(); break;
+		case STICKYPAD_FTEXT: effect = partyStickyPool.obtain(); break;
+		
 		case GHOST_TAIL: effect = partyGhostTailPool.obtain(); break;
 		case MAGGHOST_TAIL: effect = partyMagGhostTailPool.obtain(); break;
 		default:	 	effect = partySparksPool.obtain(); break;
@@ -720,6 +731,7 @@ public class ApplicationScreen implements Screen {
 		}
 		gameOverTimer-= delta;
 		if(gameOverTimer < 0){
+			Gdx.graphics.setSystemCursor(inMenu);
 			parent.changeScreen(BlockBreaker.ENDGAME);
 			gameOverTimer = 5f;
 		}
@@ -777,6 +789,9 @@ public class ApplicationScreen implements Screen {
 		scorePlusEffect = parent.assMan.manager.get("particles/scoreplus.pe",ParticleEffect.class);
 		ghostTailEffect = parent.assMan.manager.get("particles/ballghosttail.pe",ParticleEffect.class);
 		magGhostTailEffect = parent.assMan.manager.get("particles/magballghosttail.pe",ParticleEffect.class);
+		slowEffect = parent.assMan.manager.get("particles/slow.pe",ParticleEffect.class);
+		drunkEffect = parent.assMan.manager.get("particles/drunk.pe",ParticleEffect.class);
+		stickyEffect = parent.assMan.manager.get("particles/stickypad.pe",ParticleEffect.class);
 		
 
 		
@@ -811,6 +826,9 @@ public class ApplicationScreen implements Screen {
 		partyMagPowerPool = new ParticleEffectPool(magPowerPlusEffect,2,20);
 		partyMagStrPool = new ParticleEffectPool(magStrPlusEffect,2,20);
 		partyScorePlusPool = new ParticleEffectPool(scorePlusEffect,2,20);
+		partySlowPool = new ParticleEffectPool(slowEffect,2,20);
+		partyDrunkPool = new ParticleEffectPool(drunkEffect,2,20);
+		partyStickyPool = new ParticleEffectPool(stickyEffect,2,20);
 		partyGhostTailPool = new ParticleEffectPool(ghostTailEffect,2,100);
 		partyMagGhostTailPool = new ParticleEffectPool(magGhostTailEffect,2,100);
 		

@@ -16,6 +16,7 @@ public class AppController implements InputProcessor{
 	public boolean ffive = false;
 	public boolean fsix = false;
 	public boolean ffour = false;
+	public boolean fseven = false;
 	public boolean feight = false;
 	public boolean useBomb = false;
 	private Vector2 mouseLocation;
@@ -65,6 +66,9 @@ public class AppController implements InputProcessor{
         	return false;
         case Keys.F6:
         	this.fsix = !this.fsix;
+        	return false;
+        case Keys.F7:
+        	this.fseven = !this.fseven;
         	return false;
         case Keys.F8:
         	this.feight = !this.feight;

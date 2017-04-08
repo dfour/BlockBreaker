@@ -50,6 +50,10 @@ public class BBAssetManager {
 	public final String magPowerPlusPE	="particles/magpowerplus.pe";
 	public final String magStrPlus		="particles/magstrplus.pe";
 	public final String scorePlus		="particles/scoreplus.pe";
+	public final String slowText		="particles/slow.pe";
+	public final String stickyText		="particles/stickypad.pe";
+	public final String drunkText		="particles/drunk.pe";
+	
 	public final String ghostTail		="particles/ballghosttail.pe";
 	public final String magghostTail	="particles/magballghosttail.pe";
 	
@@ -73,6 +77,9 @@ public class BBAssetManager {
 		manager.load(scorePlus, ParticleEffect.class, pep);
 		manager.load(ghostTail,ParticleEffect.class,pep);
 		manager.load(magghostTail,ParticleEffect.class,pep);
+		manager.load(slowText,ParticleEffect.class,pep);
+		manager.load(stickyText,ParticleEffect.class,pep);
+		manager.load(drunkText,ParticleEffect.class,pep);
 	}
 	
 	//Sounds

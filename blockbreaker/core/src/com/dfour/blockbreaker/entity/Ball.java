@@ -9,7 +9,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 
 public class Ball extends Entity{
 	public boolean isDead = false;
-	public boolean isAttached = true; 
+	public boolean isAttached = true;
+	public float xOffset = 0;
+	public float yOffset = 2;
 	public int MAX_SPEED = 100;
 	public boolean isMagBall = false;
 	public float speedModifier = 1f;
