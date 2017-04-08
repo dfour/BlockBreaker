@@ -15,7 +15,6 @@ import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEffectPool;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -41,6 +40,7 @@ import com.dfour.blockbreaker.BBModel;
 import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.IconBar;
+import com.dfour.blockbreaker.ParticleEffectManager;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
 import com.dfour.blockbreaker.entity.Bomb;
@@ -73,45 +73,8 @@ public class ApplicationScreen implements Screen {
 	private TextureRegion gameOver;
 	private TextureRegion gameOverwin;
 	
-	private ParticleEffect sparks;
-	private ParticleEffect explosion;
-	private ParticleEffect lazerEffect;
-	private ParticleEffect pupEffect;
-	private ParticleEffect lazerHitEffect;
-	private ParticleEffect bhEffect;
-	private ParticleEffect cashEffect;
-	private ParticleEffect magBallEffect;
-	private ParticleEffect bombpeEffect;
-	private ParticleEffect ballPlusoneEffect;
-	private ParticleEffect guideLaserEffect;
-	private ParticleEffect laserPlusEffect;
-	private ParticleEffect magPowerPlusEffect;
-	private ParticleEffect magStrPlusEffect;
-	private ParticleEffect scorePlusEffect;
-	private ParticleEffect slowEffect;
-	private ParticleEffect drunkEffect;
-	private ParticleEffect stickyEffect;
-
-	private ParticleEffectPool partySparksPool;
-	private ParticleEffectPool partyExplosionPool;
-	private ParticleEffectPool partyLazerPool;
-	private ParticleEffectPool partyHitLazerPool;
-	private ParticleEffectPool partyPupPool;
-	private ParticleEffectPool partyBhPool;
-	private ParticleEffectPool partyCashPool;
-	private ParticleEffectPool partyMagBallPool;
-	private ParticleEffectPool partyBombPool;
-	private ParticleEffectPool partyBallPlusOnePool;
-	private ParticleEffectPool partyGuideLaserPool;
-	private ParticleEffectPool partyLaserPlussPool;
-	private ParticleEffectPool partyMagPowerPool;
-	private ParticleEffectPool partyMagStrPool;
-	private ParticleEffectPool partyScorePlusPool;
-	private ParticleEffectPool partySlowPool;
-	private ParticleEffectPool partyDrunkPool;
-	private ParticleEffectPool partyStickyPool;
 	
-	
+	private ParticleEffectManager pem = new ParticleEffectManager();
 	private Array<PooledEffect> effects = new Array<PooledEffect>();
 	
 	private Texture expParty;
@@ -132,29 +95,6 @@ public class ApplicationScreen implements Screen {
 	public ExtendViewport viewport;
 	private ShapeRenderer sr;
 	
-	public static final int SPARK = 0;
-	public static final int EXPLOSION = 1;
-	public static final int POWERUP = 2;
-	public static final int LAZER = 3;
-	public static final int LAZER_HIT = 4;
-	public static final int BLACK_HOLE = 5;
-	// FLYING TEXT PES
-	public static final int CASH_FTEXT = 6;
-	public static final int MAGBALL_FTEXT = 7;
-	public static final int BOMB_FTEXT = 8;
-	public static final int BALL_FTEXT = 9;
-	public static final int GUIDE_FTEXT = 10;
-	public static final int LASER_FTEXT =11;
-	public static final int MAGPOWER_FTEXT = 12;
-	public static final int MAGSTR_FTEXT = 13;
-	public static final int SCORE_FTEXT = 14;
-	public static final int SLOW_FTEXT = 17;
-	public static final int DRUNK_FTEXT = 18;
-	public static final int STICKYPAD_FTEXT = 19;
-	
-	public static final int GHOST_TAIL = 15;
-	public static final int MAGGHOST_TAIL = 16;
-	
 	private float gameOverTimer = 5f;
 	private TextureAtlas atlas;
 	private TextureAtlas atlasGui;
@@ -165,10 +105,6 @@ public class ApplicationScreen implements Screen {
 	private float currentAlpha = 1f;
 	private boolean isReturning;
 	private int nextScreen;
-	private ParticleEffect ghostTailEffect;
-	private ParticleEffectPool partyGhostTailPool;
-	private ParticleEffect magGhostTailEffect;
-	private ParticleEffectPool partyMagGhostTailPool;
 	private Stage stage;
 	private Table displayTable;
 	private Skin skin;
@@ -582,26 +518,26 @@ public class ApplicationScreen implements Screen {
 	private void addParticleEffects() {
 		for(Ball ball :bbModel.entFactory.balls){
 			if(ball.isMagBall){
-				addPartyEffect(ball.body.getPosition(),MAGGHOST_TAIL);
+				addPartyEffect(ball.body.getPosition(),ParticleEffectManager.MAGGHOST_TAIL);
 			}else{
-				addPartyEffect(ball.body.getPosition(),GHOST_TAIL);
+				addPartyEffect(ball.body.getPosition(),ParticleEffectManager.GHOST_TAIL);
 			}
 		}
-	    addParticleEffectArray(bbModel.magPowerFText,MAGPOWER_FTEXT);
-	    addParticleEffectArray(bbModel.laserFtext,LASER_FTEXT);
-	    addParticleEffectArray(bbModel.guideFText,GUIDE_FTEXT);
-	    addParticleEffectArray(bbModel.ballFText,BALL_FTEXT);
-	    addParticleEffectArray(bbModel.bombFText,BOMB_FTEXT);
-	    addParticleEffectArray(bbModel.magBallPEToShow,MAGBALL_FTEXT);
-	    addParticleEffectArray(bbModel.cashPEToShow,CASH_FTEXT);
-	    addParticleEffectArray(bbModel.blackHolePE,BLACK_HOLE);
-	    addParticleEffectArray(bbModel.pupExplosions,POWERUP);
-	    addParticleEffectArray(bbModel.explosions,EXPLOSION);
-	    addParticleEffectArray(bbModel.sparks,SPARK);
-	    addParticleEffectArray(bbModel.scoreFText,SCORE_FTEXT);
-	    addParticleEffectArray(bbModel.slowFText,SLOW_FTEXT);
-	    addParticleEffectArray(bbModel.drunkFText,DRUNK_FTEXT);
-	    addParticleEffectArray(bbModel.stickyFText,STICKYPAD_FTEXT);
+	    addParticleEffectArray(bbModel.magPowerFText,ParticleEffectManager.MAGPOWER_FTEXT);
+	    addParticleEffectArray(bbModel.laserFtext,ParticleEffectManager.LASER_FTEXT);
+	    addParticleEffectArray(bbModel.guideFText,ParticleEffectManager.GUIDE_FTEXT);
+	    addParticleEffectArray(bbModel.ballFText,ParticleEffectManager.BALL_FTEXT);
+	    addParticleEffectArray(bbModel.bombFText,ParticleEffectManager.BOMB_FTEXT);
+	    addParticleEffectArray(bbModel.magBallPEToShow,ParticleEffectManager.MAGBALL_FTEXT);
+	    addParticleEffectArray(bbModel.cashPEToShow,ParticleEffectManager.CASH_FTEXT);
+	    addParticleEffectArray(bbModel.blackHolePE,ParticleEffectManager.BLACK_HOLE);
+	    addParticleEffectArray(bbModel.pupExplosions,ParticleEffectManager.POWERUP);
+	    addParticleEffectArray(bbModel.explosions,ParticleEffectManager.EXPLOSION);
+	    addParticleEffectArray(bbModel.sparks,ParticleEffectManager.SPARK);
+	    addParticleEffectArray(bbModel.scoreFText,ParticleEffectManager.SCORE_FTEXT);
+	    addParticleEffectArray(bbModel.slowFText,ParticleEffectManager.SLOW_FTEXT);
+	    addParticleEffectArray(bbModel.drunkFText,ParticleEffectManager.DRUNK_FTEXT);
+	    addParticleEffectArray(bbModel.stickyFText,ParticleEffectManager.STICKYPAD_FTEXT);
 		
 	}
 	
@@ -623,11 +559,11 @@ public class ApplicationScreen implements Screen {
 			
 			if(bbModel.lazerEndLeft != null){
 				lazerLengthLeft = bbModel.lazerEndLeft.y - y - 6;
-				this.addPartyEffect(bbModel.lazerEndLeft, LAZER_HIT);
+				this.addPartyEffect(bbModel.lazerEndLeft,ParticleEffectManager.LAZER_HIT);
 			}
 			if(bbModel.lazerEndRight != null){
 				lazerLengthRight = bbModel.lazerEndRight.y - y - 6;
-				this.addPartyEffect(bbModel.lazerEndRight, LAZER_HIT);
+				this.addPartyEffect(bbModel.lazerEndRight, ParticleEffectManager.LAZER_HIT);
 			}
 			
 			drawLazor(x-5,y,lazerLengthLeft);
@@ -693,32 +629,8 @@ public class ApplicationScreen implements Screen {
 	}
 		
 	private void addPartyEffect(Vector2 pos, int type){
-		PooledEffect effect;
-		switch(type){
-		case SPARK:	 	effect = partySparksPool.obtain(); break;
-		case EXPLOSION:	effect = partyExplosionPool.obtain(); break;
-		case LAZER:		effect = partyLazerPool.obtain();break;
-		case POWERUP:	effect = partyPupPool.obtain();break;
-		case LAZER_HIT:	effect = partyHitLazerPool.obtain();break;
-		case BLACK_HOLE:effect = partyBhPool.obtain();break;
-		case CASH_FTEXT:effect = partyCashPool.obtain();break;
-		case MAGBALL_FTEXT:effect = partyMagBallPool.obtain();break;
-		case BOMB_FTEXT :effect = partyBombPool.obtain();break;
-		case BALL_FTEXT :effect = partyBallPlusOnePool.obtain();break;
-		case GUIDE_FTEXT :effect = partyGuideLaserPool.obtain();break;
-		case LASER_FTEXT :effect = partyLaserPlussPool.obtain();break;
-		case MAGPOWER_FTEXT :effect = partyMagPowerPool.obtain();break;
-		case MAGSTR_FTEXT :effect = partyMagStrPool.obtain();break;
-		case SCORE_FTEXT: effect = partyScorePlusPool.obtain(); break;
 		
-		case DRUNK_FTEXT: effect = partyDrunkPool.obtain(); break;
-		case SLOW_FTEXT: effect = partySlowPool.obtain(); break;
-		case STICKYPAD_FTEXT: effect = partyStickyPool.obtain(); break;
-		
-		case GHOST_TAIL: effect = partyGhostTailPool.obtain(); break;
-		case MAGGHOST_TAIL: effect = partyMagGhostTailPool.obtain(); break;
-		default:	 	effect = partySparksPool.obtain(); break;
-		}
+		PooledEffect effect = pem.getPooledParticleEffect(type);
 		effect.setPosition(pos.x * BBModel.BOX_TO_WORLD, pos.y * BBModel.BOX_TO_WORLD);
 		effects.add(effect);	
 	}
@@ -772,66 +684,28 @@ public class ApplicationScreen implements Screen {
 	
 	private void createEffects(){
 		// make effects
-		sparks = parent.assMan.manager.get("particles/sparks.pe",ParticleEffect.class);
-		explosion = parent.assMan.manager.get("particles/explosion.pe",ParticleEffect.class);
-		lazerEffect = parent.assMan.manager.get("particles/lazer.pe",ParticleEffect.class);
-		lazerHitEffect = parent.assMan.manager.get("particles/laserHitSparks.pe",ParticleEffect.class);
-		pupEffect = parent.assMan.manager.get("particles/pupGetEffect.pe",ParticleEffect.class);
-		bhEffect = parent.assMan.manager.get("particles/blackhole.pe",ParticleEffect.class);
-		cashEffect = parent.assMan.manager.get("particles/cash.pe",ParticleEffect.class);
-		magBallEffect = parent.assMan.manager.get("particles/magballpe.pe",ParticleEffect.class);
-		bombpeEffect = parent.assMan.manager.get("particles/bombpe.pe",ParticleEffect.class);
-		ballPlusoneEffect = parent.assMan.manager.get("particles/ballplusone.pe",ParticleEffect.class);
-		guideLaserEffect = parent.assMan.manager.get("particles/guidelaser.pe",ParticleEffect.class);
-		laserPlusEffect = parent.assMan.manager.get("particles/laserplus.pe",ParticleEffect.class);
-		magPowerPlusEffect = parent.assMan.manager.get("particles/magpowerplus.pe",ParticleEffect.class);
-		magStrPlusEffect = parent.assMan.manager.get("particles/magstrplus.pe",ParticleEffect.class);
-		scorePlusEffect = parent.assMan.manager.get("particles/scoreplus.pe",ParticleEffect.class);
-		ghostTailEffect = parent.assMan.manager.get("particles/ballghosttail.pe",ParticleEffect.class);
-		magGhostTailEffect = parent.assMan.manager.get("particles/magballghosttail.pe",ParticleEffect.class);
-		slowEffect = parent.assMan.manager.get("particles/slow.pe",ParticleEffect.class);
-		drunkEffect = parent.assMan.manager.get("particles/drunk.pe",ParticleEffect.class);
-		stickyEffect = parent.assMan.manager.get("particles/stickypad.pe",ParticleEffect.class);
 		
-
+		pem.addParticleEffect(ParticleEffectManager.SPARK, parent.assMan.manager.get("particles/sparks.pe",ParticleEffect.class), 1/2f);
+		pem.addParticleEffect(ParticleEffectManager.EXPLOSION, parent.assMan.manager.get("particles/explosion.pe",ParticleEffect.class), 1/4f);
+		pem.addParticleEffect(ParticleEffectManager.LAZER, parent.assMan.manager.get("particles/lazer.pe",ParticleEffect.class), 1/4f);
+		pem.addParticleEffect(ParticleEffectManager.LAZER_HIT, parent.assMan.manager.get("particles/laserHitSparks.pe",ParticleEffect.class), 1/3f);
+		pem.addParticleEffect(ParticleEffectManager.POWERUP, parent.assMan.manager.get("particles/pupGetEffect.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.BLACK_HOLE, parent.assMan.manager.get("particles/blackhole.pe",ParticleEffect.class), 1/4f);
 		
+		pem.addParticleEffect(ParticleEffectManager.CASH_FTEXT, parent.assMan.manager.get("particles/cash.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.MAGBALL_FTEXT, parent.assMan.manager.get("particles/magballpe.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.BOMB_FTEXT, parent.assMan.manager.get("particles/bombpe.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.BALL_FTEXT, parent.assMan.manager.get("particles/ballplusone.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.GUIDE_FTEXT, parent.assMan.manager.get("particles/guidelaser.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.LASER_FTEXT, parent.assMan.manager.get("particles/laserplus.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.MAGPOWER_FTEXT, parent.assMan.manager.get("particles/magpowerplus.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.SCORE_FTEXT, parent.assMan.manager.get("particles/scoreplus.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.SLOW_FTEXT, parent.assMan.manager.get("particles/slow.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.DRUNK_FTEXT, parent.assMan.manager.get("particles/drunk.pe",ParticleEffect.class));
+		pem.addParticleEffect(ParticleEffectManager.STICKYPAD_FTEXT, parent.assMan.manager.get("particles/stickypad.pe",ParticleEffect.class));
 		
+		pem.addParticleEffect(ParticleEffectManager.GHOST_TAIL, parent.assMan.manager.get("particles/ballghosttail.pe",ParticleEffect.class), 1/3f, 5, 100);
+		pem.addParticleEffect(ParticleEffectManager.MAGGHOST_TAIL, parent.assMan.manager.get("particles/magballghosttail.pe",ParticleEffect.class), 1/3f, 5, 100);
 		
-		
-		// scale effects
-		sparks.scaleEffect(1/2f);
-		explosion.scaleEffect(1/4f);
-		lazerEffect.scaleEffect(1/4f);
-		lazerHitEffect.scaleEffect(1/3f);
-		bhEffect.scaleEffect(1/4f);
-		// FloatingText
-		cashEffect.scaleEffect(1/3f);
-		//magBallEffect.scaleEffect(1/3f);
-		ghostTailEffect.scaleEffect(1/3f);
-		magGhostTailEffect.scaleEffect(1/3f);
-		
-		//create object pools
-		partySparksPool = new ParticleEffectPool(sparks, 5, 20);
-		partyExplosionPool = new ParticleEffectPool(explosion, 5, 20);
-		partyLazerPool = new ParticleEffectPool(lazerEffect, 5, 20);
-		partyHitLazerPool = new ParticleEffectPool(lazerHitEffect, 5, 20);
-		partyPupPool = new ParticleEffectPool(pupEffect, 5, 20);
-		partyBhPool = new ParticleEffectPool(bhEffect,5,20);
-		partyCashPool = new ParticleEffectPool(cashEffect,2,20);
-		partyMagBallPool = new ParticleEffectPool(magBallEffect,2,20);
-		partyBombPool = new ParticleEffectPool(bombpeEffect,2,20);
-		partyBallPlusOnePool = new ParticleEffectPool(ballPlusoneEffect,2,20);
-		partyGuideLaserPool = new ParticleEffectPool(guideLaserEffect,2,20);
-		partyLaserPlussPool = new ParticleEffectPool(laserPlusEffect,2,20);
-		partyMagPowerPool = new ParticleEffectPool(magPowerPlusEffect,2,20);
-		partyMagStrPool = new ParticleEffectPool(magStrPlusEffect,2,20);
-		partyScorePlusPool = new ParticleEffectPool(scorePlusEffect,2,20);
-		partySlowPool = new ParticleEffectPool(slowEffect,2,20);
-		partyDrunkPool = new ParticleEffectPool(drunkEffect,2,20);
-		partyStickyPool = new ParticleEffectPool(stickyEffect,2,20);
-		partyGhostTailPool = new ParticleEffectPool(ghostTailEffect,2,100);
-		partyMagGhostTailPool = new ParticleEffectPool(magGhostTailEffect,2,100);
-		
-				
 	}
 }

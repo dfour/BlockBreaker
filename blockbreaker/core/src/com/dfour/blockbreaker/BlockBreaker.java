@@ -24,13 +24,11 @@ public class BlockBreaker extends Game {
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
-	//TODO NEEDS TESTING hide cursor when in game and show when in menus with custom cursor
-	//TODO sticky pad/ tractor beam
-	//TODO DONE needs images and testing ------------- negative power ups such as drunk/slow
 	//TODO make GUI class that overlays application screen using stage
 	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
-	//TODO NEEDS TESTING add release ball key to prefs
 	//TODO look into changing box2d step size to alter time
+	//TODO move duplicate party effects into sinngle efect with different images
+	//TODO try to sort out loading of particle effects and pools
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;
