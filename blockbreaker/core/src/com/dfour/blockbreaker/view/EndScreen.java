@@ -11,9 +11,7 @@ import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.controller.AppController;
 
 public class EndScreen implements Screen {
-	
-	// TODO get assets from Asset manager
-	
+		
 	private BlockBreaker parent;
 	private SpriteBatch pb;
 	private AppController controller;
@@ -23,6 +21,7 @@ public class EndScreen implements Screen {
 	private TextureAtlas atlasGui;
 	private AtlasRegion bg;
 	private AtlasRegion bgCredits;
+	private float countDown = 20f;
 
 	
 	public EndScreen(BlockBreaker app){
@@ -39,13 +38,12 @@ public class EndScreen implements Screen {
 	public void show() {
 		controller = new AppController(parent);
 		Gdx.input.setInputProcessor(controller);
+		countDown = 20f;
 
 	}
 
 	@Override
 	public void render(float delta) {
-		
-		// TODO redesign this screen
 		
 		Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -59,29 +57,13 @@ public class EndScreen implements Screen {
 		}
 		pb.draw(bgCredits, sw/2 - 310, sh/2 - 300);
 		pb.end();
-	    
-		/*
-	    pb.begin();
-        font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        font.draw(pb, "You Have Completed the game.",widthOffset/2,sh-10);
-        font.draw(pb, "Press Escpae to return to menu.",widthOffset/2,sh -20);
-        font.draw(pb, "Credits",widthOffset/2,sh -30);
-        font.draw(pb, "Who made this : John Day",widthOffset/2,sh -40); 
-        font.draw(pb, "Who made that : John Day",widthOffset/2,sh -50); 
-        font.draw(pb, "Who made this thingy : John Day",widthOffset/2,sh -60); 
-        font.draw(pb, "Who made that thingy: John Day",widthOffset/2,sh -70); 
-        font.draw(pb, "Who made the dohickey : John Day",widthOffset/2,sh -80); 
-        font.draw(pb, "Who made the whatchamacallit : John Day",widthOffset/2,sh -90); 
-        font.draw(pb, "Who made the thingymabob : John Day",widthOffset/2,sh -100);
-        font.draw(pb, "Who has no friends : John Day",widthOffset/2,sh -110); 
-        font.draw(pb, "Easter Egg Manager : Charlotte Day",widthOffset/2,sh -120); 
-        font.draw(pb, "Music By : sawsquarenoise",widthOffset/2,sh -130); 
-        pb.end();
-        
-        */
 		
         if(controller.getEscape()){
         	controller.setEscape(false);
+        	returnToMenu();
+        }
+        countDown -= delta;
+        if(countDown <= 0){
         	returnToMenu();
         }
         
@@ -98,27 +80,19 @@ public class EndScreen implements Screen {
 	}
 
 	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
+	public void pause() {		
 	}
 
 	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
+	public void resume() {		
 	}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
+	public void hide() {		
 	}
 
 	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
+	public void dispose() {		
 	}
 
 }

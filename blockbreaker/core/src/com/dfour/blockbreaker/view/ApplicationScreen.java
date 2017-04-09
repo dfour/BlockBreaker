@@ -187,7 +187,7 @@ public class ApplicationScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				isPaused = false;
+				
 				quitToMenu();
 			}
 		});
@@ -302,6 +302,7 @@ public class ApplicationScreen implements Screen {
 	    		pauseMenuTable.setVisible(true);
 	    		Gdx.graphics.setSystemCursor(inMenu);
 	    	}else{
+	    		pauseMenuTable.setVisible(false);
 	    		Gdx.graphics.setCursor(inGame);
 	    	}
 	    	
@@ -330,6 +331,8 @@ public class ApplicationScreen implements Screen {
 			currentAlpha = fadeOut;
 			if(fadeOut <= 0){
 				Gdx.graphics.setSystemCursor(inMenu);
+				pauseMenuTable.setVisible(false);
+				isPaused = false;
 				parent.changeScreen(nextScreen);
 			}
 		}else{

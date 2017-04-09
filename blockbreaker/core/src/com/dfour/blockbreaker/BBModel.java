@@ -141,9 +141,6 @@ public class BBModel {
 	private Sound ping;
 	
 	
-	
-	
-	
 
 	public BBModel(AppController cont, BBAssetManager ass) {
 		assMan = ass;
@@ -287,7 +284,7 @@ public class BBModel {
 				padOffset+=padSpeed;
 			}
 		}
-		MathUtils.clamp(padOffset, -335, 335);
+		padOffset = MathUtils.clamp(padOffset, -335, 335);
 		if(BlockBreaker.debug){
 			System.out.println("Pad Offset is :"+padOffset);
 		}

@@ -104,7 +104,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				LevelBlock lvb = new LevelBlock(blank);
 				lvb.setVisible(true);
 				lvb.setBounds(0, 0, 20, 10);
-				if(i !=0){
+				if(i !=0 && i < 28){
 					lvb.addListener(cl);
 				}
 				levelTable.add(lvb);
