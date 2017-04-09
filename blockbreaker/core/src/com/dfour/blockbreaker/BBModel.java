@@ -93,6 +93,8 @@ public class BBModel {
 	
 	private float padSpeed = 12f;
 	
+	private float xPosGetDrunk = 0f;
+	
 	public boolean isDrunk = false;
 	public boolean isSlow = false;
 	public boolean needToAddBall = false;
@@ -289,6 +291,23 @@ public class BBModel {
 			System.out.println("Pad Offset is :"+padOffset);
 		}
 		Vector3 mousePosition = cam.unproject(new Vector3(controller.getMousePosition(), 0));
+		
+		System.out.println("MP: x="+mousePosition.x + " y=" + mousePosition.y);
+		
+		
+		// limit mouse to ingame area
+		if(mousePosition.x < 0){
+			Vector3 left = new Vector3().set(0, 320, 0);
+			cam.project(left);
+			Gdx.input.setCursorPosition((int)left.x,(int)left.y);
+		}else if(mousePosition.x > 800){
+			Vector3 left = new Vector3().set(800, 320, 0);
+			cam.project(left);
+			Gdx.input.setCursorPosition((int)left.x,(int)left.y);
+		}
+		
+		
+		
 		if(lastMousePos != null){
 			if(!mousePosition.equals(lastMousePos)){
 				padOffset = 0;
@@ -296,7 +315,7 @@ public class BBModel {
 		}
 		float screenx = MathUtils.clamp((mousePosition.x + padOffset) * WORLD_TO_BOX, 6.5f, 73.5f);
 		if(isDrunk){
-			screenx =  80 - screenx;
+			screenx =  80 - screenx - xPosGetDrunk;
 		}
 		if(isSlow){
 			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.05f), 5);
@@ -756,6 +775,8 @@ public class BBModel {
 
 	public void isDrunk() {
 		isDrunk = true;
+		//set initial x pos for drunk (remove flip effect bug)
+		//xPosGetDrunk = pad.body.getPosition().x;
 	}
 
 	public void isSlow() {

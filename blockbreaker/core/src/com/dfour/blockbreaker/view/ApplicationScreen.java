@@ -158,6 +158,7 @@ public class ApplicationScreen implements Screen {
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
+		
 		inGame = Gdx.graphics.newCursor(new Pixmap(1,1,Format.RGBA8888), 0, 0);
 		inMenu = Cursor.SystemCursor.Arrow;
 		
@@ -178,6 +179,7 @@ public class ApplicationScreen implements Screen {
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				pauseMenuTable.setVisible(false);
+				ApplicationScreen.this.toInGameSettings();
 				isPaused = false;
 			}
 		});
@@ -187,7 +189,7 @@ public class ApplicationScreen implements Screen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				
+				ApplicationScreen.this.toInMenuSettings();
 				quitToMenu();
 			}
 		});
@@ -264,6 +266,7 @@ public class ApplicationScreen implements Screen {
 
 	@Override
 	public void show() {
+		
 		Gdx.input.setInputProcessor(imp);
 		if(bbModel.gameOver){
 			bbModel.level = 0;
@@ -271,7 +274,7 @@ public class ApplicationScreen implements Screen {
 		bbModel.init();
 		isPaused = false;
 		isReturning = false;
-		Gdx.graphics.setCursor(inGame);
+		toInGameSettings();
 	}
 	
 	@Override
@@ -295,15 +298,16 @@ public class ApplicationScreen implements Screen {
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	    
+	    
 	    if(controller.isPauseDown){
 	    	isPaused = !isPaused;
 	    	controller.isPauseDown = false;
 	    	if(isPaused){
 	    		pauseMenuTable.setVisible(true);
-	    		Gdx.graphics.setSystemCursor(inMenu);
+	    		toInMenuSettings();
 	    	}else{
 	    		pauseMenuTable.setVisible(false);
-	    		Gdx.graphics.setCursor(inGame);
+	    		toInGameSettings();
 	    	}
 	    	
 	    }
@@ -330,7 +334,7 @@ public class ApplicationScreen implements Screen {
 			fadeOut -= delta;
 			currentAlpha = fadeOut;
 			if(fadeOut <= 0){
-				Gdx.graphics.setSystemCursor(inMenu);
+				toInMenuSettings();
 				pauseMenuTable.setVisible(false);
 				isPaused = false;
 				parent.changeScreen(nextScreen);
@@ -711,4 +715,16 @@ public class ApplicationScreen implements Screen {
 		pem.addParticleEffect(ParticleEffectManager.MAGGHOST_TAIL, parent.assMan.manager.get("particles/magballghosttail.pe",ParticleEffect.class), 1/3f, 5, 100);
 		
 	}
+	
+	private void toInGameSettings(){
+		Gdx.input.setCursorCatched(true);
+		Gdx.graphics.setSystemCursor(inMenu);
+	}
+	
+	private void toInMenuSettings(){
+		Gdx.input.setCursorCatched(false);
+		Gdx.graphics.setSystemCursor(inMenu);
+	}
+	
+	
 }

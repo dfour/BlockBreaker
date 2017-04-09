@@ -72,7 +72,6 @@ public class BlockBreaker extends Game {
 		//pm.dispose();
 		
 		
-		
 		setScreen(loadingScreen);
 	}
 
