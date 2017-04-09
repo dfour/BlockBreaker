@@ -165,7 +165,6 @@ public class ApplicationScreen implements Screen {
 		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("darkblockbutton"));
 		
 		pauseMenuTable = new Table();
-		pauseMenuTable.setDebug(true);
 		pauseMenuTable.setBackground(npd);
 		pauseMenuTable.setVisible(false);
 		

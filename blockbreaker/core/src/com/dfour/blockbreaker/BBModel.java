@@ -268,62 +268,41 @@ public class BBModel {
 	}
 	
 	public void doLogic(float delta) {
+		
+
+		if(isDrunk){
+			padOffset -= (controller.getMousePosition().x - 400);
+		}else{
+			padOffset += (controller.getMousePosition().x - 400);
+		}
+		Gdx.input.setCursorPosition(400,350);
+		controller.getMousePosition().x = 400; 
+		
 		if(controller.getLeft()){
-			Gdx.input.setCursorPosition(sw/2,300);
-			controller.overrideMouseLocation(sw/2,300);
 			if(isDrunk){
 				padOffset+=padSpeed;
 			}else{
 				padOffset-=padSpeed;
 			}
-			
 		}else if(controller.getRight()){
-			Gdx.input.setCursorPosition(sw/2,300);
-			controller.overrideMouseLocation(sw/2,300);
 			if(isDrunk){
 				padOffset-=padSpeed;
 			}else{
 				padOffset+=padSpeed;
 			}
 		}
-		padOffset = MathUtils.clamp(padOffset, -335, 335);
+		padOffset = MathUtils.clamp(padOffset, 0, 800);
 		if(BlockBreaker.debug){
 			System.out.println("Pad Offset is :"+padOffset);
 		}
-		Vector3 mousePosition = cam.unproject(new Vector3(controller.getMousePosition(), 0));
-		
-		System.out.println("MP: x="+mousePosition.x + " y=" + mousePosition.y);
-		
-		
-		// limit mouse to ingame area
-		if(mousePosition.x < 0){
-			Vector3 left = new Vector3().set(0, 320, 0);
-			cam.project(left);
-			Gdx.input.setCursorPosition((int)left.x,(int)left.y);
-		}else if(mousePosition.x > 800){
-			Vector3 left = new Vector3().set(800, 320, 0);
-			cam.project(left);
-			Gdx.input.setCursorPosition((int)left.x,(int)left.y);
-		}
-		
-		
-		
-		if(lastMousePos != null){
-			if(!mousePosition.equals(lastMousePos)){
-				padOffset = 0;
-			}
-		}
-		float screenx = MathUtils.clamp((mousePosition.x + padOffset) * WORLD_TO_BOX, 6.5f, 73.5f);
-		if(isDrunk){
-			screenx =  80 - screenx - xPosGetDrunk;
-		}
+
+		float screenx = MathUtils.clamp(padOffset * WORLD_TO_BOX, 6.5f, 73.5f);
 		if(isSlow){
 			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.05f), 5);
 		}else{
 			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
 		}
 		
-		lastMousePos = mousePosition.cpy();
 		
 		debugFeatures();
 		updateLazer(delta);
@@ -775,8 +754,6 @@ public class BBModel {
 
 	public void isDrunk() {
 		isDrunk = true;
-		//set initial x pos for drunk (remove flip effect bug)
-		//xPosGetDrunk = pad.body.getPosition().x;
 	}
 
 	public void isSlow() {
