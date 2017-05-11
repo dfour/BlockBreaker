@@ -32,6 +32,11 @@ public class EntityFactory {
 	public Array<Body> walls = new Array<Body>();
 	public Array<Spinner> spinners = new Array<Spinner>();
 	public Array<LocalEffectEntity> localEffectEntities = new Array<LocalEffectEntity>();
+	public Array<Portal> portals = new Array<Portal>();
+	
+	private Portal[] preLinkedPortals = new Portal[10];
+	private int currentPortlaCount = 0;
+	
 	
 	public int ballCount;
 
@@ -227,6 +232,26 @@ public class EntityFactory {
 		bodyFactory.setAllFixtureMask(bhbod,(short) -1); // add filter to filter box2d light conacts
 		localEffectEntities.add(bh);
 		return bh;
+	}
+	
+	public Portal makePortal(int x, int y){
+		Body bod = bodyFactory.makeSensorBody(x, y, 1, BodyType.StaticBody);
+		Portal p = new Portal(bod, atlas.findRegion("effectrange"));
+		bod.setUserData(p);
+		preLinkedPortals[currentPortlaCount] = p;
+		currentPortlaCount++;
+		return p;
+	}
+	
+	
+	/**
+	 * Link Portals and add portals to array for model use
+	 * @param p1 Portal to link an exit to
+	 * @param p2 Portal that is the exit
+	 */
+	public void pairPortals(int p1, int p2){
+		preLinkedPortals[p1].setExit(preLinkedPortals[p2]);
+		portals.add(preLinkedPortals[p1]);
 	}
 	
 	public SpeedZone makeSpeedZone(int x, int y) {

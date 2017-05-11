@@ -44,20 +44,20 @@ public class SpeedZone extends LocalEffectEntity{
 				if(speedMod > 1){
 					// slow down
 					body.setLinearVelocity(body.getLinearVelocity().scl(0.5f));
-					body.setAngularVelocity(body.getAngularVelocity() / 2);
+					body.setAngularVelocity(body.getAngularVelocity() / 2f);
 				}else{
 					//speed upo
 					body.setLinearVelocity(body.getLinearVelocity().scl(2f));
-					body.setAngularVelocity(body.getAngularVelocity() * 2);
+					body.setAngularVelocity(body.getAngularVelocity() * 2f);
 				}
 			}else{
 				// setting speed
 				if(speedMod > 1){
 					body.setLinearVelocity(body.getLinearVelocity().scl(2f));
-					body.setAngularVelocity(body.getAngularVelocity() * 2);
+					body.setAngularVelocity(body.getAngularVelocity() * 2f);
 				}else{
 					body.setLinearVelocity(body.getLinearVelocity().scl(0.5f));
-					body.setAngularVelocity(body.getAngularVelocity() / 2);
+					body.setAngularVelocity(body.getAngularVelocity() / 2f);
 				}
 			}
 		}

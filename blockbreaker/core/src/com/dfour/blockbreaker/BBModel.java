@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -27,6 +26,7 @@ import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
 import com.dfour.blockbreaker.entity.LocalEffectEntity;
 import com.dfour.blockbreaker.entity.Pad;
+import com.dfour.blockbreaker.entity.Portal;
 import com.dfour.blockbreaker.entity.PowerBrick;
 import com.dfour.blockbreaker.entity.PowerUp;
 import com.dfour.blockbreaker.entity.Spinner;
@@ -92,9 +92,7 @@ public class BBModel {
 	private float padOffset = 0;
 	
 	private float padSpeed = 12f;
-	
-	private float xPosGetDrunk = 0f;
-	
+		
 	public boolean isDrunk = false;
 	public boolean isSlow = false;
 	public boolean needToAddBall = false;
@@ -124,8 +122,8 @@ public class BBModel {
 	public Array<Vector2> slowFText = new Array<Vector2>();
 	public Array<Vector2> drunkFText = new Array<Vector2>();
 	public Array<Vector2> stickyFText = new Array<Vector2>();
+	public Array<Vector2> bombShader = new Array<Vector2>();
 	
-	private Vector3 lastMousePos;
 	public Pad pad;
 	public Brick brickLazoredLeft;
 	public Brick brickLazoredRight;
@@ -171,7 +169,7 @@ public class BBModel {
 		// update lf to use new raycount quality
 		lf.updatePools();
 		
-		lf.addDirectionalLight(-90, true, new Color(1f, 1f, 1f, .2f));
+		lf.addDirectionalLight(-90, true, new Color(1f, 1f, 1f, .5f));
 		
 		entFactory = new EntityFactory(world,atlas,lf);
 		
@@ -293,7 +291,7 @@ public class BBModel {
 		}
 		padOffset = MathUtils.clamp(padOffset, 0, 800);
 		if(BlockBreaker.debug){
-			System.out.println("Pad Offset is :"+padOffset);
+			//System.out.println("Pad Offset is :"+padOffset);
 		}
 
 		float screenx = MathUtils.clamp(padOffset * WORLD_TO_BOX, 6.5f, 73.5f);
@@ -314,6 +312,7 @@ public class BBModel {
 		updateBricks();
 		updateExplosions();
 		updateObstacles();
+		updatePortals();
 		
 		if (entFactory.bricks.size < 1 && !changingLevel) {
 			levelTimer = 1f;
@@ -364,6 +363,13 @@ public class BBModel {
 		}
 		
 		controller.ffive = false;
+	}
+
+	private void updatePortals() {
+		for(Portal portal:entFactory.portals){
+			portal.update();
+		}
+		
 	}
 
 	private void updateObstacles() {
@@ -593,6 +599,7 @@ public class BBModel {
 		//exploding bombs
 		if (bombsToExplode.size > 0) {
 			for (Vector2 vector : bombsToExplode) {
+				bombShader.add(vector);
 				entFactory.addExplosionParticles(vector);
 				explosions.add(vector);
 				bombsToExplode.removeValue(vector, true);

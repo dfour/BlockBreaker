@@ -13,6 +13,7 @@ import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LocalEffectEntity;
 import com.dfour.blockbreaker.entity.Pad;
+import com.dfour.blockbreaker.entity.Portal;
 import com.dfour.blockbreaker.entity.PowerUp;
 
 public class BBContactListener implements ContactListener {
@@ -25,7 +26,7 @@ public class BBContactListener implements ContactListener {
 	
 	@Override
 	public void beginContact(Contact contact) {
-		System.out.println("Contact");
+		//System.out.println("Contact");
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		
@@ -45,6 +46,14 @@ public class BBContactListener implements ContactListener {
 			objectInVoid(fb);
 		}else if(fb.getBody().getUserData() instanceof Bin){
 			objectInVoid(fa);
+		}
+		
+		if(fa.getBody().getUserData() instanceof Portal){
+			Portal p = (Portal) fa.getBody().getUserData();
+			enteredAPortal(p,fb);
+		}else if(fb.getBody().getUserData() instanceof Portal){
+			Portal p = (Portal) fb.getBody().getUserData();
+			enteredAPortal(p,fa);
 		}
 		
 		if(fa.getBody().getUserData() instanceof Ball){
@@ -73,12 +82,18 @@ public class BBContactListener implements ContactListener {
 			}
 		}
 	}
+	
+	private void enteredAPortal(Portal p, Fixture fix){
+		System.out.println("Body in Portal");
+		p.bodyInPortal(fix.getBody());
+	}
+	
+	
 	private void inLocalEffectRange(LocalEffectEntity lee, Fixture fb) {		
 		lee.addToEffectedObjects(fb.getBody());
 	}
 
 	private void bombHitSomething(Bomb bomb, Fixture fb) {
-		System.out.println("Bomb hit something");
 		if(fb.getBody().getType() == BodyType.StaticBody
 				&& !fb.isSensor()){
 			parent.createBlast(bomb); // only go off for static bricks
@@ -206,7 +221,7 @@ public class BBContactListener implements ContactListener {
 
 	@Override
 	public void endContact(Contact contact) {
-		System.out.println("End Contact");
+		//System.out.println("End Contact");
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
 		

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -399,6 +400,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			}
 			batch.draw(defaultRegion, getX(), getY(), getOriginX(), getOriginY(),
 		            getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+
 		}
 		
 		public void setImage(TextureRegion region, String type){
@@ -448,5 +450,6 @@ public class LevelDesignerScreen extends Scene2DScreen {
 			}
 		}
 	}
-	
 }
+
+

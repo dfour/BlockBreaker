@@ -27,7 +27,6 @@ public class ExplosionParticle {
 		bd.linearVelocity.y = rayDir.y;
 		body = world.createBody( bd );
 		body.setUserData(this);
-		System.out.println(bd.linearVelocity);
 		CircleShape circleShape = new CircleShape();
 		circleShape.setRadius(0.1f); // very small
 		 

@@ -18,6 +18,10 @@ public class AppController implements InputProcessor{
 	public boolean ffour = false;
 	public boolean fseven = false;
 	public boolean feight = false;
+	public boolean fnine= false;
+	public boolean ften = false;
+	public boolean feleven = false;
+	
 	public boolean useBomb = false;
 	private Vector2 mouseLocation;
 	private BlockBreaker parent;
@@ -73,6 +77,16 @@ public class AppController implements InputProcessor{
         case Keys.F8:
         	this.feight = !this.feight;
         	return false;
+        case Keys.F9:
+        	this.fnine = !this.fnine;
+        	return false;
+        case Keys.F10:
+        	this.ften = !this.ften;
+        	return false;
+        case Keys.F11:
+        	this.feleven = !this.feleven;
+        	return false;
+        	
         }
 		return false;
 	}

@@ -20,13 +20,19 @@ import com.dfour.blockbreaker.view.EndScreen;
 import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
-	//TODO finish designing end screen
 	//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
 	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
 	//TODO look into changing box2d step size to alter time
-
+	//TODO update level designer
+	//TODO add buying sound effect for shop (cha-ching)
+	//DONE look into making own shader for background
+	//TODO update level designer to use actual rendering like game, just without pad and info display and a obstacle menu instead
+	//TODO look into making level using level generator
+	//TODO update info display with spaceship dashboard look (metal with black display and green computer text)
+	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals)
+	// fix bug where game ends and no pointer
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;

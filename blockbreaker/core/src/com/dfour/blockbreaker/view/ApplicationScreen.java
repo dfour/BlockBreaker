@@ -19,10 +19,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffectPool.PooledEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -120,9 +124,22 @@ public class ApplicationScreen implements Screen {
 	private Label livesCountLabel;
 	private Table pauseMenuTable;
 	private InputMultiplexer imp;
-	
-	private Cursor inGame;
+		
 	private SystemCursor inMenu;
+	private ShaderProgram shader;
+	private float shadertime = 500f;
+	private float shaderSmokeTime = 0f;
+	private FrameBuffer fbBase;
+	private FrameBuffer fbPostEffects;
+	
+	private float spa = 10f;
+	private float spb = 0.8f;
+	private float spc = 0.1f;
+	private Vector2 center = new Vector2(0.5f,0.5f);
+	private ShaderProgram smokeShader;
+	
+	private float fpsTimer = 0;
+	private int FPS;
 	
 	
 	public ApplicationScreen(BlockBreaker p) {
@@ -145,10 +162,29 @@ public class ApplicationScreen implements Screen {
 		rayHandler.setCombinedMatrix(debugMatrix, 40, 30, 80, 60);
 	
 		
+		
+		
+		
 		sr = new ShapeRenderer();
 		sb = new SpriteBatch();
 		pb = new SpriteBatch();
 		
+		ShaderProgram.pedantic = false;
+		shader = new ShaderProgram(Gdx.files.internal("shaders/shockwave.vert"),
+				Gdx.files.internal("shaders/shockwave.frag"));
+		shadertime = 50f;
+		
+		smokeShader = new ShaderProgram(Gdx.files.internal("shaders/smoke.vert"),
+				Gdx.files.internal("shaders/smoke.frag"));
+		
+		if (!shader.isCompiled() || !smokeShader.isCompiled()) {
+			System.err.println(shader.getLog());
+			System.exit(0);
+		}
+		
+		if (shader.getLog().length()!=0 || smokeShader.getLog().length()!=0)
+			System.out.println(shader.getLog());
+				
 		createEffects();
 		
 		
@@ -158,8 +194,6 @@ public class ApplicationScreen implements Screen {
 		displayTable.setFillParent(true);
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
-		
-		inGame = Gdx.graphics.newCursor(new Pixmap(1,1,Format.RGBA8888), 0, 0);
 		inMenu = Cursor.SystemCursor.Arrow;
 		
 		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("darkblockbutton"));
@@ -261,6 +295,8 @@ public class ApplicationScreen implements Screen {
 		displayTable.add(buttonTable).center().height(60).width(800);
 		
 		stage.addActor(displayTable);
+		
+		
 	}
 
 	@Override
@@ -288,14 +324,68 @@ public class ApplicationScreen implements Screen {
 		debugMatrix.scl(BBModel.BOX_TO_WORLD);
 		bbModel.cam = cam;
 		stage.getViewport().update(width, height, true);
+		createBackgroundImage();
 	}
 
 	@Override
 	public void render(float delta) {
+		
+		fpsTimer += delta;
+		FPS+=1;
+		if(fpsTimer >= 1f){
+			fpsTimer = 0;
+			System.out.println("FPS="+FPS);
+			FPS = 0;
+		}
+		//debug shader controls
+		if(controller.feight){
+			
+			spa*=2;
+			controller.feight = false;
+			System.out.println("F8 spa="+spa);
+		}
+		if(controller.fnine){
+			spb*=2;
+			controller.fnine = false;
+		}
+		if(controller.ften){
+			spc*=2;
+			controller.ften = false;
+		}
+		if(controller.feleven){
+			spa = 10f;
+			spb = 0.8f;
+			spc = 0.1f;
+			controller.feleven = false;
+			
+			addShockWave(MathUtils.random(),MathUtils.random());
+			
+		}
+		
 		//clear screen
 		Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	    
+	    shadertime+= delta;
+	    shaderSmokeTime+=delta*3;
+
+	    
+	    shader.begin();
+	    shader.setUniformf("time", shadertime);
+	    shader.setUniformf("center", center.x,center.y);
+	    shader.setUniformf("shockParams", spa,spb,spc);
+	    shader.end();
+	    
+	    smokeShader.begin();
+	    smokeShader.setUniformf("u_time", shaderSmokeTime);
+	    smokeShader.setUniformf("u_cola", new Vector3(1f,0,0));
+	    smokeShader.setUniformf("u_colb", new Vector3(0,1f,1f));
+	    smokeShader.setUniformf("u_resolution", Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+	    smokeShader.end();
+	    
+	    
+	    
 	    
 	    
 	    if(controller.isPauseDown){
@@ -355,6 +445,8 @@ public class ApplicationScreen implements Screen {
 		// render Lighting
 		rayHandler.setCombinedMatrix(debugMatrix, 40, 30, 80, 60);
 		rayHandler.updateAndRender();
+		
+		
 		
 		
 		sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -446,6 +538,7 @@ public class ApplicationScreen implements Screen {
 	@Override
 	public void resume() {
 		isPaused = false;
+		createBackgroundImage();
 	}
 
 	@Override
@@ -460,14 +553,40 @@ public class ApplicationScreen implements Screen {
 		sb.disableBlending();
 		sr.dispose();
 		pb.dispose();
+		fbBase.dispose();
+		fbPostEffects.dispose();
+	}
+	
+	private void createBackgroundImage(){
+		System.out.println("Making new FrameBuffers:"+this.sw+"x"+this.sh);
+		fbBase = new FrameBuffer(Format.RGBA8888,this.sw,this.sh, false);
+		fbPostEffects = new FrameBuffer(Format.RGBA8888,this.sw,this.sh, false);
+		fbBase.begin();
+		pb.setShader(null);
+		pb.begin();
+		Gdx.gl.glClearColor(0,0,0, 1);
+	    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		for(int i = 0; i < this.sw; i += 300){
+			for(int j = 0; j < this.sh; j+= 200){
+				pb.draw(background, i, j,300,200);
+			}
+		}
+		pb.end();
+		fbBase.end();	
 	}
 	
 	private void drawBrickBackground() {
-		for(int i = 0; i < this.sw; i += 20){
-			for(int j = 0; j < this.sh; j+= 10){
-				pb.draw(background, i, j,20,10);
-			}
-		}
+		pb.setShader(shader);
+		fbPostEffects.begin();
+		pb.draw(fbBase.getColorBufferTexture(),0,0,this.sw,this.sh);
+		fbPostEffects.end();
+		
+		pb.setShader(smokeShader);
+		pb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
+		pb.draw(fbPostEffects.getColorBufferTexture(),0,0,this.sw,this.sh);
+		
+		
+
 	}
 
 	private void drawGuideLazors() {
@@ -522,6 +641,7 @@ public class ApplicationScreen implements Screen {
 	}
 
 	private void addParticleEffects() {
+		checkForExplosions();
 		for(Ball ball :bbModel.entFactory.balls){
 			if(ball.isMagBall){
 				addPartyEffect(ball.body.getPosition(),ParticleEffectManager.MAGGHOST_TAIL);
@@ -545,6 +665,14 @@ public class ApplicationScreen implements Screen {
 	    addParticleEffectArray(bbModel.drunkFText,ParticleEffectManager.DRUNK_FTEXT);
 	    addParticleEffectArray(bbModel.stickyFText,ParticleEffectManager.STICKYPAD_FTEXT);
 		
+	}
+	
+	private void checkForExplosions(){
+		for(Vector2 pos: bbModel.bombShader){
+			System.out.println("bombpos"+pos);
+			this.addShockWave(pos.x,pos.y);
+			bbModel.bombShader.removeValue(pos,true);
+		}
 	}
 	
 	private void addParticleEffectArray(Array<Vector2> positions, int particleType){
@@ -642,6 +770,7 @@ public class ApplicationScreen implements Screen {
 	}
 	
 	private void doGameOverStuff(float delta, boolean win) {
+		toInMenuSettings(); // hopefully fixes no curse in end game screen bug
 		float x = (float) Math.random() * 80;
 		float y = (float) Math.random() * 60;
 		if(win){
@@ -665,7 +794,7 @@ public class ApplicationScreen implements Screen {
 		atlasGui = parent.assMan.manager.get("gui/loadingGui.pack");
 		atlasLazor = parent.assMan.manager.get("lazor/lazor.pack");
 		
-		background 		= atlasGui.findRegion("background");
+		background 		= atlas.findRegion("starfield");
 		visfont 		= parent.assMan.manager.get("font/visitor.fnt", BitmapFont.class);
 		gameOver 		= atlas.findRegion("gameover");
 		gameOverwin		= atlas.findRegion("gameoverwin");
@@ -723,6 +852,14 @@ public class ApplicationScreen implements Screen {
 	private void toInMenuSettings(){
 		Gdx.input.setCursorCatched(false);
 		Gdx.graphics.setSystemCursor(inMenu);
+	}
+	
+	private void addShockWave(float x,float y){
+		Vector3 sbtvec = new Vector3(x * BBModel.BOX_TO_WORLD,y * BBModel.BOX_TO_WORLD,0);
+		viewport.project(sbtvec);
+		center.x = (sbtvec.x / sw);
+		center.y = 1- (sbtvec.y / sh);
+		shadertime = 0f;
 	}
 	
 	
