@@ -82,6 +82,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 		font: visitor
 		fontColor: NeonAqua
 	}
+	chat: {
+		font: visitor
+		fontColor: NeonAqua
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: {

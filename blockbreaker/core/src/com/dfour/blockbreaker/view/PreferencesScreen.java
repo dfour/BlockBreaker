@@ -1,18 +1,22 @@
 package com.dfour.blockbreaker.view;
 
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
 /**
  * This is the application settings screen and will be for 
@@ -25,6 +29,7 @@ public class PreferencesScreen extends Scene2DScreen {
 	
 	// private Sprite mainScreen;
 	private Label volumeValue, soundValue,lightingQuality;
+	private TextField unametxf;
 	
 	public PreferencesScreen(BlockBreaker p){
 		super(p);
@@ -93,6 +98,7 @@ public class PreferencesScreen extends Scene2DScreen {
 	    backButton.addListener( new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
+				updateUname();
 				PreferencesScreen.this.returnScreen = BlockBreaker.MENU;
 				PreferencesScreen.this.isReturning = true;		
 			}
@@ -133,6 +139,22 @@ public class PreferencesScreen extends Scene2DScreen {
 			}
         } );
 	    
+        //uname txf
+        unametxf = new TextField(parent.getPreferences().getUserName(),skin){
+            @Override
+            protected InputListener createInputListener () {
+                return new TextFieldClickListener(){
+                    @Override
+                    public boolean keyUp(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
+                        if(keycode == Keys.ENTER){
+                        	updateUname();
+                        }
+                        return super.keyUp(event, keycode);
+                    };
+                };
+            }
+        };
+        
 	    //labels
 	    
 	    volumeValue = new Label( null, skin );
@@ -142,10 +164,25 @@ public class PreferencesScreen extends Scene2DScreen {
         updateScrollLabel();
         updateLightingLabel();
         
+        // unamegen
+        final Label unameLabel = new Label ("Username" , skin);
+        unameLabel.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				super.clicked(event, x, y);
+				unametxf.setText(BBUtils.generateRandomName());
+				updateUname();
+			}
+			
+		});
+        
         Table buttonTable = new Table();
         buttonTable.add(backButton).padRight(15);
         buttonTable.add(controlsButton);
 
+        displayTable.add(unameLabel).uniformX().align(Align.left);
+        displayTable.add(unametxf).align(Align.left);
+        displayTable.row();
         displayTable.add(new Label("Windowed",skin)).uniformX().width(325).align(Align.left);// music label
         displayTable.add(windowedCheckbox).align(Align.left);
         displayTable.row();
@@ -192,5 +229,9 @@ public class PreferencesScreen extends Scene2DScreen {
         //scrollValue.setText("Scroll: "+ String.format( Locale.US, "%1.0f%%", scroll ) );
         soundValue.setText("Sound Volume: "+ Math.round(scroll) );
     }
+	
+	private void updateUname(){
+		parent.getPreferences().setUserName(unametxf.getText());
+	}
 
 }

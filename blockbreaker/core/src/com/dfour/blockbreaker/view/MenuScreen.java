@@ -13,6 +13,7 @@ public class MenuScreen extends Scene2DScreen {
 	private TextButton btnQuit;
 	private TextButton btnLevelDesign;
 	private TextButton btnCustomGame;
+	private TextButton btnMulti;
 
 	public MenuScreen(BlockBreaker p){
 		super(p)	;
@@ -25,12 +26,15 @@ public class MenuScreen extends Scene2DScreen {
 		btnStart = new TextButton("Start", skin, "Large");
 		btnPrefs = new TextButton("Preferences", skin, "Large");
 		btnQuit = new TextButton("Exit", skin, "Large");
+		btnMulti = new TextButton("Multiplayer",skin, "Large");
 		btnLevelDesign = new TextButton("Level Designer", skin, "Large");
 		btnCustomGame = new TextButton("Custom Game",skin, "Large");
 
         displayTable.add(btnStart).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnCustomGame).width(300).height(50);
+        displayTable.row().pad(10, 0, 0, 0);
+        displayTable.add(btnMulti).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnLevelDesign).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
@@ -75,9 +79,17 @@ public class MenuScreen extends Scene2DScreen {
 			}
 		});
 		
+		btnMulti.addListener(new ClickListener() {
+			public void clicked(InputEvent e, float x, float y){
+				MenuScreen.this.returnScreen = BlockBreaker.MULTIPLAYER;
+				MenuScreen.this.isReturning = true;	
+			}
+		});
+		
 		btnStart.setChecked(false);
 		btnPrefs.setChecked(false);
 		btnQuit.setChecked(false);
+		btnMulti.setChecked(false);
 		btnLevelDesign.setChecked(false);
 		
 	}

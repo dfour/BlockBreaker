@@ -13,6 +13,7 @@ import com.dfour.blockbreaker.view.ControlMapScreen;
 import com.dfour.blockbreaker.view.CustomMapScreen;
 import com.dfour.blockbreaker.view.LevelDesignerScreen;
 import com.dfour.blockbreaker.view.LoadingScreen;
+import com.dfour.blockbreaker.view.MultiplayerScreen;
 import com.dfour.blockbreaker.view.PreferencesScreen;
 import com.dfour.blockbreaker.view.ShopScreen;
 import com.dfour.blockbreaker.AppPreferences;
@@ -33,6 +34,16 @@ public class BlockBreaker extends Game {
 	//TODO update info display with spaceship dashboard look (metal with black display and green computer text)
 	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals)
 	// fix bug where game ends and no pointer
+	//TODO redo rendering system so box to world rendering is in sync (e.g. 16px image = 1 box unit)
+	//TODO add local multiplayer then
+		//TODO add button for multiplayer
+		//TODO add keys for player 2 to config/prof screen
+	//TODO add Host > Client multiplayer then (see below)
+		//TODO add screen to be host or enter Host ip
+	//TODO add lobby and matching
+	//TODO pad size = player count(max 4) / full pad size (multi multiplayer)
+	//TODO add username preferences
+	//TODO add help page for networking (show ports to use or add to preferences)
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;
@@ -65,6 +76,9 @@ public class BlockBreaker extends Game {
 	public final static int SHOP = 5;
 	public final static int CONTROL =6;
 	public final static int CUSTOM_MAP = 7;
+	public final static int MULTIPLAYER = 8;
+	
+	public final static String VERSION = "0.1"; 
 	
 	@Override
 	public void create () {
@@ -121,6 +135,9 @@ public class BlockBreaker extends Game {
 				break;
 			case CUSTOM_MAP:
 				this.setScreen(new CustomMapScreen(this));
+				break;
+			case MULTIPLAYER:
+				this.setScreen(new MultiplayerScreen(this));
 				break;
 			case APPLICATION:
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){

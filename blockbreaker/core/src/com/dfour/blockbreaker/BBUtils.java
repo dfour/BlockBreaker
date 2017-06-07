@@ -1,8 +1,12 @@
 package com.dfour.blockbreaker;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 
 public class BBUtils {
+	private static String[] fnames;
+	private static String[] lnames;
 
 	public static Color hsvToRgba(float hue, float saturation, float value, float alpha) {
 
@@ -28,5 +32,23 @@ public class BBUtils {
 	    String gs = Integer.toHexString((int)(g * 256));
 	    String bs = Integer.toHexString((int)(b * 256));
 	    return rs + gs + bs;
+	}
+	
+	public static String generateRandomName(){
+		String name = "";
+		if(fnames == null){
+			FileHandle fnfile = Gdx.files.internal("fname.txt");
+			fnames = fnfile.readString().split("\n");
+			
+			FileHandle lnfile = Gdx.files.internal("lname.txt");
+			lnames = lnfile.readString().split("\n");
+		}
+		int fni = (int)(Math.random() * fnames.length);
+		name = fnames[fni].trim();
+		
+		int lni = (int)(Math.random() * lnames.length);
+		name += "_"+lnames[lni].trim();
+		
+		return name;
 	}
 }

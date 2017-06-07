@@ -13,6 +13,7 @@ public class AppPreferences {
 	private static final String PREF_SOUND_VOL = "sound";
 	private static final String PREF_SCREEN_SIZE = "Screen Size";
 	private static final String PREF_WINDOWED = "Windowed";
+	private static final String PREF_UNAME = "Username";
 	private static final String PREFS_NAME = "dfour";
 	private static final String CONTROL_LEFT = "Control Left";
 	private static final String CONTROL_RIGHT = "Control Right";
@@ -22,6 +23,7 @@ public class AppPreferences {
 	private static final String CONTROL_PAUSE = "Control Pause";
 	private static final String CONTROL_BOMB = "Control Bomb";
 	private static final String CONTROL_RELEASE = "Control Release";
+	
 	
 
 	protected Preferences getPrefs() {
@@ -167,5 +169,12 @@ public class AppPreferences {
 		return getPrefs().getInteger(CONTROL_RELEASE, Keys.SPACE);
 	}
 	
+	public void setUserName(String uname){
+		getPrefs().putString(PREF_UNAME, uname);
+		getPrefs().flush();
+	}
 	
+	public String getUserName(){
+		return getPrefs().getString(PREF_UNAME, BBUtils.generateRandomName());
+	}
 }

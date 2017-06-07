@@ -16,9 +16,9 @@ public class DesktopLauncher {
 		// 640  x 960
 		
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1024;
-		config.height = 768;
-		config.samples =2; // AA for shpe renderer.. not textures!
+		config.width = 1200;
+		config.height = 900;
+		config.samples =2; // AA for shape renderer.. not textures!
 		new LwjglApplication(new BlockBreaker(), config);
 	}
 }

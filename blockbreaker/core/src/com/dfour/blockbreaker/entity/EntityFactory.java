@@ -39,7 +39,20 @@ public class EntityFactory {
 	
 	
 	public int ballCount;
-
+	
+	// object sizes
+	// pad 		10 x 1.1
+	// ball 	1
+	// light 	1.2
+	// brick 	1.9 x  0.9 (non textured)
+	// obstacle 2.4 x 2
+	// spinner 	0.5 x 3
+	// bhole	2
+	// portal	2
+	// szone	40
+	// bomb		1
+	// powerup	2
+	
 	
 	public EntityFactory(World world, TextureAtlas atlas, LightFactory lf){
 		this.world = world;
