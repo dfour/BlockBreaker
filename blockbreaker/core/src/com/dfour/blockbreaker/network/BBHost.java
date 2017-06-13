@@ -1,13 +1,14 @@
 package com.dfour.blockbreaker.network;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.FrameworkMessage.Ping;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.dfour.blockbreaker.BlockBreaker;
+import com.dfour.blockbreaker.network.NetworkCommon.PlayerAction;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 
 /**
@@ -20,6 +21,7 @@ public class BBHost extends AbstractNetworkBase{
 	private NetworkedUser me;
 	public int connectionCount = 0;
 	public int readyCount = 0;
+	public HashMap<Integer, Integer> playerPositions = new HashMap<Integer, Integer>();
 	
 	public BBHost(String uname){
 		me = new NetworkedUser(0, uname);
@@ -46,6 +48,8 @@ public class BBHost extends AbstractNetworkBase{
 			public void received (Connection c, Object object) {
 				CharacterConnection connection = (CharacterConnection)c;
 				NetworkedUser character = connection.character;
+				
+				System.out.println(object);
 								
 				if(object instanceof Login){
 					if(logUserIn((Login)object, connection)){
@@ -64,6 +68,11 @@ public class BBHost extends AbstractNetworkBase{
 					sendAllMessage((LobbyMessage)object);
 				}else if(object instanceof UserReady){
 					readyUpRelay((UserReady)object);
+				}else if(object instanceof PlayerUpdate){
+					System.out.println("got player update");
+					updatePlayerPos((PlayerUpdate) object);
+				}else if(object instanceof PlayerAction){
+					performPlayerAction((PlayerAction)object);
 				}
 			}
 			
@@ -74,11 +83,18 @@ public class BBHost extends AbstractNetworkBase{
 		});
 		try {
 			server.bind(NetworkCommon.tcpPort,NetworkCommon.udpPort);
+			server.start();
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println("Disconnect error");
 		}
 	}
 	
+	protected void performPlayerAction(PlayerAction pa) {
+		multi.playerAction(pa);
+		
+	}
+
 	public boolean logUserIn(Login lg,CharacterConnection c){
 		if(lg.version.equalsIgnoreCase(BlockBreaker.VERSION)){
 			c.character = new NetworkedUser(c.getID(),lg.name);
@@ -86,9 +102,13 @@ public class BBHost extends AbstractNetworkBase{
 		}
 		return false;
 	}
+	
+	public void updatePlayerPos(PlayerUpdate pu) {
+		multi.updatePadPos(pu);
+	}
 
 	@Override
-	public void updateCharacterPosition(int id, int xp) {
+	public void receiveCharacterPosition(int id, int xp) {
 		this.characters.get(id).xpos = xp;
 	}
 
@@ -148,6 +168,13 @@ public class BBHost extends AbstractNetworkBase{
 		}
 	}
 	
+	public void updateDead(int type, long id){
+		ItemDied di = new ItemDied();
+		di.type = type;
+		di.id = id;
+		server.sendToAllTCP(di);
+	}
+	
 	public void readyUp(boolean rdy){
 		UserReady readyMessage = new UserReady();
 		readyMessage.id = 0;
@@ -165,16 +192,27 @@ public class BBHost extends AbstractNetworkBase{
 		server.sendToAllTCP(msg);
 		
 		if(readyCount > connectionCount){
-			//all ready init start of game
+			startLevelReady = true;
 		}
+		System.out.println(readyCount+"R:C"+connectionCount);
+	}
+	
+	public void sendLevel(WorldUpdate wu){
+		server.sendToAllTCP(wu);
 	}
 	
 	public void update(){
-		try {
-			server.update(30);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//try {
+		//	server.update(30);
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//}
+	}
+	
+	public void sendGameState(int state){
+		GameState gs = new GameState();
+		gs.state = state;
+		server.sendToAllTCP(gs);
 	}
 	
 }

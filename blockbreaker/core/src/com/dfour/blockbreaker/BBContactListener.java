@@ -84,7 +84,9 @@ public class BBContactListener implements ContactListener {
 	}
 	
 	private void enteredAPortal(Portal p, Fixture fix){
-		System.out.println("Body in Portal");
+		if(BlockBreaker.debug && BlockBreaker.debug_contact_log){
+			System.out.println("Body in Portal");
+		}
 		p.bodyInPortal(fix.getBody());
 	}
 	
@@ -117,7 +119,9 @@ public class BBContactListener implements ContactListener {
 	
 	private void padHit(Pad userData, Fixture fix) {
 		if(fix.getBody().getUserData() instanceof Ball){
-			if(BlockBreaker.debug) System.out.println("TODO play sound");
+			if(BlockBreaker.debug && BlockBreaker.debug_contact_log){
+				System.out.println("TODO play sound");
+			}
 			
 		}else if(fix.getBody().getUserData() instanceof Brick){
 			Brick brick = (Brick) fix.getBody().getUserData();
@@ -125,7 +129,9 @@ public class BBContactListener implements ContactListener {
 			brick.wasEatenByPad = true;
 			brick.isDead = true;
 		}else if(fix.getBody().getUserData() instanceof PowerUp){
-			if(BlockBreaker.debug) System.out.println("pup hit");
+			if(BlockBreaker.debug && BlockBreaker.debug_contact_log){
+				System.out.println("pup hit");
+			}
 			PowerUp pup = (PowerUp) fix.getBody().getUserData();
 			switch(pup.type){
 			case PowerUp.MAG_POWER:
@@ -195,7 +201,9 @@ public class BBContactListener implements ContactListener {
 
 	private void brickHit(Brick br, Fixture fix){
 		if(fix.getBody().getUserData() instanceof Ball){
-			if(BlockBreaker.debug) System.out.println("Ball Hit Brick");
+			if(BlockBreaker.debug && BlockBreaker.debug_contact_log){
+				System.out.println("Ball Hit Brick");
+			}
 			parent.sparks.add(br.body.getPosition());
 			br.hit();
 		}else if(fix.getBody().getUserData() instanceof ExplosionParticle){
@@ -204,7 +212,9 @@ public class BBContactListener implements ContactListener {
 	}
 	
 	private void ballHitSomething(Ball ball, Fixture fix){
-		if (BlockBreaker.debug) System.out.println("Ball Hit");
+		if(BlockBreaker.debug && BlockBreaker.debug_contact_log){
+			System.out.println("Ball Hit");
+		}
 		if(fix.getUserData() instanceof Brick){
 			parent.playSound(BBModel.PING_SOUND);
 		}else if(fix.getBody().getUserData() instanceof Pad){

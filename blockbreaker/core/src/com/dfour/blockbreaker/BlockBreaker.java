@@ -7,7 +7,9 @@ import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
+import com.dfour.blockbreaker.network.AbstractNetworkBase;
 import com.dfour.blockbreaker.view.ApplicationScreen;
 import com.dfour.blockbreaker.view.ControlMapScreen;
 import com.dfour.blockbreaker.view.CustomMapScreen;
@@ -49,14 +51,21 @@ public class BlockBreaker extends Game {
 	private PreferencesScreen prefs;
 	private AppPreferences preferences;
 	private ApplicationScreen app;
+	private ApplicationScreen app_multi;
 	private LoadingScreen loadingScreen;
 	private LevelDesignerScreen designScreen;
 	private ShopScreen shopScreen;
 	private EndScreen end;
+	private AppController controller;
 	private boolean musicLoaded = false;
 	public BBAssetManager assMan = new BBAssetManager();
+	public AbstractNetworkBase base;
 	
+	// debug vars
 	public static boolean debug = false;
+	public static boolean debug_b2d_render = false;
+	public static boolean debug_texture_render = true;
+	public static boolean debug_contact_log = false;
 	
 	public static Array<FileHandle> customMaps;
 	public static boolean isCustomMapMode = false;
@@ -76,7 +85,8 @@ public class BlockBreaker extends Game {
 	public final static int SHOP = 5;
 	public final static int CONTROL =6;
 	public final static int CUSTOM_MAP = 7;
-	public final static int MULTIPLAYER = 8;
+	public final static int MULTIPLAYER_MENU = 8;
+	public final static int MULTIPLAYER_APPLICATION = 9;
 	
 	public final static String VERSION = "0.1"; 
 	
@@ -93,6 +103,9 @@ public class BlockBreaker extends Game {
 		
 		
 		setScreen(loadingScreen);
+		
+		// create controller and model
+		controller = new AppController(this);
 	}
 
 	public void changeScreen(int screen){
@@ -136,8 +149,12 @@ public class BlockBreaker extends Game {
 			case CUSTOM_MAP:
 				this.setScreen(new CustomMapScreen(this));
 				break;
-			case MULTIPLAYER:
+			case MULTIPLAYER_MENU:
 				this.setScreen(new MultiplayerScreen(this));
+				break;
+			case MULTIPLAYER_APPLICATION:
+				if(app_multi == null) app_multi = new ApplicationScreen(this,new BBModelMulti(controller,assMan,base));
+				this.setScreen(app_multi); 
 				break;
 			case APPLICATION:
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){
@@ -145,7 +162,7 @@ public class BlockBreaker extends Game {
 					currentSound = gameMusic;
 					currentSongId = currentSound.loop(preferences.getVolume());
 				}
-				if(app == null) app = new ApplicationScreen(this);
+				if(app == null) app = new ApplicationScreen(this,new BBModel(controller,this.assMan));
 				app.fadeIn = 1f;
 				this.setScreen(app);
 				break;

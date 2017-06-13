@@ -2,8 +2,10 @@ package com.dfour.blockbreaker.network;
 
 import java.io.IOException;
 
+import com.dfour.blockbreaker.BBModelMulti;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.network.NetworkCommon.AdditionalUser;
+import com.dfour.blockbreaker.network.NetworkCommon.ItemDied;
 import com.dfour.blockbreaker.network.NetworkCommon.NetError;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 import com.esotericsoftware.kryonet.Client;
@@ -16,6 +18,9 @@ import com.esotericsoftware.minlog.Log;
 public class BBClient extends AbstractNetworkBase{
 	Client client;
 	private NetworkedUser me;
+	public WorldUpdate lastUpdate;
+	public boolean newUpdate = false;
+	public int gameState = 0;
 	
 	public BBClient(String uname){
 		me = new NetworkedUser(99999999,uname);
@@ -56,9 +61,22 @@ public class BBClient extends AbstractNetworkBase{
 					addUser((AdditionalUser)object);
 				}else if(object instanceof NetError){
 					respondError((NetError)object);
+				}else if(object instanceof WorldUpdate){
+					lastUpdate = (WorldUpdate) object;
+					startLevelReady = true;
+					newUpdate = true;
+				}else if(object instanceof GameState){
+					gameState = ((GameState) object).state;
+				}else if(object instanceof ItemDied){
+					killItem(((ItemDied)object));
+					
 				}
 			}
 		}));
+	}
+
+	protected void killItem(ItemDied item) {
+		multi.addDeadItems(item);
 	}
 
 	protected void respondError(NetError error) {
@@ -80,9 +98,16 @@ public class BBClient extends AbstractNetworkBase{
 	public void userReady(UserReady ur) {
 		characters.get(ur.id).isReady = ur.status;
 	}
+	
+	public void sendMyPosition(int xpos){
+		PlayerUpdate pu = new PlayerUpdate();
+		pu.playerXPos = xpos;
+		pu.playerId = me.connectionID;
+		client.sendTCP(pu);
+	}
 
 	@Override
-	public void updateCharacterPosition( int id, int xpos) {		
+	public void receiveCharacterPosition( int id, int xpos) {		
 	}
 
 	@Override

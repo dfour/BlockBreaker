@@ -13,13 +13,14 @@ public class AppController implements InputProcessor{
 	public boolean isReleaseDown = false;
 	public boolean isDragged = false;
 	public boolean isPauseDown = false;
-	public boolean ffive = false;
-	public boolean fsix = false;
-	public boolean ffour = false;
-	public boolean fseven = false;
-	public boolean feight = false;
-	public boolean fnine= false;
-	public boolean ften = false;
+	
+	public boolean ffour = false; 	// create brick
+	public boolean ffive = false; 	// kill bricks
+	public boolean fsix = false; 	// spit out bomb
+	public boolean fseven = false; 	// create powerup
+	public boolean feight = false;  // box2d deug renderer
+	public boolean fnine= false;	// texture render
+	public boolean ften = false;	// contact log
 	public boolean feleven = false;
 	
 	public boolean useBomb = false;

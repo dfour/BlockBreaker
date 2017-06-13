@@ -52,6 +52,7 @@ import com.dfour.blockbreaker.entity.Brick;
 import com.dfour.blockbreaker.entity.ExplosionParticle;
 import com.dfour.blockbreaker.entity.LightBall;
 import com.dfour.blockbreaker.entity.LocalEffectEntity;
+import com.dfour.blockbreaker.entity.MultiPad;
 import com.dfour.blockbreaker.entity.Obstacle;
 import com.dfour.blockbreaker.entity.PowerUp;
 import com.dfour.blockbreaker.entity.Spinner;
@@ -141,11 +142,13 @@ public class ApplicationScreen implements Screen {
 	private float fpsTimer = 0;
 	private int FPS;
 	
+
 	
-	public ApplicationScreen(BlockBreaker p) {
+	public ApplicationScreen(BlockBreaker p, BBModel model) {
 		parent = p;
-		controller = new AppController(p);
-		bbModel = new BBModel(controller,parent.assMan);
+		
+		bbModel = model;
+		controller = model.controller;
 		
 		loadImages();
 		cam = new OrthographicCamera(800,600);
@@ -334,32 +337,8 @@ public class ApplicationScreen implements Screen {
 		FPS+=1;
 		if(fpsTimer >= 1f){
 			fpsTimer = 0;
-			System.out.println("FPS="+FPS);
+			//System.out.println("FPS="+FPS);
 			FPS = 0;
-		}
-		//debug shader controls
-		if(controller.feight){
-			
-			spa*=2;
-			controller.feight = false;
-			System.out.println("F8 spa="+spa);
-		}
-		if(controller.fnine){
-			spb*=2;
-			controller.fnine = false;
-		}
-		if(controller.ften){
-			spc*=2;
-			controller.ften = false;
-		}
-		if(controller.feleven){
-			spa = 10f;
-			spb = 0.8f;
-			spc = 0.1f;
-			controller.feleven = false;
-			
-			addShockWave(MathUtils.random(),MathUtils.random());
-			
 		}
 		
 		//clear screen
@@ -404,16 +383,18 @@ public class ApplicationScreen implements Screen {
 	    
 	    if(!isPaused){
 	    	bbModel.doLogic(delta);
-	    	magnetBar.updateProgress((bbModel.magnetPower/(float)bbModel.baseMagnetPower));
-	    	laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
-	    	guideBar.updateProgress((bbModel.guideLazerTimer/ bbModel.baseGuideLazerTimer));
-			magnetUnitsTotal.setText(bbModel.magnetPower+" / "+bbModel.baseMagnetPower+" @ "+(bbModel.magnetRechargeRate * 60));
-	    	scoreCountLabel.setText(bbModel.score+"");
-	    	cashCountLabel.setText("$"+bbModel.cash);
-	    	bombCountLabel.setText(""+bbModel.bombsLeft);
-	    	laserCountLabel.setText((int)bbModel.lazerTimer+" seconds");
-	    	laserGuideCountLabel.setText((int)bbModel.guideLazerTimer+" seconds");
-	    	livesCountLabel.setText(""+bbModel.livesLeft);
+	    	if(!BlockBreaker.debug || (BlockBreaker.debug && BlockBreaker.debug_texture_render)){
+		    	magnetBar.updateProgress((bbModel.magnetPower/(float)bbModel.baseMagnetPower));
+		    	laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
+		    	guideBar.updateProgress((bbModel.guideLazerTimer/ bbModel.baseGuideLazerTimer));
+				magnetUnitsTotal.setText(bbModel.magnetPower+" / "+bbModel.baseMagnetPower+" @ "+(bbModel.magnetRechargeRate * 60));
+		    	scoreCountLabel.setText(bbModel.score+"");
+		    	cashCountLabel.setText("$"+bbModel.cash);
+		    	bombCountLabel.setText(""+bbModel.bombsLeft);
+		    	laserCountLabel.setText((int)bbModel.lazerTimer+" seconds");
+		    	laserGuideCountLabel.setText((int)bbModel.guideLazerTimer+" seconds");
+		    	livesCountLabel.setText(""+bbModel.livesLeft);
+	    	}
 	    }
 	    
 	    if(fadeIn > 0){
@@ -432,73 +413,80 @@ public class ApplicationScreen implements Screen {
 			currentAlpha = 1;  // set alpha to 1(fixes display bug when lagging during fade in)
 		}
 	    
-	    if(!isPaused){
-	    	addParticleEffects();
-	    }
-	    
-		sb.setProjectionMatrix(cam.combined); // set SpriteBatch Matrix
-		
-		pb.begin();
-			drawBrickBackground();
-		pb.end();
-		
-		// render Lighting
-		rayHandler.setCombinedMatrix(debugMatrix, 40, 30, 80, 60);
-		rayHandler.updateAndRender();
-		
-		
-		
-		
-		sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		sb.begin();
-			// draw walls
-			sb.setColor(1,1,1,(0.7f * currentAlpha));
-			sb.draw(leftWall, 0, 	0,	10,	590);
-			//sb.draw(wall, 0, 	0,	800	,10);
-			sb.draw(bottomWall, 0, 	600,800	,-11);
-			sb.draw(leftWall, 800, 	0,	-10	,590);
-			sb.draw(bottomWall, 0, 0,800, -10000 );
+	    if(!BlockBreaker.debug || (BlockBreaker.debug && BlockBreaker.debug_texture_render)){
+		    if(!isPaused){
+		    	addParticleEffects();
+		    }
+		    
+			sb.setProjectionMatrix(cam.combined); // set SpriteBatch Matrix
+			//
+			pb.begin();
+				drawBrickBackground();
+			pb.end();
+			
+			// render Lighting
+			rayHandler.setCombinedMatrix(debugMatrix, 40, 30, 80, 60);
+			rayHandler.updateAndRender();
+			
+			
+			sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			sb.begin();
+				// draw walls
+				sb.setColor(1,1,1,(0.7f * currentAlpha));
+				sb.draw(leftWall, 0, 	0,	10,	590);
+				//sb.draw(wall, 0, 	0,	800	,10);
+				sb.draw(bottomWall, 0, 	600,800	,-11);
+				sb.draw(leftWall, 800, 	0,	-10	,590);
+				sb.draw(bottomWall, 0, 0,800, -10000 );
+				sb.setColor(1,1,1,currentAlpha);
+				drawGameObjects(delta);
+			sb.end();
+			
+			
+			sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
 			sb.setColor(1,1,1,currentAlpha);
-			drawGameObjects(delta);
-		sb.end();
+			sb.begin();
+				drawEffects(delta);
+				drawBombParticles(delta);
+				fireLazors();
+			sb.end();
+			
+			drawGuideLazors();
+	    }
+		//*/
 		
-		
-		sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		sb.setColor(1,1,1,currentAlpha);
-		sb.begin();
-			drawEffects(delta);
-			drawBombParticles(delta);
-			fireLazors();
-		sb.end();
-		
-		if(BlockBreaker.debug){
+		if(BlockBreaker.debug && BlockBreaker.debug_b2d_render){
 			debugRenderer.render(bbModel.world, debugMatrix);
 		}
 
-		drawGuideLazors();
-
-		pb.begin();
-			if(BlockBreaker.debug){
-				visfont.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
-				visfont.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
-				visfont.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
-				visfont.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
-				visfont.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
-				visfont.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
-			}
-			if(bbModel.gameOver){
-				if(bbModel.gameOverWin){
-					this.doGameOverStuff(delta, true);
-					pb.draw(gameOverwin, sw/2 -gameOverwin.getRegionWidth() / 2,sh/2 -gameOverwin.getRegionHeight() / 2);
-				}else{
-					this.doGameOverStuff(delta, false);
-					pb.draw(gameOver, sw/2 -gameOver.getRegionWidth() / 2,sh/2 -gameOver.getRegionHeight() / 2);
+		if(!BlockBreaker.debug || (BlockBreaker.debug && BlockBreaker.debug_texture_render)){
+			//
+			pb.begin();
+				/*
+				if(BlockBreaker.debug){
+					visfont.draw(pb, "Score: "+bbModel.score+"00", 20 , sh - 20);
+					visfont.draw(pb, "Lives :"+bbModel.livesLeft, 20, sh-30);
+					visfont.draw(pb, "Magnet  Power: "+bbModel.magnetPower, 20 , sh - 40);
+					visfont.draw(pb, "Magnet  Strength: "+bbModel.magnetStrength, 20 , sh - 50);
+					visfont.draw(pb, "Mag Ball Next: "+bbModel.nextBallIsMag, 20 , sh - 60);
+					visfont.draw(pb, "Cash $"+bbModel.cash,20,sh-70);
 				}
-			}
-		pb.end();
-		
-		stage.act();
-		stage.draw();
+				*/
+				if(bbModel.gameOver){
+					if(bbModel.gameOverWin){
+						this.doGameOverStuff(delta, true);
+						pb.draw(gameOverwin, sw/2 -gameOverwin.getRegionWidth() / 2,sh/2 -gameOverwin.getRegionHeight() / 2);
+					}else{
+						this.doGameOverStuff(delta, false);
+						pb.draw(gameOver, sw/2 -gameOver.getRegionWidth() / 2,sh/2 -gameOver.getRegionHeight() / 2);
+					}
+				}
+			pb.end();
+			
+			stage.act();
+			stage.draw();
+		 }
+		//*/
 		
 		if(bbModel.showShop){
 			removeConstantPE();
@@ -532,18 +520,18 @@ public class ApplicationScreen implements Screen {
 
 	@Override
 	public void pause() {
-		isPaused = true;
+		//isPaused = true;
 	}
 
 	@Override
 	public void resume() {
-		isPaused = false;
+		//isPaused = false;
 		createBackgroundImage();
 	}
 
 	@Override
 	public void hide() {
-		isPaused = true;
+		//isPaused = true;
 	}
 
 	@Override
@@ -634,6 +622,11 @@ public class ApplicationScreen implements Screen {
 				bbModel.blackHolePE.add(lee.body.getPosition());
 				lee.hasPartyEffect = true;
 			}
+		}
+		// draw multi pads
+		for(MultiPad mpad:bbModel.entFactory.mpads){
+			mpad.sprite.draw(sb,currentAlpha);
+			mpad.drawAnimation(sb, delta);	
 		}
 		
 		bbModel.pad.sprite.draw(sb,currentAlpha);

@@ -21,6 +21,12 @@ public class Entity {
 	protected float normalAnimationScale = 1f;
 	protected boolean hasDeathAnimation = false;
 	protected float stateTime = 0f;
+	public static long idCount = 0l;
+	public long id = Entity.getID();
+	
+	public static long getID(){
+		return idCount++;
+	}
 	
 	public Entity(Body b, Texture tex){
 		body = b;
@@ -84,6 +90,10 @@ public class Entity {
 			//draw image
 			sprite.draw(sb,alpha);
 		}
+	}
+	
+	public void setId(long newId){
+		id = newId;
 	}
 
 }

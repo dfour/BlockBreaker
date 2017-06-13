@@ -160,10 +160,19 @@ public class MultiplayerScreen extends Scene2DScreen{
 	public void render(float delta) {
 		super.render(delta);
 		if(base != null){
-			base.update();
+			//base.update();
 			updateMessages();
 			checkPing(delta);
 			fillUserList();
+			isHostReady();
+		}
+	}
+
+	private void isHostReady() {
+		if(base.startLevelReady){
+			parent.base = base;
+			this.isReturning = true;
+			this.returnScreen = BlockBreaker.MULTIPLAYER_APPLICATION;
 		}
 	}
 
@@ -200,7 +209,7 @@ public class MultiplayerScreen extends Scene2DScreen{
 			base.newMessage = false;
 			
 			messages_names+="\n";
-			messages_names+=base.lastMessage.name.substring(0, 29)+":";
+			messages_names+=base.lastMessage.name+":";
 			lblMessageNameWindow.setText(messages_names);
 			
 			messages+="\n";

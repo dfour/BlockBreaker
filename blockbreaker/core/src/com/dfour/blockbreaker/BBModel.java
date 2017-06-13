@@ -52,8 +52,8 @@ public class BBModel {
 	
 	private AppPreferences preferences;
 	public BBAssetManager assMan;
-	private LevelLoader ll;
-	private AppController controller;
+	protected LevelLoader ll;
+	public AppController controller;
 	public OrthographicCamera cam;
 	
 	private TextureAtlas atlas;
@@ -61,8 +61,8 @@ public class BBModel {
 	private RayCastCallback callbackLeft;
 	private RayCastCallback callbackRight;
 	
-	private int cH = 60;
-	private int cW = 80;
+	protected int cH = 60;
+	protected int cW = 80;
 	public int sw = 800;
 	public int sh = 600;
 	
@@ -223,7 +223,6 @@ public class BBModel {
 		lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
 		lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
 		
-		// TODO verify this
 		if(this.level == 0){
 			//reset base stats
 			baseMagnetPower = 1000;
@@ -244,18 +243,8 @@ public class BBModel {
 		entFactory.ballCount = 0;
 		isFiringLazer = false;
 		lazerTimer = 5f;
-		entFactory.makeBall(eternalMagBall);
-		if(BlockBreaker.isCustomMapMode){
-			if(level < BlockBreaker.customMaps.size){
-				ll.loadLevelFile(BlockBreaker.customMaps.get(level).path(), false);
-			}else{
-				gameOver = true;
-			}
-		}else{
-			ll.loadLevel(level);
-		}
-		entFactory.makeWalls(cH,cW);
-		entFactory.makeBin(cW);
+		
+		makeLevel();
 		
 		// reset to base
 		magnetPower = baseMagnetPower;
@@ -265,43 +254,23 @@ public class BBModel {
 		
 	}
 	
+	protected void makeLevel(){
+		entFactory.makeBall(eternalMagBall);
+		if(BlockBreaker.isCustomMapMode){
+			if(level < BlockBreaker.customMaps.size){
+				ll.loadLevelFile(BlockBreaker.customMaps.get(level).path(), false, true);
+			}else{
+				gameOver = true;
+			}
+		}else{
+			ll.loadLevel(level);
+		}
+		entFactory.makeWalls(cH,cW);
+		entFactory.makeBin(cW);
+	}
+	
 	public void doLogic(float delta) {
-		
-
-		if(isDrunk){
-			padOffset -= (controller.getMousePosition().x - 400);
-		}else{
-			padOffset += (controller.getMousePosition().x - 400);
-		}
-		Gdx.input.setCursorPosition(400,350);
-		controller.getMousePosition().x = 400; 
-		
-		if(controller.getLeft()){
-			if(isDrunk){
-				padOffset+=padSpeed;
-			}else{
-				padOffset-=padSpeed;
-			}
-		}else if(controller.getRight()){
-			if(isDrunk){
-				padOffset-=padSpeed;
-			}else{
-				padOffset+=padSpeed;
-			}
-		}
-		padOffset = MathUtils.clamp(padOffset, 0, 800);
-		if(BlockBreaker.debug){
-			//System.out.println("Pad Offset is :"+padOffset);
-		}
-
-		float screenx = MathUtils.clamp(padOffset * WORLD_TO_BOX, 6.5f, 73.5f);
-		if(isSlow){
-			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.05f), 5);
-		}else{
-			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
-		}
-		
-		
+		controlPad();
 		debugFeatures();
 		updateLazer(delta);
 		updateBombs();
@@ -313,37 +282,20 @@ public class BBModel {
 		updateExplosions();
 		updateObstacles();
 		updatePortals();
-		
+		updateDrunk(delta);
+		updateSlow(delta);
+		updateSticky(delta);
+		updateLevelState(delta);
+
+		controller.ffive = false;
+	}
+
+	// controls game over and shop screen changes
+	protected void updateLevelState(float delta) {
 		if (entFactory.bricks.size < 1 && !changingLevel) {
 			levelTimer = 1f;
 			changingLevel = true;
 		}
-		
-		if(isDrunk){
-			drunkTimer -= delta;
-			if(drunkTimer <= 0){
-				isDrunk = false;
-				drunkTimer = 5f;
-			}
-		}
-		
-		if(isSlow){
-			slowTimer -= delta;
-			if(slowTimer <= 0){
-				isSlow = false;
-				slowTimer = 5f;
-				padSpeed = 12f;
-			}
-		}
-		
-		if(pad.isStickyPad){
-			stickyTimer -= delta;
-			if(stickyTimer <= 0){
-				pad.isStickyPad = false;
-				stickyTimer = 30f;
-			}
-		}
-		
 		if(changingLevel){
 			if(levelTimer <= 0){
 				level += 1;
@@ -362,17 +314,94 @@ public class BBModel {
 			}
 		}
 		
-		controller.ffive = false;
 	}
 
-	private void updatePortals() {
+	// controls sticky pad 
+	protected void updateSticky(float delta) {
+		if(pad.isStickyPad){
+			stickyTimer -= delta;
+			if(stickyTimer <= 0){
+				pad.isStickyPad = false;
+				stickyTimer = 30f;
+			}
+		}
+	}
+
+	//controls slow pad
+	protected void updateSlow(float delta) {
+		if(isSlow){
+			slowTimer -= delta;
+			if(slowTimer <= 0){
+				isSlow = false;
+				slowTimer = 5f;
+				padSpeed = 12f;
+			}
+		}
+	}
+
+	// controls drunk pad
+	protected void updateDrunk(float delta) {
+		if(isDrunk){
+			drunkTimer -= delta;
+			if(drunkTimer <= 0){
+				isDrunk = false;
+				drunkTimer = 5f;
+			}
+		}
+	}
+
+	// pad control
+	protected void controlPad() {
+		// move pad
+		if(isDrunk){
+			padOffset -= (controller.getMousePosition().x - 400);
+		}else{
+			padOffset += (controller.getMousePosition().x - 400);
+		}
+		// set mouse pos
+		Gdx.input.setCursorPosition(400,350);
+		controller.getMousePosition().x = 400; 
+		
+		// move pad for keyboard
+		if(controller.getLeft()){
+			if(isDrunk){
+				padOffset+=padSpeed;
+			}else{
+				padOffset-=padSpeed;
+			}
+		}else if(controller.getRight()){
+			if(isDrunk){
+				padOffset-=padSpeed;
+			}else{
+				padOffset+=padSpeed;
+			}
+		}
+		//limit pad
+		padOffset = MathUtils.clamp(padOffset, 0, 800);
+		if(BlockBreaker.debug){
+			//System.out.println("Pad Offset is :"+padOffset);
+		}
+		
+		//pad from screen to box2d
+		float screenx = MathUtils.clamp(padOffset * WORLD_TO_BOX, 6.5f, 73.5f);
+		if(isSlow){
+			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.05f), 5);
+		}else{
+			pad.setPosition(MathUtils.lerp(pad.body.getPosition().x, screenx, 0.1f), 5);
+		}
+		
+	}
+
+	// updates Portals
+	protected void updatePortals() {
 		for(Portal portal:entFactory.portals){
 			portal.update();
 		}
 		
 	}
 
-	private void updateObstacles() {
+	// update obstacles
+	protected void updateObstacles() {
 		for (Spinner spinner : entFactory.spinners){
 			spinner.update();
 		}
@@ -383,7 +412,8 @@ public class BBModel {
 		
 	}
 
-	private void updateExplosions() {
+	// updates spinners
+	protected void updateExplosions() {
 		for (ExplosionParticle party : entFactory.explosionParticles) {
 			if (Math.abs(party.body.getLinearVelocity().x) < 15f
 					&& Math.abs(party.body.getLinearVelocity().y) < 15f) {
@@ -393,7 +423,8 @@ public class BBModel {
 		}
 	}
 
-	private void updateBricks() {
+	//updates bricks
+	protected void updateBricks() {
 		for (Brick brick : entFactory.bricks) {
 			brick.update();
 			
@@ -404,10 +435,7 @@ public class BBModel {
 			if (brick.isStatic == true && brick.wasHit) {
 				brick.body.setType(BodyType.DynamicBody);
 				brick.isStatic = false;
-				int rup = (int) (Math.random() * 100);
-				if (rup > 50 || brick instanceof PowerBrick) {
-					entFactory.createNewPowerUp(brick.body.getPosition());
-				}
+				dispensePowerup(brick);
 			}
 
 			if (brick.isStatic == false) {
@@ -415,6 +443,7 @@ public class BBModel {
 			}
 
 			if (brick.isDead) {
+				deadBrick(brick);
 				if (brick.wasEatenByPad) {
 					score += 2;
 					cash+=1;
@@ -426,11 +455,21 @@ public class BBModel {
 			}
 		}		
 	}
+	
 
-	private void updatePowerUps() {
+	protected void dispensePowerup(Brick brick){
+		int rup = (int) (Math.random() * 100);
+		if (rup > 50 || brick instanceof PowerBrick) {
+			entFactory.createNewPowerUp(brick.body.getPosition());
+		}
+	}
+
+	// update power ups
+	protected void updatePowerUps() {
 		for (PowerUp pup : entFactory.pups) {
 			pup.update();
 			if (pup.isDead) {
+				this.deadPowerUp(pup);
 				pupExplosions.add(pup.body.getPosition());
 				world.destroyBody(pup.body);
 				entFactory.pups.removeValue(pup, true);
@@ -440,7 +479,8 @@ public class BBModel {
 		}
 	}
 
-	private void updateMagnet() {
+	//update magnetism
+	protected void updateMagnet() {
 		if (controller.isMouse1Down() || controller.isMouse2Down() || controller.getPush() || controller.getPull()) {
 			this.magnetPower = magnetPower - (this.magnetStrength / 35);
 			if (magnetPower < 0) {
@@ -462,7 +502,8 @@ public class BBModel {
 		}		
 	}
 
-	private void updateBalls() {
+	//update balls
+	protected void updateBalls() {
 		
 		// add balls
 		if (this.needToAddBall) {
@@ -505,6 +546,7 @@ public class BBModel {
 							ball.setNormalBall(new Animation(0.1f,atlas.findRegions("ballanim")));
 						}
 						ball.isDead = false;
+						
 						this.livesLeft-=1;
 					}else{
 						gameOver = true;
@@ -513,11 +555,15 @@ public class BBModel {
 						score -= 10; // remove 10 for lost ball
 					}
 				}
+				if(ball.isDead){
+					deadBall(ball);
+				}
 			}
 		}		
 	}
 
-	private void updateLazer(float delta) {
+	//controls lazer and raycasting
+	protected void updateLazer(float delta) {
 		//lazer a brick
 		if (brickLazoredLeft != null) {
 			brickLazoredLeft.brickHealth -= 1;
@@ -567,7 +613,8 @@ public class BBModel {
 		}
 	}
 
-	private void updateBombs() {
+	//updates bombs
+	protected void updateBombs() {
 		
 		// TODO implement limit to bomb count per second to stop all bombs being released at once
 		// B key to init bomb
@@ -589,6 +636,7 @@ public class BBModel {
 		for (Bomb bomb : entFactory.bombs) {
 			bomb.update();
 			if (bomb.isDead) {
+				this.deadBomb(bomb);
 				bombsToExplode.add(bomb.body.getPosition());
 				playSound(EXPLOSION_SOUND);
 				world.destroyBody(bomb.body);
@@ -607,7 +655,8 @@ public class BBModel {
 		}
 	}
 
-	private void debugFeatures() {
+	// debug stuff
+	protected void debugFeatures() {
 		// debug lazer
 		if (BlockBreaker.debug) {
 			this.isFiringLazer = controller.isMouse3Down() ? true : false;
@@ -628,6 +677,24 @@ public class BBModel {
 		if (controller.fsix) {
 			controller.fsix = false;
 			dispenseBomb();
+		}
+		
+		// toggle box2d debug renderer
+		if (controller.feight) {
+			controller.feight = false;
+			BlockBreaker.debug_b2d_render = !BlockBreaker.debug_b2d_render;
+		}
+		
+		// toggle texture rendering
+		if (controller.fnine) {
+			controller.fnine = false;
+			BlockBreaker.debug_texture_render = !BlockBreaker.debug_texture_render;
+		}
+		
+		// toggle contact logging
+		if (controller.ften) {
+			controller.ften = false;
+			BlockBreaker.debug_contact_log = !BlockBreaker.debug_contact_log;
 		}
 	}
 
@@ -654,6 +721,10 @@ public class BBModel {
 		}
 	}
 
+	/**
+	 * @param body
+	 * @param vector
+	 */
 	private void applyMagnetism(Body body, Vector2 vector) {
 		if ((controller.isMouse1Down() || controller.isMouse2Down()|| controller.getPush() || controller.getPull())
 				&& magnetPower > 0) {
@@ -778,6 +849,16 @@ public class BBModel {
 
 	public void isSticky() {
 		pad.isStickyPad = true;
-		
 	}
+	
+	
+	
+	// Multiplayer required methods
+	protected void deadBrick(Brick brick) {}
+	protected void deadPowerUp(PowerUp pup){}
+	protected void deadBall(Ball ball){}
+	protected void deadBomb(Bomb bomb){}
+	
+	
+	
 }

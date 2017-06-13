@@ -14,8 +14,16 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.BodyFactory;
 import com.dfour.blockbreaker.LightFactory;
+import com.dfour.blockbreaker.network.NetworkCommon.ItemBase;
+import com.dfour.blockbreaker.network.NetworkCommon.WorldUpdate;
 
 public class EntityFactory {
+	
+	public static final int BALL = 0;
+	public static final int BOMBS = 1;
+	public static final int BRICKS = 2;
+	public static final int POWERUPS = 3;
+	public static final int SPINNERS = 4;
 	
 	private BodyFactory bodyFactory;
 	private TextureAtlas atlas;
@@ -33,7 +41,8 @@ public class EntityFactory {
 	public Array<Spinner> spinners = new Array<Spinner>();
 	public Array<LocalEffectEntity> localEffectEntities = new Array<LocalEffectEntity>();
 	public Array<Portal> portals = new Array<Portal>();
-	
+	public Array<MultiPad> mpads = new Array<MultiPad>
+();	
 	private Portal[] preLinkedPortals = new Portal[10];
 	private int currentPortlaCount = 0;
 	
@@ -61,6 +70,44 @@ public class EntityFactory {
 		this.lf = lf;
 	}
 	
+	public MultiPad makeMultiPad(float x, float y){
+		
+		//TODO add smaller image for smaller pad
+		
+		MultiPad mpad;
+		
+		Vector2[] verts = new Vector2[8];
+		verts[0] = new Vector2(-3,-0.5f); 
+		verts[1] = new Vector2(-3,0.2f);
+		verts[2] = new Vector2(-2,0.4f);
+		verts[3] = new Vector2(-1,0.6f);
+		verts[4] = new Vector2(1,0.6f);
+		verts[5] = new Vector2(2,0.4f);
+		verts[6] = new Vector2(3,0.2f);
+		verts[7] = new Vector2(3,-0.5f);
+		
+		Body padBody = bodyFactory.makePolygonShapeBody(verts, x, y,  BodyFactory.RUBBER, BodyType.KinematicBody);
+		
+		
+		bodyFactory.addCircleFixture(padBody, -3, 0, 0.5f, BodyFactory.RUBBER);
+		bodyFactory.addCircleFixture(padBody, 3, 0, 0.5f, BodyFactory.RUBBER);
+		mpad = new MultiPad(padBody, atlas.createSprite("paddel"),
+				atlas.createSprite("paddel-magnet-pull"),
+				atlas.createSprite("paddel-magnet-push"), new Animation(0.05f,
+						atlas.findRegions("hover")));
+		padBody.setUserData(mpad);
+		
+		mpad.lazLightLeft = lf.addChainLight(new float[] { -3.5f, 0, -5, 0, -2.5f, 0 });
+		mpad.lazLightRight = lf.addChainLight(new float[] { 2.5f, 0, 5, 0, 3.5f, 0 });
+		mpad.lazLightLeft.attachToBody(mpad.body);
+		mpad.lazLightRight.attachToBody(mpad.body);
+		mpad.lazLightLeft.setActive(false);
+		mpad.lazLightRight.setActive(false);
+		
+		mpads.add(mpad);
+		
+		return mpad;
+	}
 	
 	public Pad makePad(float x, float y){
 		
@@ -83,8 +130,6 @@ public class EntityFactory {
 		verts[7] = new Vector2(5,-0.5f);
 		
 		Body padBody = bodyFactory.makePolygonShapeBody(verts, x, y,  BodyFactory.RUBBER, BodyType.KinematicBody);
-		
-		
 		
 		
 		bodyFactory.addCircleFixture(padBody, -5, 0, 0.5f, BodyFactory.RUBBER);
@@ -319,11 +364,15 @@ public class EntityFactory {
 		}
 	}
 	
-	public PowerUp createNewPowerUp(Vector2 position) {
+	public PowerUp createNewPowerUp(Vector2 position){
+		int type = (int) (Math.random() * 15);
+		return createNewPowerUp(position, type);
+	}
+	
+	public PowerUp createNewPowerUp(Vector2 position, int type) {
 		Body pupBody = bodyFactory.makeCirclePolyBody(position.x, position.y,
 				1f, BodyFactory.RUBBER, BodyType.DynamicBody);
 		TextureRegion tex;
-		int type = (int) (Math.random() * 15);
 		if (type == PowerUp.MAG_POWER) {
 			tex = atlas.findRegion("mag_power_pup");
 		} else if (type == PowerUp.MAG_STRENGTH) {
@@ -378,6 +427,159 @@ public class EntityFactory {
 		spinners.clear();
 		localEffectEntities.clear();
 	}
+	
+	public ItemBase[][] getAllItems(){
+		ItemBase[][] ib = new ItemBase[6][];
+		ib[BALL] = getArrayItem(balls,BALL);
+		ib[BOMBS] = getArrayItem(bombs,BOMBS);
+		ib[BRICKS] = getArrayItem(bricks,BRICKS);
+		ib[POWERUPS] = getArrayItem(pups,POWERUPS);
+		ib[SPINNERS] = getArrayItem(spinners,SPINNERS);
+		return ib;
+	}
+	
+	public ItemBase[] getArrayItem(Array<? extends Entity> arr, int type){
+		ItemBase[] ib = new ItemBase[arr.size];
+		int count = 0;
+		for(Entity ent:arr){
+			ib[count] = getSingleItem(ent,type);
+			count++;
+		}
+		return ib;
+	}
+	
+
+	
+	private ItemBase getSingleItem(Entity ent, int type){
+		ItemBase ib = new ItemBase();
+		ib.item = type;
+		
+		ib.id = ent.id;
+		ib.x = ent.body.getPosition().x;
+		ib.y = ent.body.getPosition().y;
+		ib.vx = ent.body.getLinearVelocity().x;
+		ib.vy= ent.body.getLinearVelocity().y;
+		ib.r = ent.body.getAngle();
+		
+		if(type == BALL){
+			ib.extra = ((Ball) ent).isMagBall?1:0;
+		}else if(type == POWERUPS){
+			ib.extra = ((PowerUp) ent).type;
+		}else if(type == BRICKS){
+			ib.extra = (ent instanceof PowerBrick)?1:0;
+		}else if (type == SPINNERS){
+			ib.extra = (((Spinner) ent).body.getAngularVelocity()>0)?1:0;
+		}
+		return ib;
+	}
+	
+	// updates local world from world update item
+	public void updateWorldItems(WorldUpdate wu){
+		createOrUpdateBalls(wu.balls);
+		createOrUpdateBombs(wu.bombs);
+		createOrUpdateBricks(wu.bricks);
+		createOrUpdatePups(wu.pups);
+		createOrUpdateSpinners(wu.spinners);
+	}
+	
+	private void createOrUpdateSpinners(ItemBase[] spinnerBase) {
+		for(ItemBase newItem: spinnerBase){
+			boolean itemFound = false;
+			for(Spinner spinner:spinners){
+				if(spinner.id == newItem.id){
+					itemFound = true; //already made so update
+					spinner.body.setTransform(newItem.x, newItem.y, newItem.r);
+					spinner.body.setLinearVelocity(newItem.vx, newItem.vy);
+				}	
+			}
+			if(!itemFound){
+				Spinner s = this.addSpinner(newItem.x, newItem.y,newItem.extra == 1);
+				s.id = newItem.id;
+				s.body.setTransform(newItem.x, newItem.y, newItem.r);
+				s.body.setLinearVelocity(newItem.vx, newItem.vy);
+			}
+		}
+	}
+
+
+	private void createOrUpdatePups(ItemBase[] pupBase) {
+		for(ItemBase newItem: pupBase){
+			boolean itemFound = false;
+			for(PowerUp pup:pups){
+				if(pup.id == newItem.id){
+					itemFound = true; //already made so update
+					pup.body.setTransform(newItem.x, newItem.y, newItem.r);
+					pup.body.setLinearVelocity(newItem.vx, newItem.vy);
+				}	
+			}
+			if(!itemFound){
+				PowerUp p = this.createNewPowerUp(new Vector2(newItem.x, newItem.y), newItem.extra);
+				p.id = newItem.id;
+				p.body.setLinearVelocity(newItem.vx, newItem.vy);
+			}
+		}
+	}
+
+
+	private void createOrUpdateBricks(ItemBase[] brickBase) {
+		for(ItemBase newItem: brickBase){
+			boolean itemFound = false;
+			for(Brick brick:bricks){
+				if(brick.id == newItem.id){
+					itemFound = true; //already made so update
+					brick.body.setTransform(newItem.x, newItem.y, newItem.r);
+					brick.body.setLinearVelocity(newItem.vx, newItem.vy);
+				}	
+			}
+			if(!itemFound){
+				Brick b = (newItem.extra == 1)? makePowerBrick(newItem.x, newItem.y): makeBrick(newItem.x, newItem.y);
+				b.id = newItem.id;
+				b.body.setLinearVelocity(newItem.vx, newItem.vy);
+			}
+		}
+	}
+
+
+	private void createOrUpdateBombs(ItemBase[] bombBase) {
+		for(ItemBase newItem: bombBase){
+			boolean itemFound = false;
+			for(Bomb bomb:bombs){
+				if(bomb.id == newItem.id){
+					itemFound = true; //already made so update
+					bomb.body.setTransform(newItem.x, newItem.y, newItem.r);
+					bomb.body.setLinearVelocity(newItem.vx, newItem.vy);
+				}	
+			}
+			if(!itemFound){
+				Bomb b = addBomb();
+				b.id = newItem.id;
+				b.body.setTransform(newItem.x, newItem.y, newItem.r);
+				b.body.setLinearVelocity(newItem.vx, newItem.vy);
+			}
+		}
+	}
+
+
+	private void createOrUpdateBalls(ItemBase[] ballBase){
+		for(ItemBase newItem: ballBase){
+			boolean itemFound = false;
+			for(Ball ball:balls){
+				if(ball.id == newItem.id){
+					itemFound = true; //already made so update
+					ball.body.setTransform(newItem.x, newItem.y, newItem.r);
+					ball.body.setLinearVelocity(newItem.vx, newItem.vy);
+					ball.isAttached = false; // opnly attch to host for now
+				}	
+			}
+			if(!itemFound){
+				Ball b = makeBall(newItem.extra == 1);
+				b.id = newItem.id;
+				b.body.setTransform(newItem.x, newItem.y, newItem.r);
+				b.body.setLinearVelocity(newItem.vx, newItem.vy);
+			}
+		}
+	}
+	
 }
 
 

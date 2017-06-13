@@ -7,6 +7,8 @@ public class NetworkCommon {
 
 	static public final int tcpPort = 54555;
 	static public final int udpPort = 54777;
+	
+	static public final int STATE_ALL_READY = 1;
 
 	// This registers objects that are going to be sent over the network.
 	static public void register (EndPoint endPoint) {
@@ -18,6 +20,12 @@ public class NetworkCommon {
 		kryo.register(UserReady.class);
 		kryo.register(NetError.class);
 		kryo.register(PlayerUpdate.class);
+		kryo.register(WorldUpdate.class);
+		kryo.register(ItemBase.class);
+		kryo.register(ItemBase[].class);
+		kryo.register(GameState.class);
+		kryo.register(ItemDied.class);
+		kryo.register(PlayerAction.class);
 		
 	}
 	
@@ -64,6 +72,49 @@ public class NetworkCommon {
 	static public class PlayerUpdate{
 		public int playerId;
 		public int playerXPos;
+	}
+	
+	static public class PlayerAction{
+		public int playerId;
+		public int playerAction;
+	}
+	
+	static public class GameState{
+		public int state;
+	}
+	
+	static public class ItemBase{
+		public long id;
+		public int item;
+		public float x,y,vx,vy,r;
+		public int extra = 0;
+	}
+	
+	static public class ItemDied{
+		public int type;
+		public long id;
+	}
+	
+	/**
+	 * @author darkd
+	 * For updating world on client with server
+	 */
+	static public class WorldUpdate{
+		public ItemBase[] spinners;
+		public ItemBase[] balls;
+		public ItemBase[] bombs;
+		public ItemBase[] bricks;
+		public ItemBase[] pups;
+		
+		public WorldUpdate(){}
+		
+		public WorldUpdate(ItemBase[][] all){
+			balls = all[0];
+			bombs = all[1];
+			bricks = all[2];
+			pups = all[3];
+			spinners = all[4];
+		}
 	}
 }
 

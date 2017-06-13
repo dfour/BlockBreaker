@@ -2,6 +2,7 @@ package com.dfour.blockbreaker.network;
 
 import java.util.HashMap;
 
+import com.dfour.blockbreaker.BBModelMulti;
 import com.dfour.blockbreaker.network.NetworkCommon.LobbyMessage;
 import com.esotericsoftware.kryonet.Connection;
 
@@ -9,8 +10,10 @@ public abstract class AbstractNetworkBase {
 	public HashMap<Integer, NetworkedUser> characters = new HashMap<Integer, NetworkedUser>();
 	public boolean newMessage = false;
 	public LobbyMessage lastMessage;
+	public boolean startLevelReady = false;
+	public BBModelMulti multi;
 	
-	public abstract void updateCharacterPosition(int id, int xpos);
+	public abstract void receiveCharacterPosition(int id, int xpos);
 	
 	public abstract void addCharacter(CharacterConnection c);
 	

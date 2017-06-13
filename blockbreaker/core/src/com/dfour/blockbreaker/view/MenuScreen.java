@@ -81,7 +81,7 @@ public class MenuScreen extends Scene2DScreen {
 		
 		btnMulti.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
-				MenuScreen.this.returnScreen = BlockBreaker.MULTIPLAYER;
+				MenuScreen.this.returnScreen = BlockBreaker.MULTIPLAYER_MENU;
 				MenuScreen.this.isReturning = true;	
 			}
 		});
