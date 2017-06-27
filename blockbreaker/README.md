@@ -59,17 +59,17 @@ This is a gradle project and can be built using gradle.
 
 ## Blog
 
-Many features of this game have tutorials or guides on [https://gamedevelopment.blog] (gamedevelopment.blog) including:
+Many features of this game have tutorials or guides on [gamedevelopment.blog](https://gamedevelopment.blog) including:
 
-[https://www.gamedevelopment.blog/project-creation-libgdx-project-generator/] (LibGDX Project Generator)
+[LibGDX Project Generator](https://www.gamedevelopment.blog/project-creation-libgdx-project-generator/)
 
-[https://www.gamedevelopment.blog/asset-manager-libgdx-tutorial/] (Asset Manager Tutorial)
+[Asset Manager Tutorial](https://www.gamedevelopment.blog/asset-manager-libgdx-tutorial/)
 
-[https://www.gamedevelopment.blog/texture-packer-gui-quick-tutorial/] (GUI Texture Packer)
+[GUI Texture Packer](https://www.gamedevelopment.blog/texture-packer-gui-quick-tutorial/)
 
-[https://www.gamedevelopment.blog/updating-block-breaker/] (Block Breaker - Power Ups)
+[Block Breaker - Power Ups](https://www.gamedevelopment.blog/updating-block-breaker/)
 
-[https://www.gamedevelopment.blog/creating-explosions-libgdx-box2d/] (Explosions Using Libgdx and Box2d)
+[Explosions Using Libgdx and Box2d](https://www.gamedevelopment.blog/creating-explosions-libgdx-box2d/)
 
 
 
