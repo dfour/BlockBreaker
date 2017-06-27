@@ -51,4 +51,8 @@ public class BBUtils {
 		
 		return name;
 	}
+	
+	public static void log(Object o){
+		System.out.println(o);
+	}
 }

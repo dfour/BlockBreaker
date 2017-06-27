@@ -2,6 +2,8 @@ package com.dfour.blockbreaker;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
@@ -15,40 +17,40 @@ import com.dfour.blockbreaker.loaders.LevelLoader;
 import com.dfour.blockbreaker.network.AbstractNetworkBase;
 import com.dfour.blockbreaker.network.BBClient;
 import com.dfour.blockbreaker.network.BBHost;
-import com.dfour.blockbreaker.network.MultiPlayer;
-import com.dfour.blockbreaker.network.NetworkCommon.ItemDied;
-import com.dfour.blockbreaker.network.NetworkCommon.PlayerAction;
-import com.dfour.blockbreaker.network.NetworkCommon.PlayerUpdate;
-import com.dfour.blockbreaker.network.NetworkCommon.WorldUpdate;
+import com.dfour.blockbreaker.network.PlayerActions;
+import com.dfour.blockbreaker.network.NetworkCommon.*;
+
 
 public class BBModelMulti extends BBModel{
+	
+	//TODO split model from player
+	//TODO split model into abstract, SoloModel, MultiHostModel, MultiClientModel
+	//TODO move shop purchases from shop to model so clients can't hack extra items OR make multiplayer shopscreen
+	
+	//TODO update lives, score, cash for clients
+	//TODO implement magneism for clients
+	//TODO make shop work for clients and update host
+	//TODO update contact listener to delagate contacts to multipads
 
 	public static final int LOADING = 0;
 	public static final int WAITING_CLIENT = 1;
 	public static final int ALL_LOADED = 2;
 	public static final int RUNNING = 3;
 	public static final int DISCONNECTED = 4;
-	
-	public static final int PLAYER_ACTION_MAG_PULLS = 0; // start pull
-	public static final int PLAYER_ACTION_MAG_PULLE = 1; // stop pull
-	public static final int PLAYER_ACTION_MAG_PUSHS = 2; // start push
-	public static final int PLAYER_ACTION_MAG_PUSHE = 3; // stop push
-	public static final int PLAYER_ACTION_BOMB = 4; //release bomb
-	
-	
+	public static final int PAUSED = 5;
 	
 	private int gameState = LOADING;
-	private AbstractNetworkBase netbase;
 	private boolean isHost = false;
+	private float fullUpdateTimer = 0.5f; // do full world update only twice per second
+	private int worldUpdate = 3;
+	
+	private AbstractNetworkBase netbase;
 	private BBHost host;
 	private BBClient client;
 	
-	private int playerCount = 0;
-	private HashMap<Integer,MultiPlayer> playerMap = new HashMap<Integer,MultiPlayer>();
-	
-	public int totalPlayers = 0;
+	private HashMap<Integer,Player> playerMap = new HashMap<Integer,Player>();
 	public Array<ItemDied> deadItems = new Array<ItemDied>();
-	public int lastPadPos = 0;
+	
 	
 	public BBModelMulti(AppController cont, BBAssetManager ass,AbstractNetworkBase base ) {
 		super(cont, ass);
@@ -66,7 +68,7 @@ public class BBModelMulti extends BBModel{
 	public void init() {
 		super.init();
 		if(isHost){
-			WorldUpdate wu = new WorldUpdate(entFactory.getAllItems());
+			WorldUpdate wu = new WorldUpdate(entFactory.getAllItems(true));
 			host.sendLevel(wu);
 		}
 	}
@@ -75,7 +77,7 @@ public class BBModelMulti extends BBModel{
 	protected void makeLevel() {
 		if(isHost){
 			super.makeLevel();
-			gameState = WAITING_CLIENT;
+			gameState = RUNNING;
 		}else{
 			// load static items from level file
 			ll.loadLevel(level,LevelLoader.MULTI_CLIENT);
@@ -83,70 +85,148 @@ public class BBModelMulti extends BBModel{
 			entFactory.makeBin(cW);
 			//now load dynamic stuff from TCP
 			entFactory.updateWorldItems(client.lastUpdate);
+			gameState = RUNNING;
 		}
+	}
+	
+	
+
+	@Override
+	protected void createPad() {
+		lp.pad = entFactory.makeMultiPad(5, 5);
 	}
 
 	@Override
 	public void doLogic(float delta) {
+		netbase.update();		
 		
 		if(!isHost && client.newUpdate){
 			entFactory.updateWorldItems(client.lastUpdate);
 			client.newUpdate = false;
 		}else{
 			if(host != null){
-				WorldUpdate wu = new WorldUpdate(entFactory.getAllItems());
-				host.sendLevel(wu);
+				boolean fullUpdate = false;
+				fullUpdateTimer -= delta;
+				if(fullUpdateTimer <= 0){
+					fullUpdateTimer = 0.5f;
+					fullUpdate = true;
+				}
+				if(worldUpdate <= 0){
+					WorldUpdate wu = new WorldUpdate(entFactory.getAllItems(fullUpdate));
+					host.sendLevel(wu);
+					// limit client update to 20 times per second. can try lower values as clients simulate physics too
+					worldUpdate = 3;
+				}
+				worldUpdate--;
 			}
 		}
+		
+		controlRespond();
 		
 		controlPad();
 		
 		controlClientsPad();
 		
-		debugFeatures();
-		updateLazer(delta);
-		updateBombs();
-		world.step(delta / 4, 3, 3);
-		updateBalls();
-		updateMagnet();
-		updatePowerUps();
-		updateBricks();
-		updateExplosions();
-		updateObstacles();
-		updatePortals();
-		updateDrunk(delta);
-		updateSlow(delta);
-		updateSticky(delta);
-		updateLevelState(delta);
+		padSync();
+
+		if(gameState == RUNNING){
+			debugFeatures();
+			updateLazer(delta);
+			updateBombs();
+			world.step(delta / 4, 3, 3);
+			updateBalls();
+			updateMagnet(lp);
+			updateMagnetMulti();
+			updatePowerUps();
+			updateBricks();
+			updateExplosions();
+			updateObstacles();
+			updatePortals();
+			updateDrunk(delta);
+			updateSlow(delta);
+			updateSticky(delta);
+			updateLevelState(delta);
+		}
+		
 		
 		killItems();
 
 		controller.ffive = false;
 	}
+	
+	@Override
+	protected void controlRespond() {
+		
+		super.controlRespond();
+		
+		if(!isHost){
+			if((controller.isMouse1Down() || controller.getPull()) && !lp.magPull){
+				lp.magPull = true;
+				client.sendAction(PlayerActions.PLAYER_ACTION_MAG_PULLS);
+			}
+			
+			if((controller.isMouse2Down() || controller.getPush()) && !lp.magPush){
+				lp.magPush = true;
+				client.sendAction(PlayerActions.PLAYER_ACTION_MAG_PULLE);
+			}
+			
+			if((!controller.isMouse1Down() && !controller.getPull()) && lp.magPull){
+				lp.magPull = false;
+				client.sendAction(PlayerActions.PLAYER_ACTION_MAG_PUSHS);
+			}
+			
+			if((!controller.isMouse2Down() && !controller.getPush()) && lp.magPush){
+				lp.magPush = false;
+				client.sendAction(PlayerActions.PLAYER_ACTION_MAG_PUSHE);
+			}
+		}
+	}
 
 	private void controlClientsPad() {
 		if(!isHost){
+			
+			//this.pad.body.getPosition().x += (Math.random() * 5) - 2.5;
+			
 			// send our pos to host if changed
-			int curPadPos = (int)this.pad.body.getPosition().x;
-			if(lastPadPos != curPadPos){
+			int curPadPos = (int)lp.pad.body.getPosition().x;
+			//if(lastPadPos != curPadPos){
 				client.sendMyPosition(curPadPos);
+			//}
+		}else{
+			// send host + client pos to clients
+			for(Player mp:playerMap.values()){
+				PlayerUpdate pu = new PlayerUpdate();
+				pu.playerId = mp.connectionId;
+				pu.playerXPos = mp.position;
+				host.sendPlayerPosition(pu);
 			}
 		}
 	}
 	
+	public void padSync(){
+		for(Player mp:playerMap.values()){
+			((MultiPad)mp.pad).updatePos();
+		}
+	}
+	
 	public void updatePadPos(PlayerUpdate pu){
-		MultiPlayer p;
+		Player p;
 		if(playerMap.containsKey(pu.playerId)){
 			p = playerMap.get(pu.playerId);
 		}else{
+			BBUtils.log("Making multipad for"+pu.playerId);
 			MultiPad mpad = entFactory.makeMultiPad(pu.playerXPos, 5);
 			mpad.clientId = pu.playerId;
-			p = new MultiPlayer();
+			p = new Player();
 			p.pad= mpad;
 			playerMap.put(pu.playerId, p);
 		}
 		// set pad pos
-		p.pad.setPosition(pu.playerXPos, 5);	
+		if(!world.isLocked()){
+			p.pad.setPosition(pu.playerXPos, 5);
+		}else{
+			p.pad.newPos = pu.playerXPos;
+		}
 	}
 
 	@Override
@@ -220,22 +300,58 @@ public class BBModelMulti extends BBModel{
 			host.updateDead(EntityFactory.BOMBS, bomb.id);
 		}
 	}
+	
+	
+
+	@Override
+	public void sendPause(boolean isPaused) {
+		if(isHost){
+			gameState = isPaused?PAUSED:RUNNING;
+			host.sendGameState(gameState);
+		}
+	}
 
 	public void playerAction(PlayerAction pa) {
-		if(pa.playerAction == PLAYER_ACTION_MAG_PULLS){
+		if(pa.playerAction == PlayerActions.PLAYER_ACTION_MAG_PULLS){
 			playerMap.get(pa.playerId).magPull = true;
-		}else if(pa.playerAction == PLAYER_ACTION_MAG_PULLE){
+		}else if(pa.playerAction == PlayerActions.PLAYER_ACTION_MAG_PULLE){
 			playerMap.get(pa.playerId).magPull = false;
-		}else if(pa.playerAction == PLAYER_ACTION_MAG_PUSHE){
+		}else if(pa.playerAction == PlayerActions.PLAYER_ACTION_MAG_PUSHE){
 			playerMap.get(pa.playerId).magPush = true;
-		}else if(pa.playerAction == PLAYER_ACTION_MAG_PUSHE){
+		}else if(pa.playerAction == PlayerActions.PLAYER_ACTION_MAG_PUSHE){
 			playerMap.get(pa.playerId).magPush = false;
 		}
 	}
 	
-	private void performMagPull(){
-		
+	private void updateMagnetMulti(){
+		for(Player pl:playerMap.values()){
+			updateMagnet(pl);
+		}
 	}
-	
-	
+
+	// override applyMagnitism to apply magnetism from all players
+	@Override
+	protected void applyMagnetism(Body body) {
+		for(Player pl:playerMap.values()){
+			
+			if ((pl.magPull || pl.magPush) && pl.magnetPower > 0) {
+				float velx = pl.pad.body.getPosition().x - body.getPosition().x;
+				float vely = pl.pad.body.getPosition().y - pl.pad.body.getPosition().y;
+				float length = (float) Math.sqrt(velx * velx + vely * vely);
+				if (length != 0) {
+					velx = velx / length;
+					vely = vely / length;
+				}
+				if (pl.magnetPower > 0) {
+					if (pl.magPull) {
+						body.applyForceToCenter(new Vector2(velx * pl.magnetStrength, vely
+								* pl.magnetStrength), true);
+					} else {
+						body.applyForceToCenter(new Vector2(velx * -pl.magnetStrength,
+								vely * -pl.magnetStrength), true);
+					}
+				}
+			}
+		}
+	}
 }

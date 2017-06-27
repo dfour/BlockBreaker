@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.dfour.blockbreaker.BBModelMulti;
 import com.dfour.blockbreaker.network.NetworkCommon.LobbyMessage;
+import com.dfour.blockbreaker.network.NetworkCommon.RemoveUser;
 import com.esotericsoftware.kryonet.Connection;
 
 public abstract class AbstractNetworkBase {
@@ -14,8 +15,6 @@ public abstract class AbstractNetworkBase {
 	public BBModelMulti multi;
 	
 	public abstract void receiveCharacterPosition(int id, int xpos);
-	
-	public abstract void addCharacter(CharacterConnection c);
 	
 	public abstract void sendMessage(String msg);
 	

@@ -428,22 +428,30 @@ public class EntityFactory {
 		localEffectEntities.clear();
 	}
 	
-	public ItemBase[][] getAllItems(){
+	public ItemBase[][] getAllItems(boolean full){
 		ItemBase[][] ib = new ItemBase[6][];
-		ib[BALL] = getArrayItem(balls,BALL);
-		ib[BOMBS] = getArrayItem(bombs,BOMBS);
-		ib[BRICKS] = getArrayItem(bricks,BRICKS);
-		ib[POWERUPS] = getArrayItem(pups,POWERUPS);
-		ib[SPINNERS] = getArrayItem(spinners,SPINNERS);
+		ib[BALL] = getArrayItem(balls,BALL, full);
+		ib[BOMBS] = getArrayItem(bombs,BOMBS, full);
+		ib[BRICKS] = getArrayItem(bricks,BRICKS, full);
+		ib[POWERUPS] = getArrayItem(pups,POWERUPS, full);
+		ib[SPINNERS] = getArrayItem(spinners,SPINNERS, full);
 		return ib;
 	}
 	
-	public ItemBase[] getArrayItem(Array<? extends Entity> arr, int type){
+	public ItemBase[] getArrayItem(Array<? extends Entity> arr, int type, boolean full){
 		ItemBase[] ib = new ItemBase[arr.size];
 		int count = 0;
 		for(Entity ent:arr){
-			ib[count] = getSingleItem(ent,type);
-			count++;
+			//if(ent instanceof Brick){
+			//	Brick br = (Brick) ent;
+			//	if(!br.isStatic || full){
+			//		ib[count] = getSingleItem(ent,type);
+			//		count++;
+			//	}
+			//}else{
+				ib[count] = getSingleItem(ent,type);
+				count++;
+			//}
 		}
 		return ib;
 	}

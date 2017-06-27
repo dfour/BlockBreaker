@@ -24,7 +24,7 @@ import com.dfour.blockbreaker.network.NetworkedUser;
  * @author darkd
  *
  */
-public class MultiplayerScreen extends Scene2DScreen{
+public class MultiplayerScreen extends Scene2DScreen {
 	private String externalIp = "Checking for IP....";
 	private Label exip;
 	private List<String> loggedUsers;
@@ -44,45 +44,40 @@ public class MultiplayerScreen extends Scene2DScreen{
 	private Label lblMessageNameWindow;
 	private Table chatWindow;
 
-	//DONE limit to 4 connected players
-	//DONE add ready up state for players
-	//TODO make chat window more aesthetically pleasing
-	//TODO add timer to count down after 2 or more players have started
-	//STOPPED use RMI to have 4 pad objects for each possible used (RMI adds overhead compared to standard object sending)
-	//DONE split message windows into names and message
-	//TODO remove names from connected list when disconnection happens
-	//TODO add client and host quit actions(quit from hosting/being joined)
-		
-	
-	/* discover local server code
-	InetAddress address = client.discoverHost(54777, 5000);
-    System.out.println(address);
-    */
-	
+	// DONE limit to 4 connected players
+	// DONE add ready up state for players
+	// TODO make chat window more aesthetically pleasing
+	// TODO add timer to count down after 2 or more players have started
+	// DONE split message windows into names and message
+	// TODO remove names from connected list when disconnection happens
+	// TODO add client and host quit actions(quit from hosting/being joined)
+
+	/*
+	 * discover local server code InetAddress address =
+	 * client.discoverHost(54777, 5000); System.out.println(address);
+	 */
 
 	public MultiplayerScreen(BlockBreaker p) {
 		super(p);
 		loggedUsers = new List<String>(skin);
-		exip = new Label(externalIp,skin);
-		
-		btnHost = new TextButton("Host",skin);
-		btnJoin = new TextButton("Join",skin);
-		btnReady = new TextButton("Ready",skin);
+		exip = new Label(externalIp, skin);
+
+		btnHost = new TextButton("Host", skin);
+		btnJoin = new TextButton("Join", skin);
+		btnReady = new TextButton("Ready", skin);
 		btnReady.setDisabled(true);
-		btnSend = new TextButton("Send",skin);
+		btnSend = new TextButton("Send", skin);
 		btnSend.setDisabled(true);
-		txfMessageBox = new TextField("",skin);
-		txfJoinip = new TextField("127.0.0.1",skin);
-		lblMessageWindow = new Label("",skin,"chat");
-		lblMessageNameWindow = new Label("",skin,"chat");
-		
+		txfMessageBox = new TextField("", skin);
+		txfJoinip = new TextField("127.0.0.1", skin);
+		lblMessageWindow = new Label("", skin, "chat");
+		lblMessageNameWindow = new Label("", skin, "chat");
+
 		chatWindow = new Table();
 		chatWindow.add(lblMessageNameWindow).width(100);
-		chatWindow.add(lblMessageWindow);
+		chatWindow.add(lblMessageWindow).expandX();
 
-		
-		
-		btnHost.addListener(new ClickListener(){
+		btnHost.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
@@ -93,29 +88,31 @@ public class MultiplayerScreen extends Scene2DScreen{
 				btnHost.setDisabled(true); // disable hosting and joining
 				btnJoin.setDisabled(true);
 				lblMessageNameWindow.setText("Server :");
-				lblMessageWindow.setText("Creating Host on "+exip);
+				lblMessageWindow.setText("Creating Host on " + exip);
 			}
 		});
-		
-		btnSend.addListener(new ClickListener(){
+
+		btnSend.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				if(txfMessageBox.getText() != null 
-						&& txfMessageBox.getText().length() > 0){
+				if (txfMessageBox.getText() != null
+						&& txfMessageBox.getText().length() > 0) {
 					base.sendMessage(txfMessageBox.getText());
-					System.out.println("Sending message: "+txfMessageBox.getText());
+					System.out.println("Sending message: "
+							+ txfMessageBox.getText());
 					txfMessageBox.setText("");
 				}
 			}
 		});
-		
-		btnJoin.addListener(new ClickListener(){
+
+		btnJoin.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				//bbclient = new BBClient(parent.getPreferences().getUserName());
-				// debug version 
+				// bbclient = new
+				// BBClient(parent.getPreferences().getUserName());
+				// debug version
 				bbclient = new BBClient(BBUtils.generateRandomName());
 				base = bbclient;
 				bbclient.start(txfJoinip.getText());
@@ -123,11 +120,12 @@ public class MultiplayerScreen extends Scene2DScreen{
 				btnSend.setDisabled(false);
 				btnHost.setDisabled(true); // disable hosting and joining
 				btnJoin.setDisabled(true);
-				lblMessageWindow.setText("Attempting to Join host : "+txfJoinip.getText());
+				lblMessageWindow.setText("Attempting to Join host : "
+						+ txfJoinip.getText());
 			}
 		});
-		
-		btnReady.addListener(new ClickListener(){
+
+		btnReady.addListener(new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
@@ -147,20 +145,20 @@ public class MultiplayerScreen extends Scene2DScreen{
 		displayTable.add(btnJoin).expandX();
 		displayTable.row();
 		displayTable.add(loggedUsers).height(200).width(150);
-		displayTable.add(chatWindow).height(200).width(350).colspan(2); 
+		displayTable.add(chatWindow).height(200).width(350).colspan(2);
 		displayTable.row();
 		displayTable.add(btnReady).expandX();
 		displayTable.add(txfMessageBox);
 		displayTable.add(btnSend).expandX();
-		
+
 		getExternalIpAddress();
 	}
 
 	@Override
 	public void render(float delta) {
 		super.render(delta);
-		if(base != null){
-			//base.update();
+		if (base != null) {
+			base.update();
 			updateMessages();
 			checkPing(delta);
 			fillUserList();
@@ -169,7 +167,7 @@ public class MultiplayerScreen extends Scene2DScreen{
 	}
 
 	private void isHostReady() {
-		if(base.startLevelReady){
+		if (base.startLevelReady) {
 			parent.base = base;
 			this.isReturning = true;
 			this.returnScreen = BlockBreaker.MULTIPLAYER_APPLICATION;
@@ -178,20 +176,20 @@ public class MultiplayerScreen extends Scene2DScreen{
 
 	private void fillUserList() {
 		Array<String> users = new Array<String>();
-		for(NetworkedUser nu:base.characters.values()){
-			String ready = nu.isReady?"R":"X";
-			users.add(ready+":"+nu.ping+" "+nu.username);
+		for (NetworkedUser nu : base.characters.values()) {
+			String ready = nu.isReady ? "R" : "X";
+			users.add(ready + ":" + nu.ping + " " + nu.username);
 		}
 		loggedUsers.setItems(users);
 	}
 
 	private void checkPing(float delta) {
-		if(base == null){
+		if (base == null) {
 			return;
 		}
 		pingTimer -= delta;
-		if(pingTimer <=0){
-			pingTimer  = 2f;
+		if (pingTimer <= 0) {
+			pingTimer = 2f;
 			base.initiatePingCheck();
 		}
 	}
@@ -200,20 +198,20 @@ public class MultiplayerScreen extends Scene2DScreen{
 	public void dispose() {
 		super.dispose();
 	}
-	
+
 	/**
-	 *  Updates Messages from connected users
+	 * Updates Messages from connected users
 	 */
 	private void updateMessages() {
-		if(base.newMessage){
+		if (base.newMessage) {
 			base.newMessage = false;
-			
-			messages_names+="\n";
-			messages_names+=base.lastMessage.name+":";
+
+			messages_names += "\n";
+			messages_names += base.lastMessage.name + ":";
 			lblMessageNameWindow.setText(messages_names);
-			
-			messages+="\n";
-			messages+=base.lastMessage.message;
+
+			messages += "\n";
+			messages += base.lastMessage.message;
 			lblMessageWindow.setText(messages);
 		}
 	}
@@ -221,22 +219,22 @@ public class MultiplayerScreen extends Scene2DScreen{
 	/**
 	 * Gets External IP address with get request to amazonaws
 	 */
-	public void getExternalIpAddress(){
+	public void getExternalIpAddress() {
 		HttpRequest httpGet = new HttpRequest(HttpMethods.GET);
 		httpGet.setUrl("http://checkip.amazonaws.com/");
-		Gdx.net.sendHttpRequest (httpGet, new HttpResponseListener() {
+		Gdx.net.sendHttpRequest(httpGet, new HttpResponseListener() {
 			public void handleHttpResponse(HttpResponse httpResponse) {
 				exip.setText(httpResponse.getResultAsString());
-	        }
-	 
-	        public void failed(Throwable t) {
-	        	exip.setText("Unable to get IP");
-	        }
+			}
+
+			public void failed(Throwable t) {
+				exip.setText("Unable to get IP");
+			}
 
 			@Override
 			public void cancelled() {
-				
+
 			}
-		 });
+		});
 	}
 }

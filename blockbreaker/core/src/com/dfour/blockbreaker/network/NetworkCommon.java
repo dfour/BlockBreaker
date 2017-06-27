@@ -26,6 +26,7 @@ public class NetworkCommon {
 		kryo.register(GameState.class);
 		kryo.register(ItemDied.class);
 		kryo.register(PlayerAction.class);
+		kryo.register(RemoveUser.class);
 		
 	}
 	
@@ -38,6 +39,10 @@ public class NetworkCommon {
 		public String version;  // game version (host to client)
 		public String name;		// host username
 		public int connectionId;// conid from host to client
+	}
+	
+	static public class RemoveUser{
+		public int id;
 	}
 	
 	static public class AdditionalUser{
@@ -56,33 +61,53 @@ public class NetworkCommon {
 		public boolean status; // true = rdy 
 	}
 	
-	static public class UpdatePause{
-		public boolean isPaused;
-	}
-	
+	/**
+	 * Net Error class to hold error information and disconnect request
+	 * @author darkd
+	 */
 	static public class NetError{
 		public boolean disconnect = false;
 		public String error = "An Unknown Error Occured";
 		
+		/**
+		 * Setter for error string
+		 * @param error Error string
+		 */
 		public NetError(String error){
 			this.error = error;
 		}
 	}
 	
+	/**
+	 * Player update class to store player position to send over network
+	 * @author darkd
+	 */
 	static public class PlayerUpdate{
 		public int playerId;
 		public int playerXPos;
 	}
 	
+	/**
+	 * Holds player actions for notifying server of client acions
+	 * @author darkd
+	 */
 	static public class PlayerAction{
 		public int playerId;
 		public int playerAction;
 	}
 	
+	/**
+	 * Contains game state for sending over network
+	 * @author darkd
+	 */
 	static public class GameState{
 		public int state;
 	}
 	
+	/**
+	 * Base item for sending to clients
+	 * @author darkd
+	 */
 	static public class ItemBase{
 		public long id;
 		public int item;
@@ -90,14 +115,18 @@ public class NetworkCommon {
 		public int extra = 0;
 	}
 	
+	/**
+	 * Notify client of an item that died
+	 * @author darkd
+	 */
 	static public class ItemDied{
 		public int type;
 		public long id;
 	}
 	
 	/**
-	 * @author darkd
 	 * For updating world on client with server
+	 * @author darkd
 	 */
 	static public class WorldUpdate{
 		public ItemBase[] spinners;

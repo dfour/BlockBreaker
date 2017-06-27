@@ -3,10 +3,9 @@ package com.dfour.blockbreaker.network;
 import java.io.IOException;
 
 import com.dfour.blockbreaker.BBModelMulti;
+import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
-import com.dfour.blockbreaker.network.NetworkCommon.AdditionalUser;
-import com.dfour.blockbreaker.network.NetworkCommon.ItemDied;
-import com.dfour.blockbreaker.network.NetworkCommon.NetError;
+import com.dfour.blockbreaker.network.NetworkCommon.RemoveUser;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -29,12 +28,29 @@ public class BBClient extends AbstractNetworkBase{
 
 		NetworkCommon.register(client);
 		
-		client.addListener(new ThreadedListener(new Listener() {
+		Listener listener = new Listener() {
 			
 
 			public void connected (Connection connection) {
+				BBUtils.log("Connected");
 			}
 			
+			
+			
+			@Override
+			public void disconnected(Connection connection) {
+				super.disconnected(connection);
+			}
+
+
+
+			@Override
+			public void idle(Connection connection) {
+				super.idle(connection);
+			}
+
+
+
 			public void received (Connection connection, Object object) {
 				if(object instanceof Accept){
 					Accept msg = (Accept)object;
@@ -54,25 +70,41 @@ public class BBClient extends AbstractNetworkBase{
 						me.ping = connection.getReturnTripTime();
 					}
 				}else if(object instanceof LobbyMessage){
+					BBUtils.log("Lobby Message");
 					receivedMessage((LobbyMessage)object);
 				}else if(object instanceof UserReady){
+					BBUtils.log("UserReady");
 					userReady((UserReady)object);
 				}else if(object instanceof AdditionalUser){
+					BBUtils.log("AdditionalUser");
 					addUser((AdditionalUser)object);
 				}else if(object instanceof NetError){
+					BBUtils.log("NetError");
 					respondError((NetError)object);
 				}else if(object instanceof WorldUpdate){
+					//BBUtils.log("WorldUpdate");
 					lastUpdate = (WorldUpdate) object;
 					startLevelReady = true;
 					newUpdate = true;
 				}else if(object instanceof GameState){
+					BBUtils.log("GameState");
 					gameState = ((GameState) object).state;
 				}else if(object instanceof ItemDied){
+					BBUtils.log("ItemDied");
 					killItem(((ItemDied)object));
-					
+				}else if(object instanceof RemoveUser){
+					removeCharacter(((RemoveUser) object));
 				}
 			}
-		}));
+		};
+		
+		if(BlockBreaker.debug_multilag){
+			client.addListener(new ThreadedListener(new Listener.LagListener(
+					BlockBreaker.debug_min_lag, BlockBreaker.debug_max_lag,
+					listener)));
+		}else{
+			client.addListener(new ThreadedListener(listener));
+		}
 	}
 
 	protected void killItem(ItemDied item) {
@@ -88,6 +120,10 @@ public class BBClient extends AbstractNetworkBase{
 		lm.name = "Server";
 		newMessage = true;
 		lastMessage = lm;
+	}
+	
+	public void removeCharacter(RemoveUser ru) {
+		characters.remove(ru.id);
 	}
 
 	protected void addUser(AdditionalUser user) {
@@ -109,10 +145,6 @@ public class BBClient extends AbstractNetworkBase{
 	@Override
 	public void receiveCharacterPosition( int id, int xpos) {		
 	}
-
-	@Override
-	public void addCharacter(CharacterConnection c) {		
-	}
 	
 	@Override
 	public void sendMessage(String msg) {
@@ -132,6 +164,13 @@ public class BBClient extends AbstractNetworkBase{
 	}
 	
 	public void update(){
+		/*/
+		try {
+			 client.update(30);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		//*/
 	}
 	
 	public void readyUp(boolean rdy){
@@ -151,6 +190,14 @@ public class BBClient extends AbstractNetworkBase{
 		login.name = me.username;
 		login.version = BlockBreaker.VERSION;
 		client.sendTCP(login);
+	}
+
+	public void sendAction(int act) {
+		PlayerAction pa = new PlayerAction();
+		pa.playerId = me.connectionID;
+		pa.playerAction = act;
+		client.sendTCP(pa);
+		
 	}
 
 }

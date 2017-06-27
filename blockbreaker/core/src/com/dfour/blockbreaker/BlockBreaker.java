@@ -34,17 +34,18 @@ public class BlockBreaker extends Game {
 	//TODO update level designer to use actual rendering like game, just without pad and info display and a obstacle menu instead
 	//TODO look into making level using level generator
 	//TODO update info display with spaceship dashboard look (metal with black display and green computer text)
-	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals)
+	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals) 
+	//			(portals close to edge allow blocks to escape area)
 	// fix bug where game ends and no pointer
 	//TODO redo rendering system so box to world rendering is in sync (e.g. 16px image = 1 box unit)
 	//TODO add local multiplayer then
 		//TODO add button for multiplayer
 		//TODO add keys for player 2 to config/prof screen
 	//TODO add Host > Client multiplayer then (see below)
-		//TODO add screen to be host or enter Host ip
+		//DONE add screen to be host or enter Host ip
 	//TODO add lobby and matching
 	//TODO pad size = player count(max 4) / full pad size (multi multiplayer)
-	//TODO add username preferences
+	//DONE add username preferences
 	//TODO add help page for networking (show ports to use or add to preferences)
 	
 	private MenuScreen menu;
@@ -62,13 +63,17 @@ public class BlockBreaker extends Game {
 	public AbstractNetworkBase base;
 	
 	// debug vars
-	public static boolean debug = false;
-	public static boolean debug_b2d_render = false;
-	public static boolean debug_texture_render = true;
+	public static boolean debug = true;
+	public static boolean debug_b2d_render = true;
+	public static boolean debug_texture_render = false;
 	public static boolean debug_contact_log = false;
+	public static boolean debug_multilag = true;
+	public static int debug_min_lag = 100;
+	public static int debug_max_lag = 150;
 	
 	public static Array<FileHandle> customMaps;
 	public static boolean isCustomMapMode = false;
+	
 	
 	//music
 	private Sound introMusic;
@@ -87,6 +92,8 @@ public class BlockBreaker extends Game {
 	public final static int CUSTOM_MAP = 7;
 	public final static int MULTIPLAYER_MENU = 8;
 	public final static int MULTIPLAYER_APPLICATION = 9;
+	
+	public boolean isMultiMode = false;
 	
 	public final static String VERSION = "0.1"; 
 	
@@ -140,7 +147,13 @@ public class BlockBreaker extends Game {
 				this.setScreen(designScreen);
 				break;
 			case SHOP:
-				shopScreen = new ShopScreen(this, app.bbModel);
+				BBModel model;
+				if(isMultiMode){
+					model = app_multi.bbModel;
+				}else{
+					model = app.bbModel;
+				}
+				shopScreen = new ShopScreen(this, model);
 				this.setScreen(shopScreen);
 				break;
 			case CONTROL:
@@ -153,10 +166,12 @@ public class BlockBreaker extends Game {
 				this.setScreen(new MultiplayerScreen(this));
 				break;
 			case MULTIPLAYER_APPLICATION:
+				isMultiMode = true;
 				if(app_multi == null) app_multi = new ApplicationScreen(this,new BBModelMulti(controller,assMan,base));
 				this.setScreen(app_multi); 
 				break;
 			case APPLICATION:
+				isMultiMode = false;
 				if(currentSound != gameMusic && preferences.isMusicEnabled()){
 					currentSound.stop();
 					currentSound = gameMusic;

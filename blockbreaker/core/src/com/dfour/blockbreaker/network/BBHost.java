@@ -7,8 +7,9 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
+import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
-import com.dfour.blockbreaker.network.NetworkCommon.PlayerAction;
+import com.dfour.blockbreaker.network.AbstractNetworkBase.CharacterConnection;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 
 /**
@@ -44,7 +45,7 @@ public class BBHost extends AbstractNetworkBase{
 		
 		NetworkCommon.register(server);
 		
-		server.addListener(new Listener() {
+		Listener listener = new Listener() {
 			public void received (Connection c, Object object) {
 				CharacterConnection connection = (CharacterConnection)c;
 				NetworkedUser character = connection.character;
@@ -65,25 +66,42 @@ public class BBHost extends AbstractNetworkBase{
 						c.sendTCP(new NetError("Version Mismatch"));
 					}
 				}else if(object instanceof LobbyMessage){
+					BBUtils.log("LobbyMessage");
 					sendAllMessage((LobbyMessage)object);
 				}else if(object instanceof UserReady){
+					BBUtils.log("UserReady");
 					readyUpRelay((UserReady)object);
 				}else if(object instanceof PlayerUpdate){
-					System.out.println("got player update");
+					BBUtils.log("PlayerUpdate");
 					updatePlayerPos((PlayerUpdate) object);
 				}else if(object instanceof PlayerAction){
+					BBUtils.log("PlayerAction");
 					performPlayerAction((PlayerAction)object);
 				}
 			}
 			
 			public void disconnected (Connection c) {
+				
+				removeCharacter(c);
+				
 				// disconneted user
+				BBUtils.log("Disconnect");
 				connectionCount-=1;
+				
 			}
-		});
+		};
+		
+		if(BlockBreaker.debug_multilag){
+			Listener.LagListener ll = new Listener.LagListener (100,150,listener);
+			server.addListener(ll);
+		}else{
+			server.addListener(listener);
+		}
+		
+		
 		try {
 			server.bind(NetworkCommon.tcpPort,NetworkCommon.udpPort);
-			server.start();
+			server.start(); 
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.out.println("Disconnect error");
@@ -106,13 +124,24 @@ public class BBHost extends AbstractNetworkBase{
 	public void updatePlayerPos(PlayerUpdate pu) {
 		multi.updatePadPos(pu);
 	}
+	
+	public void sendPlayerPosition(PlayerUpdate pu){
+		server.sendToAllExceptTCP(pu.playerId, pu);
+	}
 
 	@Override
 	public void receiveCharacterPosition(int id, int xp) {
 		this.characters.get(id).xpos = xp;
 	}
+	
+	public void removeCharacter(Connection c){
+		// send all current users the new user details
+		RemoveUser ru = new RemoveUser();
+		ru.id = c.getID();
+		this.characters.remove(ru.id);
+		server.sendToAllTCP(ru);
+	}
 
-	@Override
 	public void addCharacter(CharacterConnection c) {
 		
 		// send all currentUsers to new connection

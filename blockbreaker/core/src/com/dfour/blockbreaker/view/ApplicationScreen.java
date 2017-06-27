@@ -45,6 +45,7 @@ import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.IconBar;
 import com.dfour.blockbreaker.ParticleEffectManager;
+import com.dfour.blockbreaker.Player;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.entity.Ball;
 import com.dfour.blockbreaker.entity.Bomb;
@@ -141,6 +142,7 @@ public class ApplicationScreen implements Screen {
 	
 	private float fpsTimer = 0;
 	private int FPS;
+	private Player lp;
 	
 
 	
@@ -148,6 +150,7 @@ public class ApplicationScreen implements Screen {
 		parent = p;
 		
 		bbModel = model;
+		lp = bbModel.lp;
 		controller = model.controller;
 		
 		loadImages();
@@ -251,18 +254,18 @@ public class ApplicationScreen implements Screen {
 		magnetBar = new IconBar(magnetImage,skin);
 		laserBar = new IconBar(laserImage,skin);
 		guideBar = new IconBar(laserGuideImage,skin);
-		laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
+		laserBar.updateProgress((lp.lazerTimer / lp.baseLazerTimer));
 		Label scoreTextLabel = new Label("Score:",skin,"small");
 		Label cashTextLabel = new Label ("Cash:",skin,"small");
 		Label bombTextLabel = new Label ("Bombs:",skin,"small");
 		Label livesTextLabel = new Label ("Lives Left: ",skin,"small");
-		magnetUnitsTotal = new Label (bbModel.magnetPower+" / "+bbModel.baseMagnetPower,skin,"small");
+		magnetUnitsTotal = new Label (lp.magnetPower+" / "+lp.baseMagnetPower,skin,"small");
 		scoreCountLabel = new Label(""+bbModel.score,skin,"small");
-		cashCountLabel = new Label("$"+bbModel.cash,skin,"small");
-		bombCountLabel = new Label(""+bbModel.bombsLeft,skin,"small");
-		laserCountLabel = new Label(""+bbModel.lazerTimer,skin,"small");
-		laserGuideCountLabel = new Label(""+bbModel.guideLazerTimer,skin,"small");
-		livesCountLabel = new Label(""+bbModel.livesLeft,skin,"small");
+		cashCountLabel = new Label("$"+lp.cash,skin,"small");
+		bombCountLabel = new Label(""+lp.bombsLeft,skin,"small");
+		laserCountLabel = new Label(""+lp.lazerTimer,skin,"small");
+		laserGuideCountLabel = new Label(""+lp.guideLazerTimer,skin,"small");
+		livesCountLabel = new Label(""+lp.livesLeft,skin,"small");
 		
 		bombCountLabel.setAlignment(Align.right);
 		magnetUnitsTotal.setAlignment(Align.right);
@@ -371,9 +374,11 @@ public class ApplicationScreen implements Screen {
 	    	isPaused = !isPaused;
 	    	controller.isPauseDown = false;
 	    	if(isPaused){
+	    		bbModel.sendPause(true);
 	    		pauseMenuTable.setVisible(true);
 	    		toInMenuSettings();
 	    	}else{
+	    		bbModel.sendPause(false);
 	    		pauseMenuTable.setVisible(false);
 	    		toInGameSettings();
 	    	}
@@ -384,16 +389,16 @@ public class ApplicationScreen implements Screen {
 	    if(!isPaused){
 	    	bbModel.doLogic(delta);
 	    	if(!BlockBreaker.debug || (BlockBreaker.debug && BlockBreaker.debug_texture_render)){
-		    	magnetBar.updateProgress((bbModel.magnetPower/(float)bbModel.baseMagnetPower));
-		    	laserBar.updateProgress((bbModel.lazerTimer / bbModel.baseLazerTimer));
-		    	guideBar.updateProgress((bbModel.guideLazerTimer/ bbModel.baseGuideLazerTimer));
-				magnetUnitsTotal.setText(bbModel.magnetPower+" / "+bbModel.baseMagnetPower+" @ "+(bbModel.magnetRechargeRate * 60));
+		    	magnetBar.updateProgress((lp.magnetPower/(float)lp.baseMagnetPower));
+		    	laserBar.updateProgress((lp.lazerTimer / lp.baseLazerTimer));
+		    	guideBar.updateProgress((lp.guideLazerTimer/ lp.baseGuideLazerTimer));
+				magnetUnitsTotal.setText(lp.magnetPower+" / "+lp.baseMagnetPower+" @ "+(lp.magnetRechargeRate * 60));
 		    	scoreCountLabel.setText(bbModel.score+"");
-		    	cashCountLabel.setText("$"+bbModel.cash);
-		    	bombCountLabel.setText(""+bbModel.bombsLeft);
-		    	laserCountLabel.setText((int)bbModel.lazerTimer+" seconds");
-		    	laserGuideCountLabel.setText((int)bbModel.guideLazerTimer+" seconds");
-		    	livesCountLabel.setText(""+bbModel.livesLeft);
+		    	cashCountLabel.setText("$"+lp.cash);
+		    	bombCountLabel.setText(""+lp.bombsLeft);
+		    	laserCountLabel.setText((int)lp.lazerTimer+" seconds");
+		    	laserGuideCountLabel.setText((int)lp.guideLazerTimer+" seconds");
+		    	livesCountLabel.setText(""+lp.livesLeft);
 	    	}
 	    }
 	    
@@ -629,8 +634,8 @@ public class ApplicationScreen implements Screen {
 			mpad.drawAnimation(sb, delta);	
 		}
 		
-		bbModel.pad.sprite.draw(sb,currentAlpha);
-		bbModel.pad.drawAnimation(sb, delta);		
+		lp.pad.sprite.draw(sb,currentAlpha);
+		lp.pad.drawAnimation(sb, delta);		
 	}
 
 	private void addParticleEffects() {
@@ -676,10 +681,10 @@ public class ApplicationScreen implements Screen {
 	}
 
 	private void fireLazors() {
-		if(bbModel.isFiringLazer){
+		if(lp.isFiringLazer){
 			sb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-			float x = bbModel.pad.body.getPosition().x;
-			float y = bbModel.pad.body.getPosition().y;
+			float x = lp.pad.body.getPosition().x;
+			float y = lp.pad.body.getPosition().y;
 			
 			float lazerLengthLeft = 6;
 			float lazerLengthRight = 6;
@@ -731,7 +736,7 @@ public class ApplicationScreen implements Screen {
 
 	
 	private void drawLazor(float x, float y, float length){
-		sb.setColor(BBUtils.hsvToRgba(((bbModel.lazerTimer / bbModel.baseLazerTimer) * 0.4f), 1, 1, 0.75f));
+		sb.setColor(BBUtils.hsvToRgba(((lp.lazerTimer / lp.baseLazerTimer) * 0.4f), 1, 1, 0.75f));
 		if(length < 0){
 			length = 0;
 		}
