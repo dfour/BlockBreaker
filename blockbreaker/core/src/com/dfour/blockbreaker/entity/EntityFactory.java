@@ -192,7 +192,7 @@ public class EntityFactory {
 		ballBody.setGravityScale(0);
 		ballBody.setLinearDamping(0);
 		ballBody.setLinearVelocity(5, -20);
-		PointLight light = lf.addPointLight(ballBody, new Color(.5f, .5f, 1, 0.5f));
+		PointLight light = lf.addPointLight(ballBody, new Color(1f, 1f, 1f, 0.75f));
 		ball.light = light;
 		ball.light.setDistance(LightFactory.LIGHT_SIZE_LOW);
 		if(isMag) {

@@ -9,7 +9,6 @@ import com.esotericsoftware.kryonet.Server;
 import com.esotericsoftware.minlog.Log;
 import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
-import com.dfour.blockbreaker.network.AbstractNetworkBase.CharacterConnection;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 
 /**
@@ -19,13 +18,13 @@ import com.dfour.blockbreaker.network.NetworkCommon.*;
  */
 public class BBHost extends AbstractNetworkBase{
 	Server server;
-	private NetworkedUser me;
+	private NetUser me;
 	public int connectionCount = 0;
 	public int readyCount = 0;
 	public HashMap<Integer, Integer> playerPositions = new HashMap<Integer, Integer>();
 	
 	public BBHost(String uname){
-		me = new NetworkedUser(0, uname);
+		me = new NetUser(0, uname);
 		this.characters.put(0, me);
 		
 		server = new Server() {
@@ -48,7 +47,7 @@ public class BBHost extends AbstractNetworkBase{
 		Listener listener = new Listener() {
 			public void received (Connection c, Object object) {
 				CharacterConnection connection = (CharacterConnection)c;
-				NetworkedUser character = connection.character;
+				//NetworkedUser character = connection.character;
 				
 				System.out.println(object);
 								
@@ -115,7 +114,7 @@ public class BBHost extends AbstractNetworkBase{
 
 	public boolean logUserIn(Login lg,CharacterConnection c){
 		if(lg.version.equalsIgnoreCase(BlockBreaker.VERSION)){
-			c.character = new NetworkedUser(c.getID(),lg.name);
+			c.character = new NetUser(c.getID(),lg.name);
 			return true;
 		}
 		return false;
@@ -126,7 +125,7 @@ public class BBHost extends AbstractNetworkBase{
 	}
 	
 	public void sendPlayerPosition(PlayerUpdate pu){
-		server.sendToAllExceptTCP(pu.playerId, pu);
+		server.sendToAllTCP(pu);
 	}
 
 	@Override
@@ -145,7 +144,7 @@ public class BBHost extends AbstractNetworkBase{
 	public void addCharacter(CharacterConnection c) {
 		
 		// send all currentUsers to new connection
-		for(NetworkedUser netUser:this.characters.values()){
+		for(NetUser netUser:this.characters.values()){
 			if(netUser.connectionID != 0){
 				// user not host
 				AdditionalUser adduser = new AdditionalUser();

@@ -28,7 +28,7 @@ public class BBModelMulti extends BBModel{
 	//TODO move shop purchases from shop to model so clients can't hack extra items OR make multiplayer shopscreen
 	
 	//TODO update lives, score, cash for clients
-	//TODO implement magneism for clients
+	//TODO implement magnetism for clients
 	//TODO make shop work for clients and update host
 	//TODO update contact listener to delagate contacts to multipads
 
@@ -58,6 +58,7 @@ public class BBModelMulti extends BBModel{
 		netbase.multi = this;
 		if(base instanceof BBHost){
 			isHost = true;
+			lp.connectionId = 0;
 			host = (BBHost) base;
 		}else{
 			client = (BBClient) base;
@@ -89,8 +90,6 @@ public class BBModelMulti extends BBModel{
 		}
 	}
 	
-	
-
 	@Override
 	protected void createPad() {
 		lp.pad = entFactory.makeMultiPad(5, 5);
@@ -183,23 +182,24 @@ public class BBModelMulti extends BBModel{
 	}
 
 	private void controlClientsPad() {
-		if(!isHost){
-			
-			//this.pad.body.getPosition().x += (Math.random() * 5) - 2.5;
-			
-			// send our pos to host if changed
-			int curPadPos = (int)lp.pad.body.getPosition().x;
-			//if(lastPadPos != curPadPos){
-				client.sendMyPosition(curPadPos);
-			//}
-		}else{
+		if(isHost){
 			// send host + client pos to clients
+			PlayerUpdate pu = new PlayerUpdate();
 			for(Player mp:playerMap.values()){
-				PlayerUpdate pu = new PlayerUpdate();
+				
 				pu.playerId = mp.connectionId;
 				pu.playerXPos = mp.position;
 				host.sendPlayerPosition(pu);
 			}
+			//now send own pos;
+			pu.playerId =0;
+			pu.playerXPos = lp.position;
+			host.sendPlayerPosition(pu);
+		}else{
+			// send our pos to host if changed
+			int curPadPos = (int)lp.pad.body.getPosition().x;
+			lp.pad.body.getPosition().x += (Math.random() * 5) - 2.5;
+			client.sendMyPosition(curPadPos);
 		}
 	}
 	
@@ -210,8 +210,10 @@ public class BBModelMulti extends BBModel{
 	}
 	
 	public void updatePadPos(PlayerUpdate pu){
+		if (pu.playerId == -1) return;
 		Player p;
 		if(playerMap.containsKey(pu.playerId)){
+			BBUtils.log("PU:"+pu.playerId+" "+pu.playerXPos);
 			p = playerMap.get(pu.playerId);
 		}else{
 			BBUtils.log("Making multipad for"+pu.playerId);
@@ -222,11 +224,7 @@ public class BBModelMulti extends BBModel{
 			playerMap.put(pu.playerId, p);
 		}
 		// set pad pos
-		if(!world.isLocked()){
-			p.pad.setPosition(pu.playerXPos, 5);
-		}else{
-			p.pad.newPos = pu.playerXPos;
-		}
+		p.pad.newPos = pu.playerXPos;
 	}
 
 	@Override

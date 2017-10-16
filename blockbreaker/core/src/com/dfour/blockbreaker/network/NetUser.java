@@ -1,6 +1,6 @@
 package com.dfour.blockbreaker.network;
 
-public class NetworkedUser {
+public class NetUser {
 	public int connectionID;
 	public String username; // holds username
 	public int xpos;		// holds pad x pos
@@ -8,11 +8,11 @@ public class NetworkedUser {
 	public int ping;
 	public boolean isReady = false;
 	
-	public NetworkedUser(int conid){
+	public NetUser(int conid){
 		this.connectionID = conid;
 	}
 	
-	public NetworkedUser(int conid, String name){
+	public NetUser(int conid, String name){
 		this.connectionID = conid;
 		this.username = name;
 	}

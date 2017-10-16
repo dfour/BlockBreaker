@@ -8,7 +8,7 @@ import com.dfour.blockbreaker.network.NetworkCommon.RemoveUser;
 import com.esotericsoftware.kryonet.Connection;
 
 public abstract class AbstractNetworkBase {
-	public HashMap<Integer, NetworkedUser> characters = new HashMap<Integer, NetworkedUser>();
+	public HashMap<Integer, NetUser> characters = new HashMap<Integer, NetUser>();
 	public boolean newMessage = false;
 	public LobbyMessage lastMessage;
 	public boolean startLevelReady = false;
@@ -26,6 +26,6 @@ public abstract class AbstractNetworkBase {
 	
 	// server only connection implementation
 	static class CharacterConnection extends Connection {
-		public NetworkedUser character;
+		public NetUser character;
 	}
 }

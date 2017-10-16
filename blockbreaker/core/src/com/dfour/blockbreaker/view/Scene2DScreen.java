@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
 
@@ -24,7 +25,7 @@ public class Scene2DScreen implements Screen{
 	protected int sw;
 	protected int sh;
 	protected TextureAtlas atlasGui;
-	protected AtlasRegion bg;
+	protected TiledDrawable bgTiled;
 	protected float fadeIn = 0.7f;
 	protected float fadeOut = 0.7f;
 	protected boolean isReturning = false;
@@ -36,13 +37,18 @@ public class Scene2DScreen implements Screen{
 		pb = new SpriteBatch();
 		
 		atlasGui = parent.assMan.manager.get("gui/loadingGui.pack");
-		bg = atlasGui.findRegion("background");
+		bgTiled = new TiledDrawable(atlasGui.findRegion("background"));
 		skin = parent.assMan.manager.get("skin/bbskin.json",Skin.class);
 		
 	}
 
 	@Override
 	public void show() {
+		if(Gdx.graphics.getWidth() != parent.screenWidthPreferred
+				|| Gdx.graphics.getHeight() != parent.screenHeightPreferred){
+			Gdx.graphics.setWindowedMode(parent.screenWidthPreferred, parent.screenHeightPreferred);
+		}
+		
 		Image title = new Image(atlasGui.findRegion("blockBreakerTitle"));
 
 		
@@ -65,14 +71,12 @@ public class Scene2DScreen implements Screen{
 		Gdx.gl.glClearColor(.4f, .4f, .4f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		// new better tiling
 		pb.begin();
-		// draw brick background
-		for(int i = 0; i < this.sw; i += 20){
-			for(int j = 0; j < this.sh; j+= 10){
-				pb.draw(bg, i, j,20,10);
-			}
-		}
+		bgTiled.draw(pb, 0, 0, sw, sh);
 		pb.end();
+		
+		
 		
 		if(fadeIn > 0){
 			fadeIn -= delta;
@@ -95,6 +99,11 @@ public class Scene2DScreen implements Screen{
 		sh = height;
 		pb.getProjectionMatrix().setToOrtho2D(0, 0, width, height);
 		stage.getViewport().update(width, height, true);
+		
+		parent.screenWidthPreferred = sw;
+		parent.screenHeightPreferred = sh;
+		
+		parent.getPreferences().setScreenSize(Gdx.graphics.getWidth()+"x"+Gdx.graphics.getHeight());
 		
 	}
 

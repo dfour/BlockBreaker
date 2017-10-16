@@ -81,7 +81,7 @@ public class AppPreferences {
 	}
 	
 	public String getScreenSize(){
-		return getPrefs().getString(PREF_SCREEN_SIZE, "640x480");
+		return getPrefs().getString(PREF_SCREEN_SIZE, "1024x786");
 		
 	}
 	

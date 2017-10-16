@@ -23,30 +23,26 @@ import com.dfour.blockbreaker.view.EndScreen;
 import com.dfour.blockbreaker.view.MenuScreen;
 
 public class BlockBreaker extends Game {
-	//TODO create bug reporter( in game or online )
+		//TODO create bug reporter( in game or online )
 	//TODO try make bricks that hit black hole spin into oblivion (see add animations todo)
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
-	//TODO add continue button (saving score and cash in preferences ?? possible cheat)
-	//TODO look into changing box2d step size to alter time
+		//TODO add continue button (saving score and cash in preferences ?? possible cheat)
 	//TODO update level designer
 	//TODO add buying sound effect for shop (cha-ching)
-	//DONE look into making own shader for background
 	//TODO update level designer to use actual rendering like game, just without pad and info display and a obstacle menu instead
-	//TODO look into making level using level generator
+		//TODO look into making level using level generator
 	//TODO update info display with spaceship dashboard look (metal with black display and green computer text)
 	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals) 
 	//			(portals close to edge allow blocks to escape area)
-	// fix bug where game ends and no pointer
+	//TODO fix bug where game ends and no pointer
 	//TODO redo rendering system so box to world rendering is in sync (e.g. 16px image = 1 box unit)
-	//TODO add local multiplayer then
-		//TODO add button for multiplayer
-		//TODO add keys for player 2 to config/prof screen
-	//TODO add Host > Client multiplayer then (see below)
+		//TODO add Host > Client multiplayer then (see below)
 		//DONE add screen to be host or enter Host ip
-	//TODO add lobby and matching
-	//TODO pad size = player count(max 4) / full pad size (multi multiplayer)
-	//DONE add username preferences
-	//TODO add help page for networking (show ports to use or add to preferences)
+		//TODO add lobby and matching
+		//TODO pad size = player count(max 4) / full pad size (multi multiplayer)
+		//DONE add username preferences (with random name generator)
+		//TODO add help page for networking (show ports to use or add to preferences)
+		//TODO may drop multiplayer to allow working on next game ************************************
 	
 	private MenuScreen menu;
 	private PreferencesScreen prefs;
@@ -63,13 +59,14 @@ public class BlockBreaker extends Game {
 	public AbstractNetworkBase base;
 	
 	// debug vars
+	public static boolean debug_mouse_capture = false;
 	public static boolean debug = true;
-	public static boolean debug_b2d_render = true;
-	public static boolean debug_texture_render = false;
+	public static boolean debug_b2d_render = false;
+	public static boolean debug_texture_render = true;
 	public static boolean debug_contact_log = false;
-	public static boolean debug_multilag = true;
-	public static int debug_min_lag = 100;
-	public static int debug_max_lag = 150;
+	public static boolean debug_multilag = false;
+	public static int debug_min_lag = 300;
+	public static int debug_max_lag = 500;
 	
 	public static Array<FileHandle> customMaps;
 	public static boolean isCustomMapMode = false;
@@ -96,6 +93,10 @@ public class BlockBreaker extends Game {
 	public boolean isMultiMode = false;
 	
 	public final static String VERSION = "0.1"; 
+	
+	// screen size preferred
+	public int screenWidthPreferred = 1024;
+	public int screenHeightPreferred= 786;
 	
 	@Override
 	public void create () {
@@ -263,21 +264,21 @@ public class BlockBreaker extends Game {
 		String screenSize = preferences.getScreenSize();
 		// split string into width and height
 		String[] sizes = screenSize.split("x");
-		int width = Integer.valueOf(sizes[0]);
-		int height = Integer.valueOf(sizes[1]);
+		screenWidthPreferred = Integer.valueOf(sizes[0]);
+		screenHeightPreferred = Integer.valueOf(sizes[1]);
 		
 		DisplayMode displayModeSelected = null;
 		
 		// set the screen size
 		if(preferences.getWindowed()){
 		// if pref windowed
-			return this.setWindowedMode(width,height);
+			return this.setWindowedMode(screenWidthPreferred,screenHeightPreferred);
 		}else{
 			//if pref fullScreen
 			boolean screenModeMatched = false;
 			DisplayMode[] displayModes = this.getDisplayModes(this.getCurrentMonitor());
 			for(DisplayMode dMode: displayModes){
-				if(dMode.width == width && dMode.height == height){
+				if(dMode.width == screenWidthPreferred && dMode.height == screenHeightPreferred){
 					screenModeMatched = true;
 					displayModeSelected = dMode;
 				}

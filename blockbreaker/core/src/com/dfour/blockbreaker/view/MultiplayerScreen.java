@@ -18,7 +18,7 @@ import com.dfour.blockbreaker.BlockBreaker;
 import com.dfour.blockbreaker.network.AbstractNetworkBase;
 import com.dfour.blockbreaker.network.BBClient;
 import com.dfour.blockbreaker.network.BBHost;
-import com.dfour.blockbreaker.network.NetworkedUser;
+import com.dfour.blockbreaker.network.NetUser;
 
 /**
  * @author darkd
@@ -43,6 +43,7 @@ public class MultiplayerScreen extends Scene2DScreen {
 	private float pingTimer = 2f;
 	private Label lblMessageNameWindow;
 	private Table chatWindow;
+	private boolean isReady = false;
 
 	// DONE limit to 4 connected players
 	// DONE add ready up state for players
@@ -129,8 +130,9 @@ public class MultiplayerScreen extends Scene2DScreen {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
-				base.readyUp(true);
-				lblMessageWindow.setText("User Readied up");
+				base.readyUp(!isReady);
+				isReady = !isReady;
+				//addMessageToWindow("You:","User Readied up"); // get server to send this message
 			}
 		});
 	}
@@ -173,10 +175,10 @@ public class MultiplayerScreen extends Scene2DScreen {
 			this.returnScreen = BlockBreaker.MULTIPLAYER_APPLICATION;
 		}
 	}
-
+	
 	private void fillUserList() {
 		Array<String> users = new Array<String>();
-		for (NetworkedUser nu : base.characters.values()) {
+		for (NetUser nu : base.characters.values()) {
 			String ready = nu.isReady ? "R" : "X";
 			users.add(ready + ":" + nu.ping + " " + nu.username);
 		}
@@ -205,15 +207,18 @@ public class MultiplayerScreen extends Scene2DScreen {
 	private void updateMessages() {
 		if (base.newMessage) {
 			base.newMessage = false;
-
-			messages_names += "\n";
-			messages_names += base.lastMessage.name + ":";
-			lblMessageNameWindow.setText(messages_names);
-
-			messages += "\n";
-			messages += base.lastMessage.message;
-			lblMessageWindow.setText(messages);
+			addMessageToWindow(base.lastMessage.name,base.lastMessage.message);
 		}
+	}
+	
+	private void addMessageToWindow(String uname, String message){
+		messages_names += "\n";
+		messages_names += uname + ":";
+		lblMessageNameWindow.setText(messages_names);
+
+		messages += "\n";
+		messages += message;
+		lblMessageWindow.setText(messages);
 	}
 
 	/**

@@ -4,6 +4,7 @@ import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -360,21 +361,31 @@ public class BBModel {
 			padOffset += (controller.getMousePosition().x - 400);
 		}
 		// set mouse pos
-		Gdx.input.setCursorPosition(400,350);
-		controller.getMousePosition().x = 400; 
+		if(BlockBreaker.debug_mouse_capture){
+			Gdx.input.setCursorPosition(400,350);
+			controller.getMousePosition().x = 400; 
+		}else{
+			padOffset = controller.getMousePosition().x;
+		}
+		
+		float speedMod = 1;
+		if(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)){
+			speedMod = 2f;
+		}
 		
 		// move pad for keyboard
 		if(controller.getLeft()){
 			if(lp.isDrunk){
-				padOffset+=padSpeed;
+				padOffset+=(padSpeed * speedMod);
 			}else{
-				padOffset-=padSpeed;
+				padOffset-=(padSpeed * speedMod);
+				
 			}
 		}else if(controller.getRight()){
 			if(lp.isDrunk){
-				padOffset-=padSpeed;
+				padOffset-=(padSpeed * speedMod);
 			}else{
-				padOffset+=padSpeed;
+				padOffset+=(padSpeed * speedMod);
 			}
 		}
 		//limit pad
@@ -521,7 +532,7 @@ public class BBModel {
 			this.needToAddBall = false;
 		}
 		
-		
+		// TODO replace this with multiplayer compatable version
 		for (Ball ball : entFactory.balls) {
 			if (ball.isAttached) {
 				ball.body.setTransform(lp.pad.body.getPosition().x+ball.xOffset, lp.pad.body.getPosition().y+ball.yOffset, 0); 

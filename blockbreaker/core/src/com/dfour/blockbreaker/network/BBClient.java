@@ -1,11 +1,8 @@
 package com.dfour.blockbreaker.network;
 
 import java.io.IOException;
-
-import com.dfour.blockbreaker.BBModelMulti;
 import com.dfour.blockbreaker.BBUtils;
 import com.dfour.blockbreaker.BlockBreaker;
-import com.dfour.blockbreaker.network.NetworkCommon.RemoveUser;
 import com.dfour.blockbreaker.network.NetworkCommon.*;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
@@ -16,13 +13,13 @@ import com.esotericsoftware.minlog.Log;
 
 public class BBClient extends AbstractNetworkBase{
 	Client client;
-	private NetworkedUser me;
+	private NetUser me;
 	public WorldUpdate lastUpdate;
 	public boolean newUpdate = false;
 	public int gameState = 0;
 	
 	public BBClient(String uname){
-		me = new NetworkedUser(99999999,uname);
+		me = new NetUser(99999999,uname);
 		client = new Client();
 		client.start();
 
@@ -57,12 +54,12 @@ public class BBClient extends AbstractNetworkBase{
 					
 					System.out.println("Client:Accept msg ="+msg.toString());
 					
-					NetworkedUser host = new NetworkedUser(0, msg.name);
+					NetUser host = new NetUser(0, msg.name);
 					me.connectionID = connection.getID();
 					
 					characters.put(0,host);
 					characters.put(me.connectionID,me);
-					Log.info("CLIENT: cnnected to server my con id "+connection.getID());
+					Log.info("CLIENT: connected to server, my con id "+connection.getID());
 				}else if (object instanceof Ping) {
 					Ping ping = (Ping)object;
 					
@@ -94,6 +91,8 @@ public class BBClient extends AbstractNetworkBase{
 					killItem(((ItemDied)object));
 				}else if(object instanceof RemoveUser){
 					removeCharacter(((RemoveUser) object));
+				}else if(object instanceof PlayerUpdate){
+					updatePlayerPositions(((PlayerUpdate) object));
 				}
 			}
 		};
@@ -105,6 +104,10 @@ public class BBClient extends AbstractNetworkBase{
 		}else{
 			client.addListener(new ThreadedListener(listener));
 		}
+	}
+
+	protected void updatePlayerPositions(PlayerUpdate pu) {
+		multi.updatePadPos(pu);
 	}
 
 	protected void killItem(ItemDied item) {
@@ -127,13 +130,14 @@ public class BBClient extends AbstractNetworkBase{
 	}
 
 	protected void addUser(AdditionalUser user) {
-		NetworkedUser notme = new NetworkedUser(user.id,user.name);
+		NetUser notme = new NetUser(user.id,user.name);
 		characters.put(notme.connectionID, notme).isReady = notme.isReady;
 	}
 
 	public void userReady(UserReady ur) {
 		characters.get(ur.id).isReady = ur.status;
 	}
+	
 	
 	public void sendMyPosition(int xpos){
 		PlayerUpdate pu = new PlayerUpdate();

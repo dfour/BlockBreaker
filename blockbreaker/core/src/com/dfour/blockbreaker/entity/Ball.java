@@ -12,7 +12,7 @@ public class Ball extends Entity{
 	public boolean isAttached = true;
 	public float xOffset = 0;
 	public float yOffset = 2;
-	public int MAX_SPEED = 100;
+	public int MAX_SPEED = 125; // upped speed to increase difficulty since removing paddle lerp
 	public boolean isMagBall = false;
 	public float speedModifier = 1f;
 	public PointLight light;

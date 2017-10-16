@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -17,13 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.dfour.blockbreaker.BlockBreaker;
 
 public class LoadingScreen implements Screen{
 	
-	private int sw = 800;
-	private int sh = 600;
+	private int sw = 1024;
+	private int sh = 786;
 	private BlockBreaker parent;
 	private float percent;
 	
@@ -40,7 +40,7 @@ public class LoadingScreen implements Screen{
 	private Stage stage;
 
 	private Image loading;
-	private AtlasRegion bg;
+	private TiledDrawable bgTiled;
 	private SpriteBatch pb;
 	private TextureAtlas atlas;
 	private Image title;
@@ -143,18 +143,14 @@ public class LoadingScreen implements Screen{
 	    }
 	    
 	    pb.begin();
-		// draw brick background
+	    
 	    for(int i = 0; i < sw; i += 20){
 			for(int j = 0; j < (sh * percent); j+= 10){
 				pb.draw(loadingGreen, i, j,20,10);
 			}
 		}
 	    
-		for(int i = 0; i < sw; i += 20){
-			for(int j = 0; j < sh; j+= 10){
-				pb.draw(bg, i, j,20,10);
-			}
-		}	
+		bgTiled.draw(pb, 0, 0, sw, sh);
 		pb.end();
 	    
 	    stage.act();
@@ -188,7 +184,7 @@ public class LoadingScreen implements Screen{
 	
 	private void loadImages() {
 		atlas = parent.assMan.manager.get("gui/loadingGui.pack");
-		bg = atlas.findRegion("background");
+		bgTiled = new TiledDrawable(atlas.findRegion("background"));
 		title = new Image(atlas.findRegion("blockBreakerTitle"));
 		loading = new Image(atlas.findRegion("loading"));
 		loaded = new Image(atlas.findRegion("loaded"));

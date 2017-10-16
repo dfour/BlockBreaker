@@ -843,13 +843,17 @@ public class ApplicationScreen implements Screen {
 	}
 	
 	private void toInGameSettings(){
-		Gdx.input.setCursorCatched(true);
-		Gdx.graphics.setSystemCursor(inMenu);
+		if(BlockBreaker.debug_mouse_capture){
+			Gdx.input.setCursorCatched(true);
+			Gdx.graphics.setSystemCursor(inMenu);
+		}
 	}
 	
 	private void toInMenuSettings(){
-		Gdx.input.setCursorCatched(false);
-		Gdx.graphics.setSystemCursor(inMenu);
+		if(BlockBreaker.debug_mouse_capture){
+			Gdx.input.setCursorCatched(false);
+			Gdx.graphics.setSystemCursor(inMenu);
+		}
 	}
 	
 	private void addShockWave(float x,float y){

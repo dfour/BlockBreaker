@@ -29,7 +29,7 @@ public class Portal extends Entity{
 		for(Body bod:bodiesToMove){
 			Vector2 position = new Vector2(body.getPosition().x - bod.getPosition().x ,body.getPosition().y - bod.getPosition().y);
 			position.rotate(180);
-			position.scl(2f);
+			position.scl(1.5f); //scalled down to stop objects getting out of play area
 			bod.setTransform(linkedPortal.body.getPosition().x+ position.x,
 					linkedPortal.body.getPosition().y + position.y,
 					body.getAngle());

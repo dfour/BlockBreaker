@@ -34,8 +34,8 @@ public class MenuScreen extends Scene2DScreen {
         displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnCustomGame).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
-        displayTable.add(btnMulti).width(300).height(50);
-        displayTable.row().pad(10, 0, 0, 0);
+        //displayTable.add(btnMulti).width(300).height(50);
+        //displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnLevelDesign).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnPrefs).width(300).height(50);
@@ -61,6 +61,7 @@ public class MenuScreen extends Scene2DScreen {
 		
 		btnQuit.addListener(new ClickListener() {
 			public void clicked(InputEvent e, float x, float y){
+				// save current screensize
 				Gdx.app.exit();
 			}
 		});
