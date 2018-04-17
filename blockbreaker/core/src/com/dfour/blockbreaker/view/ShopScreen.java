@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.dfour.blockbreaker.BBModel;
-import com.dfour.blockbreaker.BBModelMulti;
 import com.dfour.blockbreaker.BlockBreaker;
 
 public class ShopScreen extends Scene2DScreen{
@@ -141,7 +140,6 @@ public class ShopScreen extends Scene2DScreen{
 			public void clicked(InputEvent e, float x, float y){
 				super.clicked(e, x, y);
 				ShopScreen.this.returnScreen = BlockBreaker.APPLICATION;
-				if(bbModel instanceof BBModelMulti) ShopScreen.this.returnScreen = BlockBreaker.MULTIPLAYER_APPLICATION;
 				isReturning = true;	
 				btnDone.setChecked(false);
 			}

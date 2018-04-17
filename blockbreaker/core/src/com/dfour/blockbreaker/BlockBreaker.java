@@ -9,13 +9,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
-import com.dfour.blockbreaker.network.AbstractNetworkBase;
 import com.dfour.blockbreaker.view.ApplicationScreen;
 import com.dfour.blockbreaker.view.ControlMapScreen;
 import com.dfour.blockbreaker.view.CustomMapScreen;
 import com.dfour.blockbreaker.view.LevelDesignerScreen;
 import com.dfour.blockbreaker.view.LoadingScreen;
-import com.dfour.blockbreaker.view.MultiplayerScreen;
 import com.dfour.blockbreaker.view.PreferencesScreen;
 import com.dfour.blockbreaker.view.ShopScreen;
 import com.dfour.blockbreaker.AppPreferences;
@@ -56,7 +54,6 @@ public class BlockBreaker extends Game {
 	private AppController controller;
 	private boolean musicLoaded = false;
 	public BBAssetManager assMan = new BBAssetManager();
-	public AbstractNetworkBase base;
 	
 	// debug vars
 	public static boolean debug_mouse_capture = false;
@@ -162,14 +159,6 @@ public class BlockBreaker extends Game {
 				break;
 			case CUSTOM_MAP:
 				this.setScreen(new CustomMapScreen(this));
-				break;
-			case MULTIPLAYER_MENU:
-				this.setScreen(new MultiplayerScreen(this));
-				break;
-			case MULTIPLAYER_APPLICATION:
-				isMultiMode = true;
-				if(app_multi == null) app_multi = new ApplicationScreen(this,new BBModelMulti(controller,assMan,base));
-				this.setScreen(app_multi); 
 				break;
 			case APPLICATION:
 				isMultiMode = false;

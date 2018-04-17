@@ -18,7 +18,7 @@ public class BBAssetManager {
 	public final String lazorPack 		= "lazor/lazor.pack";
 	
 	
-	public void loadImages(){
+	public void loadImages(){		
 		manager.load(imagesPack, TextureAtlas.class);
 		manager.load(lazorPack, TextureAtlas.class);
 	}

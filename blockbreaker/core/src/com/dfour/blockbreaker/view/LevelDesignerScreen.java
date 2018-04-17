@@ -280,7 +280,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 					col++;
 					if(col == 39){
 						col = 0;
-						map+=System.lineSeparator();
+						map+="\n";
 					}
 				}
 				FileHandle file = Gdx.files.external("blockbreaker/custommap/"+txfMapName.getText()+".map");
