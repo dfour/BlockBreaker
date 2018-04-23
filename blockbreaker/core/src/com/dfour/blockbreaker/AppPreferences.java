@@ -1,6 +1,8 @@
 package com.dfour.blockbreaker;
 
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
@@ -23,6 +25,7 @@ public class AppPreferences {
 	private static final String CONTROL_PAUSE = "Control Pause";
 	private static final String CONTROL_BOMB = "Control Bomb";
 	private static final String CONTROL_RELEASE = "Control Release";
+	private static final String MAPS = "maps";
 	
 	
 
@@ -177,4 +180,33 @@ public class AppPreferences {
 	public String getUserName(){
 		return getPrefs().getString(PREF_UNAME, BBUtils.generateRandomName());
 	}
+	
+	public HashMap<String,String> getMaps(){
+		HashMap<String,String> allMaps = new HashMap<String,String>();
+		String mapString = getPrefs().getString(MAPS, "");
+		if(!mapString.equalsIgnoreCase("")){
+			String[] nameAndMap = mapString.split(";");
+			for(String singleMap:nameAndMap){
+				String[] mapNameData = singleMap.split("@");
+				allMaps.put(mapNameData[0], mapNameData[1]);
+			}
+		}
+		return allMaps;
+	}
+	
+	public void addMap(String name, String nmap){
+		String cmaps = getPrefs().getString(MAPS, ""); //get current maps
+		if(cmaps.equalsIgnoreCase("")){
+			getPrefs().putString(MAPS, name+"@"+nmap);
+		}else{
+			getPrefs().putString(MAPS, cmaps+";"+name+"@"+nmap);
+		}
+		
+	}
 }
+
+
+
+
+
+

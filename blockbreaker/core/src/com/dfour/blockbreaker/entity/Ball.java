@@ -53,5 +53,10 @@ public class Ball extends Entity{
 		if ( speed > MAX_SPEED ) {
 			body.setLinearVelocity( vel.scl((MAX_SPEED * speedModifier) /speed));
 		}
+		
+		// Check ball is in play area and not gone off into wilderness
+		if(body.getPosition().x < -10 || body .getPosition().x > 100 || body.getPosition().y < -20 || body.getPosition().y > 80){
+			this.isDead = true;
+		}
 	}
 }

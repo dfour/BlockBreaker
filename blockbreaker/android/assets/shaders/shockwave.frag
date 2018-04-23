@@ -5,7 +5,6 @@ uniform sampler2D sceneTex; // 0
 uniform vec2 center; // Mouse position
 uniform float time; // effect elapsed time
 uniform vec3 shockParams; // 10.0, 0.8, 0.1
-
 varying vec2 v_texCoords;
 
 void main() 

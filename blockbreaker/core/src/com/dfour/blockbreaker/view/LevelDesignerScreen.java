@@ -1,13 +1,10 @@
 package com.dfour.blockbreaker.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -105,7 +102,7 @@ public class LevelDesignerScreen extends Scene2DScreen {
 				LevelBlock lvb = new LevelBlock(blank);
 				lvb.setVisible(true);
 				lvb.setBounds(0, 0, 20, 10);
-				if(i !=0 && i < 28){
+				if(i > 1 && i < 27){
 					lvb.addListener(cl);
 				}
 				levelTable.add(lvb);
@@ -283,8 +280,14 @@ public class LevelDesignerScreen extends Scene2DScreen {
 						map+="\n";
 					}
 				}
-				FileHandle file = Gdx.files.external("blockbreaker/custommap/"+txfMapName.getText()+".map");
+				/*
+				FileHandle file = Gdx.files.internal("blockbreaker/custommap/"+txfMapName.getText()+".map");
 				file.writeString(map, false);
+				*/
+				
+				// GWT compatible map
+				parent.getPreferences().addMap(txfMapName.getText(), map);
+				
 				savedLabelTimer = 5f;
 				savedLabel.setVisible(true);
 			}

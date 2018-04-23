@@ -1,5 +1,6 @@
 package com.dfour.blockbreaker.view;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -39,8 +40,11 @@ public class MenuScreen extends Scene2DScreen {
         displayTable.add(btnLevelDesign).width(300).height(50);
         displayTable.row().pad(10, 0, 0, 0);
         displayTable.add(btnPrefs).width(300).height(50);
-        displayTable.row().pad(10, 0, 0, 0);
-        displayTable.add(btnQuit).width(300).height(50);
+        if(Gdx.app.getType() != ApplicationType.WebGL){
+        	// no quitting in webgl
+        	displayTable.row().pad(10, 0, 0, 0);
+        	displayTable.add(btnQuit).width(300).height(50);
+        }
 
 		
 

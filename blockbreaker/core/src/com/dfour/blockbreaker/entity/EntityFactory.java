@@ -4,6 +4,7 @@ import box2dLight.PointLight;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -173,7 +174,7 @@ public class EntityFactory {
 	}
 	
 	public Bin makeBin(float cW){
-		Body bod = bodyFactory.makeBoxPolyBody((cW / 2), -1f, cW, 3,
+		Body bod = bodyFactory.makeBoxPolyBody((cW / 2), 2f, cW, 3,
 				BodyFactory.RUBBER, BodyType.StaticBody);
 		Bin bin = new Bin(bod);
 		bod.setUserData(bin);
@@ -292,7 +293,9 @@ public class EntityFactory {
 	
 	public Portal makePortal(int x, int y){
 		Body bod = bodyFactory.makeSensorBody(x, y, 1, BodyType.StaticBody);
-		Portal p = new Portal(bod, atlas.findRegion("effectrange"));
+		Animation anim =  new Animation(0.05f,atlas.findRegions("portal"));
+		anim.setPlayMode(PlayMode.LOOP_PINGPONG);
+		Portal p = new Portal(bod, anim);
 		bod.setUserData(p);
 		preLinkedPortals[currentPortlaCount] = p;
 		currentPortlaCount++;
@@ -419,11 +422,13 @@ public class EntityFactory {
 		pups.clear();
 		walls.clear();
 		lightBalls.clear();
+		portals.clear();
 		bombs.clear();
 		obstacles.clear();
 		explosionParticles.clear();
 		spinners.clear();
 		localEffectEntities.clear();
+		
 	}
 	
 }

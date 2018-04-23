@@ -8,14 +8,29 @@
   			  <script src="soundmanager2-jsmin.js"></script>
        </head>
 
-       <body>
-              <a class="superdev" href="javascript:%7B%20window.__gwt_bookmarklet_params%20%3D%20%7B'server_url'%3A'http%3A%2F%2Flocalhost%3A9876%2F'%7D%3B%20var%20s%20%3D%20document.createElement('script')%3B%20s.src%20%3D%20'http%3A%2F%2Flocalhost%3A9876%2Fdev_mode_on.js'%3B%20void(document.getElementsByTagName('head')%5B0%5D.appendChild(s))%3B%7D">&#8635;</a>
+       <body onkeydown="preventUseOfDefaultKeys(event);" oncontextmenu="return false;">
               <div align="center" id="embed-html"></div>
               <script type="text/javascript" src="html/html.nocache.js"></script>
        </body>
 
        <script>
+       // todo get function to nullify right click so the game can use it
+       // keys to disable/monitor
+       // f1 = 112 -> f12 123
+       // b = 66
+       // p = 80
+       	function preventUseOfDefaultKeys(event) {
+           if (event.keyCode == 32 || // space
+        		   event.keyCode == 27 || // escape
+        		   event.keyCode == 66 || // b
+        		   event.keyCode == 80 || // p
+        		   (event.keyCode >= 112 && event.keyCode <= 123)) { // function 1 to 12
+               event.preventDefault();
+           }
+        }
+       
               function handleMouseDown(evt) {
+            	window.setFocus(); 
                 evt.preventDefault();
                 evt.stopPropagation();
                 evt.target.style.cursor = 'default';

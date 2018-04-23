@@ -42,8 +42,8 @@ import com.dfour.blockbreaker.loaders.LevelLoader;
 public class BBModel {
 
 	// Box2d and World conversion constants
-	public static final float BOX_TO_WORLD = 10;
-	public static final float WORLD_TO_BOX = 0.1f;
+	public static float BOX_TO_WORLD = 10;
+	public static float WORLD_TO_BOX = 0.1f;
 	
 	// Box2d
 	public World world = new World(new Vector2(0, -10), false);
@@ -67,6 +67,8 @@ public class BBModel {
 	protected int cW = 80;
 	public int sw = 800;
 	public int sh = 600;
+	
+	
 	
 	// Game objects, timers and counters
 	
@@ -121,6 +123,7 @@ public class BBModel {
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;
+	private float screenSizeOfset = 0;
 	
 	
 
@@ -198,7 +201,7 @@ public class BBModel {
 	
 	// method to allow multi to override pad creation
 	protected void createPad(){
-		lp.pad = entFactory.makePad(5, 5);
+		lp.pad = entFactory.makePad(5, 15);
 	}
 
 	public void init() {
@@ -208,10 +211,10 @@ public class BBModel {
 		lf.rays = Math.round(LightFactory.RAYS_PER_LIGHT_HIGH * preferences.getLightingQuality()) + 6;
 		lf.updatePools();
 		
-		lf.addStaticPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
-		lf.addStaticPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
-		lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
-		lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
+		//lf.addStaticPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
+		//lf.addStaticPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
+		//lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
+		//lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
 		
 		if(this.level == 0){
 			//reset base stats
@@ -247,8 +250,8 @@ public class BBModel {
 	protected void makeLevel(){
 		entFactory.makeBall(lp.eternalMagBall);
 		if(BlockBreaker.isCustomMapMode){
-			if(level < BlockBreaker.customMaps.size){
-				ll.loadLevelFile(BlockBreaker.customMaps.get(level).path(), false, true);
+			if(level < 1){
+				ll.loadLevelString(BlockBreaker.customMap);
 			}else{
 				gameOver = true;
 			}
@@ -354,18 +357,21 @@ public class BBModel {
 	 * controls local pad using mouse location
 	 */
 	protected void controlPad() {
+		float screenWidth = Gdx.graphics.getWidth();
+		float mousex = controller.getMousePosition().x * (800f/screenWidth) ; 
+		
 		// move pad
 		if(lp.isDrunk){
-			padOffset -= (controller.getMousePosition().x - 400);
+			padOffset -= (mousex - 400 + screenSizeOfset );
 		}else{
-			padOffset += (controller.getMousePosition().x - 400);
+			padOffset += (mousex - 400 + screenSizeOfset );
 		}
 		// set mouse pos
 		if(BlockBreaker.debug_mouse_capture){
 			Gdx.input.setCursorPosition(400,350);
-			controller.getMousePosition().x = 400; 
+			mousex = 400; 
 		}else{
-			padOffset = controller.getMousePosition().x;
+			padOffset = mousex;
 		}
 		
 		float speedMod = 1;
@@ -389,9 +395,9 @@ public class BBModel {
 			}
 		}
 		//limit pad
-		padOffset = MathUtils.clamp(padOffset, 0, 800);
+		padOffset = MathUtils.clamp(padOffset, 0 + screenSizeOfset, 800 + screenSizeOfset);
 		if(BlockBreaker.debug){
-			//System.out.println("Pad Offset is :"+padOffset);
+			System.out.println("Pad Offset is :"+padOffset);
 		}
 		
 		//pad from screen to box2d
@@ -399,8 +405,26 @@ public class BBModel {
 		if(lp.isSlow){
 			lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, screenx, 0.05f), 5);
 		}else{
-			lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, screenx, 0.1f), 5);
+			lp.pad.setPosition(screenx, 5);
 		}
+		
+		/*
+		
+		if(lp.isDrunk){
+			if(lp.isSlow){
+				lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, (swh + padx) * WORLD_TO_BOX, 0.05f), 5);
+			}else{
+				lp.pad.setPosition((swh + padx) * WORLD_TO_BOX, 5);
+			}
+		}else{
+			if(lp.isSlow){
+				lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, (swh - padx) * WORLD_TO_BOX, 0.05f), 5);
+			}else{
+				lp.pad.setPosition((swh - padx) * WORLD_TO_BOX, 5); // no delay
+			}
+		}
+		*/
+		
 		
 	}
 
@@ -604,8 +628,9 @@ public class BBModel {
 		if (lp.isFiringLazer) {
 			if (lp.lazerTimer > 0) {
 				lp.lazerTimer -= delta;
-				lp.pad.lazLightLeft.setActive(true);
-				lp.pad.lazLightRight.setActive(true);
+				//disabled for webgl
+				//lp.pad.lazLightLeft.setActive(true);
+				//lp.pad.lazLightRight.setActive(true);
 			} else {
 				lp.isFiringLazer = false;
 				lp.lazerTimer = lp.baseLazerTimer;
@@ -624,8 +649,9 @@ public class BBModel {
 					new Vector2(lp.pad.body.getPosition().x + 5, lp.pad.body
 							.getPosition().y + 55));
 		}else {
-			lp.pad.lazLightLeft.setActive(false);
-			lp.pad.lazLightRight.setActive(false);
+			// disabled for webgl
+			//lp.pad.lazLightLeft.setActive(false);
+			//lp.pad.lazLightRight.setActive(false);
 		}
 	}
 
@@ -931,9 +957,6 @@ public class BBModel {
 		}
 		return false;
 	}
-
-	
-	
 	
 	
 	// Multiplayer required methods

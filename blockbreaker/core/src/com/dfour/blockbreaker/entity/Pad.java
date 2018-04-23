@@ -5,6 +5,7 @@ import box2dLight.ChainLight;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 
 public class Pad  {
@@ -59,6 +60,7 @@ public class Pad  {
 			goingLeft = false;
 			goingRight = false;
 		}
+		x = MathUtils.clamp(x,  6.5f, 73.5f); // clamp insode zone
 		pull.setPosition((x - 5.5f)*10, (y -.5f)*10);
 		push.setPosition((x - 5.5f)*10, (y -.5f)*10);
 		normal.setPosition((x - 5.5f)*10, (y -.5f)*10);

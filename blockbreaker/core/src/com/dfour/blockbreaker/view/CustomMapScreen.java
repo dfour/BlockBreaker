@@ -1,7 +1,6 @@
 package com.dfour.blockbreaker.view;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import java.util.HashMap;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -15,9 +14,9 @@ import com.dfour.blockbreaker.BlockBreaker;
  * @author John Day johnday@gamedevelopment.blog
  */
 public class CustomMapScreen extends Scene2DScreen{
-	private FileHandle[] files;
 	private Label errorLabel;
-	private List<FileHandle> mapList;
+	private List<String> mapList;
+	HashMap<String,String> maps;
 	public CustomMapScreen(BlockBreaker p) {
 		super(p);
 	}
@@ -26,14 +25,17 @@ public class CustomMapScreen extends Scene2DScreen{
 	public void show(){
 		super.show();
 		
-		mapList = new List<FileHandle>(skin);
+		maps = parent.getPreferences().getMaps();
+		
+		mapList = new List<String> (skin);
 		mapList.setBounds(0, 0, 400, 300);
 		errorLabel = new Label("Select a Map to play.",skin);
 		
-		// search for custom map files in folder
-		files = Gdx.files.external("blockbreaker/custommap/").list();
-		if(files.length != 0){
-			mapList.setItems(files);
+		
+		if(maps.size() > 0){
+			for(String mapNames: maps.keySet()){
+				mapList.setItems(mapNames);
+			}
 		}else{
 			errorLabel.setText("No Custom Maps Saved! \r\n Make some Custom Maps in the level designer!");
 		}
@@ -45,7 +47,7 @@ public class CustomMapScreen extends Scene2DScreen{
 			public void clicked(InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 				BlockBreaker.isCustomMapMode = true;
-				BlockBreaker.customMaps = CustomMapScreen.this.mapList.getSelection().toArray();
+				BlockBreaker.customMap = maps.get(CustomMapScreen.this.mapList.getSelected());
 				CustomMapScreen.this.returnScreen = BlockBreaker.APPLICATION;
 				CustomMapScreen.this.isReturning = true;
 			}

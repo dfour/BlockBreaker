@@ -1,12 +1,7 @@
 package com.dfour.blockbreaker;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.controller.AppController;
 import com.dfour.blockbreaker.loaders.BBAssetManager;
 import com.dfour.blockbreaker.view.ApplicationScreen;
@@ -65,9 +60,8 @@ public class BlockBreaker extends Game {
 	public static int debug_min_lag = 300;
 	public static int debug_max_lag = 500;
 	
-	public static Array<FileHandle> customMaps;
+	public static String customMap;
 	public static boolean isCustomMapMode = false;
-	
 	
 	//music
 	private Sound introMusic;
@@ -93,23 +87,15 @@ public class BlockBreaker extends Game {
 	
 	// screen size preferred
 	public int screenWidthPreferred = 1024;
-	public int screenHeightPreferred= 786;
+	public int screenHeightPreferred= 820;
 	
 	@Override
 	public void create () {
 		loadingScreen = new LoadingScreen(this);
 		preferences = new AppPreferences();
-		
-		this.updateScreenSize();
-		
-		//Pixmap pm = new Pixmap(Gdx.files.internal("normalCursor.png"));
-		//Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-		//pm.dispose();
-		
-		
+
 		setScreen(loadingScreen);
 		
-		// create controller and model
 		controller = new AppController(this);
 	}
 
@@ -132,7 +118,6 @@ public class BlockBreaker extends Game {
 					currentSound = introMusic;
 					currentSongId = currentSound.loop(preferences.getVolume());
 				}
-				this.updateScreenSize(); // for changing screensize after pref change
 				menu = new MenuScreen(this);
 				this.setScreen(menu);
 				break;
@@ -205,81 +190,6 @@ public class BlockBreaker extends Game {
 	@Override
 	public void dispose(){
 		assMan.dispose();
-	}
-	
-	// TODO display from https://github.com/libgdx/libgdx/wiki/Querying-&-configuring-graphics-(monitors,-display-modes,-vsync)
-	public Monitor[] getMonitors(){
-		Monitor[] monitors = Gdx.graphics.getMonitors();
-		return monitors;
-	}
-	
-	public Monitor getCurrentMonitor(){
-		Monitor currMonitor = Gdx.graphics.getMonitor();
-		return currMonitor;
-	}
-	
-	public DisplayMode[] getDisplayModes(Monitor monitor){
-		DisplayMode[] modes = Gdx.graphics.getDisplayModes(monitor);
-		return modes;
-	}
-	
-	public boolean setWindowedMode(int width, int height){
-		return Gdx.graphics.setWindowedMode(width, height);
-	}
-	
-	public boolean setFullscreenMode(DisplayMode displayMode){
-		return Gdx.graphics.setFullscreenMode(displayMode);
-	}
-	
-	public DisplayMode getLargestScreenSize(){
-		DisplayMode[] displayModes = this.getDisplayModes(this.getCurrentMonitor());
-		DisplayMode largestMode = null;
-		
-		if(displayModes.length < 1){
-			System.out.println("No Monitor display modes");
-		}else{
-			largestMode = displayModes[0];
-			for(DisplayMode dispMode: displayModes){
-				if(dispMode.width > largestMode.width){
-					largestMode = dispMode;
-				}
-			}
-		}
-		return largestMode;
-	}
-	
-	public boolean updateScreenSize(){
-		// TODO get pref data for screen size
-		String screenSize = preferences.getScreenSize();
-		// split string into width and height
-		String[] sizes = screenSize.split("x");
-		screenWidthPreferred = Integer.valueOf(sizes[0]);
-		screenHeightPreferred = Integer.valueOf(sizes[1]);
-		
-		DisplayMode displayModeSelected = null;
-		
-		// set the screen size
-		if(preferences.getWindowed()){
-		// if pref windowed
-			return this.setWindowedMode(screenWidthPreferred,screenHeightPreferred);
-		}else{
-			//if pref fullScreen
-			boolean screenModeMatched = false;
-			DisplayMode[] displayModes = this.getDisplayModes(this.getCurrentMonitor());
-			for(DisplayMode dMode: displayModes){
-				if(dMode.width == screenWidthPreferred && dMode.height == screenHeightPreferred){
-					screenModeMatched = true;
-					displayModeSelected = dMode;
-				}
-			}
-			
-			if(!screenModeMatched){
-				displayModeSelected = this.getLargestScreenSize();
-			}
-			
-			return this.setFullscreenMode(displayModeSelected);
-		
-		}
 	}
 }
 

@@ -18,7 +18,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Blockbreaker - Balls Of Steel";
 		config.width = 1024;
-		config.height = 786;
+		config.height = 820;
 		config.samples = 2; // AA for shape renderer.. not textures!
 		new LwjglApplication(new BlockBreaker(), config);
 	}

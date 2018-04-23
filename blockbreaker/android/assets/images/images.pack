@@ -115,11 +115,18 @@ paddel-magnet-push
   orig: 220, 25
   offset: 0, 0
   index: -1
-paddel
+paddel_old
   rotate: false
   xy: 632, 454
   size: 220, 25
   orig: 220, 25
+  offset: 0, 0
+  index: -1
+paddel
+  rotate: false
+  xy: 632, 440
+  size: 141, 12
+  orig: 141, 12
   offset: 0, 0
   index: -1
 ballplusone
@@ -180,13 +187,6 @@ obstacle
   index: -1
 magpowerplus
   rotate: false
-  xy: 632, 437
-  size: 128, 15
-  orig: 128, 15
-  offset: 0, 0
-  index: -1
-magstrplus
-  rotate: false
   xy: 675, 9
   size: 128, 15
   orig: 128, 15
@@ -199,23 +199,30 @@ blackhole
   orig: 64, 64
   offset: 0, 0
   index: -1
-scoreplus
+magstrplus
   rotate: false
-  xy: 762, 437
+  xy: 775, 437
   size: 128, 15
   orig: 128, 15
   offset: 0, 0
   index: -1
-slow
+scoreplus
   rotate: false
   xy: 803, 420
   size: 128, 15
   orig: 128, 15
   offset: 0, 0
   index: -1
-stickypad
+slow
   rotate: false
   xy: 803, 403
+  size: 128, 15
+  orig: 128, 15
+  offset: 0, 0
+  index: -1
+stickypad
+  rotate: false
+  xy: 803, 386
   size: 128, 15
   orig: 128, 15
   offset: 0, 0
@@ -332,66 +339,94 @@ pesquare
   orig: 32, 32
   offset: 0, 0
   index: -1
-pre_particle
+portal
   rotate: false
   xy: 904, 787
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-score_pup
+  index: 1
+portal
   rotate: false
   xy: 515, 240
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-slow_pup
+  index: 2
+portal
   rotate: false
   xy: 549, 274
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-spinner
+  index: 3
+portal
   rotate: false
   xy: 904, 753
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-sticky_pup
+  index: 4
+pre_particle
   rotate: false
   xy: 515, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+score_pup
+  rotate: false
+  xy: 549, 240
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+slow_pup
+  rotate: false
+  xy: 904, 719
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+spinner
+  rotate: false
+  xy: 549, 206
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 pboutery
   rotate: false
-  xy: 970, 965
+  xy: 515, 182
   size: 42, 22
   split: 1, 1, 1, 1
   orig: 42, 22
   offset: 0, 0
   index: -1
+sticky_pup
+  rotate: false
+  xy: 904, 685
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 brick
   rotate: false
-  xy: 549, 252
+  xy: 970, 967
   size: 40, 20
   orig: 40, 20
   offset: 0, 0
   index: -1
 brickoff
   rotate: false
-  xy: 549, 230
+  xy: 904, 663
   size: 40, 20
   orig: 40, 20
   offset: 0, 0
   index: -1
 pbouter
   rotate: false
-  xy: 549, 212
+  xy: 904, 645
   size: 42, 16
   split: 1, 1, 1, 1
   orig: 42, 16
@@ -420,39 +455,18 @@ ballanim
   index: 8
 ballanim
   rotate: false
-  xy: 938, 939
+  xy: 559, 188
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 ballanim
   rotate: false
-  xy: 904, 735
+  xy: 1004, 1005
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
-ballanim
-  rotate: false
-  xy: 515, 188
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 4
-ballanim
-  rotate: false
-  xy: 1004, 1005
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 5
-ballanim
-  rotate: false
-  xy: 1004, 1005
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: 7
 fullpbstart
   rotate: false
   xy: 1022, 1005
@@ -461,6 +475,27 @@ fullpbstart
   orig: 1, 16
   offset: 0, 0
   index: -1
+ballanim
+  rotate: false
+  xy: 938, 939
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 4
+ballanim
+  rotate: false
+  xy: 904, 627
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 5
+ballanim
+  rotate: false
+  xy: 904, 627
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: 7
 ballanim
   rotate: false
   xy: 593, 474
@@ -477,91 +512,91 @@ bomb
   index: -1
 laserguideicon
   rotate: false
-  xy: 904, 717
+  xy: 904, 609
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 lasericon
   rotate: false
-  xy: 593, 456
+  xy: 922, 627
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 magballanim
   rotate: false
-  xy: 938, 903
+  xy: 593, 456
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 1
 magballanim
   rotate: false
-  xy: 938, 903
+  xy: 593, 456
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 8
 magballanim
   rotate: false
-  xy: 904, 699
+  xy: 938, 903
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 2
 magballanim
   rotate: false
-  xy: 938, 885
+  xy: 904, 591
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 3
 magballanim
   rotate: false
-  xy: 904, 681
+  xy: 922, 609
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 4
 magballanim
   rotate: false
-  xy: 938, 867
+  xy: 938, 885
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 5
 magballanim
   rotate: false
-  xy: 938, 867
+  xy: 938, 885
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 7
 magballanim
   rotate: false
-  xy: 904, 663
+  xy: 904, 573
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: 6
 magnet
   rotate: false
-  xy: 938, 849
+  xy: 922, 591
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 mag_ball
   rotate: false
-  xy: 904, 645
+  xy: 938, 867
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 emptypbend
   rotate: false
-  xy: 938, 831
+  xy: 904, 555
   size: 15, 16
   split: 1, 1, 1, 1
   orig: 15, 16

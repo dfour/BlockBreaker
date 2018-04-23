@@ -6,13 +6,8 @@ import com.dfour.blockbreaker.BBModel;
 
 public class LevelLoader {
 	
-	public static final int SOLO = 0;
-	public static final int MULTI_HOST= 1;
-	public static final int MULTI_CLIENT = 2;
-	
 	private String folder;
 	private BBModel model;
-	private int mode = SOLO;
 		
 	public LevelLoader(String fol, BBModel model){
 		folder = fol;
@@ -20,29 +15,16 @@ public class LevelLoader {
 	}
 	
 	public void loadLevel(int level){
-		loadLevelFile(folder+"level" + level + ".map", true, true);
+		loadLevelFile(folder+"level" + level + ".map", true);
 	}
 	
-	public void loadLevel(int level, int mode){
-		boolean full = false;
-		if(mode == SOLO || mode == MULTI_HOST){
-			full = true;
-		}
-		loadLevelFile(folder+"level" + level + ".map", true, full);
-	}
-	
-	public void loadLevelFile(String filename, boolean internal, boolean fullLoad){
-		FileHandle file = null;
-		if(internal){
-			file = Gdx.files.internal(filename);
-		}else{
-			file = Gdx.files.external(filename);
-		}
-		String text = file.readString().replaceAll("[\n\r]", ""); // remove new lines and carriage returns
+	public void loadLevelString(String mapData){
+		String text = mapData.replaceAll("[\n\r]", "");
 		//space for 10 portals
 		int[] portalPairs = {0,1,2,3,4,5,6,7,8,9};
 		int portalCount = 0;
-		// if text.len > 1200 (portals exist)
+		// if text.len > 1170 (old)
+		System.out.println(text.length());
 		if(text.length() >1170){
 			for(int i =0; i < 10; i++){
 				portalPairs[i] = Integer.valueOf(String.valueOf(text.charAt(1170+i)));
@@ -53,7 +35,7 @@ public class LevelLoader {
 		for (int y = 0; y < 30; y++) { // for each line of 30 lines
 			for (int x = 0; x < 39; x++) { // for each row of 39 chars + 0
 				char coord = text.charAt((y * 39) + x); // current line * 39 chars per line + amount of chars in
-				if (coord == 'x' && fullLoad) {
+				if (coord == 'x') {
 					model.entFactory.makeBrick(x * 2 +1, (Math.abs(y - 30)) * 2); // each brick is 2 high and 2 wide
 				} else if (coord == 's') {
 					model.entFactory.makeLight(x * 2+1, (Math.abs(y - 30)) * 2);
@@ -61,9 +43,9 @@ public class LevelLoader {
 					model.entFactory.makeStaticObstacle(x * 2+1, (Math.abs(y - 30)) * 2,false);
 				}else if (coord == '\\') {
 					model.entFactory.makeStaticObstacle(x * 2+1, (Math.abs(y - 30)) * 2, true);
-				}else if (coord == 'c' && fullLoad) {
+				}else if (coord == 'c') {
 					model.entFactory.addSpinner(x * 2+1, (Math.abs(y - 30)) * 2, true);
-				}else if (coord == 'a' && fullLoad) {
+				}else if (coord == 'a') {
 					model.entFactory.addSpinner(x * 2+1, (Math.abs(y - 30)) * 2, false);
 				}else if (coord == 'b'){
 					model.entFactory.addBlackHole(x * 2+1, (Math.abs(y - 30)) * 2);
@@ -83,6 +65,20 @@ public class LevelLoader {
 		for(int i = 0; i < portalCount; i++){
 			model.entFactory.pairPortals(i,portalPairs[i]);
 		}
+	}
+	
+	
+	public void loadLevelFile(String filename, boolean internal){
+		FileHandle file = null;
+		String text = "";
+		if(internal){
+			file = Gdx.files.internal(filename);
+			text = file.readString(); // remove new lines and carriage returns
+		}else{
+			text = filename;
+		}
+		loadLevelString(text);
+		
 	}
 	
 	
