@@ -119,10 +119,12 @@ public class BBModel {
 	public static final int EXPLOSION_SOUND = 0;
 	public static final int BOING_SOUND = 1;
 	public static final int PING_SOUND = 2;
+	public static final int CHING_SOUND =4;
 	
 	private Sound explosion;
 	private Sound boing;
 	private Sound ping;
+	private Sound ching;
 	private float screenSizeOfset = 0;
 	
 	
@@ -136,6 +138,7 @@ public class BBModel {
 		explosion = assMan.manager.get("sounds/explosion.wav", Sound.class);
 		boing = assMan.manager.get("sounds/boing.wav", Sound.class);
 		ping = assMan.manager.get("sounds/ping.wav", Sound.class);
+		ching = assMan.manager.get("sounds/ping.wav", Sound.class);
 		atlas = assMan.manager.get("images/images.pack", TextureAtlas.class);
 		
 		controller = cont;
@@ -147,7 +150,7 @@ public class BBModel {
 		RayHandler.useDiffuseLight(true);
 		rayHandler = new RayHandler(world);
 		rayHandler.setCulling(true);
-		rayHandler.setAmbientLight(0.7f);
+		rayHandler.setAmbientLight(0f);
 		
 		lf = new LightFactory(rayHandler);
 		lf.filter = (short) -1;
@@ -157,7 +160,7 @@ public class BBModel {
 		// update lf to use new raycount quality
 		lf.updatePools();
 		
-		lf.addDirectionalLight(-90, true, new Color(1f, 1f, 1f, .5f));
+		//lf.addDirectionalLight(-90, true, new Color(1f, 1f, 1f, .02f));
 		
 		entFactory = new EntityFactory(world,atlas,lf);
 		
@@ -211,10 +214,10 @@ public class BBModel {
 		lf.rays = Math.round(LightFactory.RAYS_PER_LIGHT_HIGH * preferences.getLightingQuality()) + 6;
 		lf.updatePools();
 		
-		//lf.addStaticPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
-		//lf.addStaticPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
-		//lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
-		//lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
+		lf.addStaticPointLight(2, 1, new Color(1f, 0f, 0f, 1f));
+		lf.addStaticPointLight(79, 1, new Color(0f, 1f, 1f, 1f));
+		lf.addStaticPointLight(2, 59, new Color(0f, 0f, 1f, 1f));
+		lf.addStaticPointLight(79, 59, new Color(0f, 1f, 0f, 1f));
 		
 		if(this.level == 0){
 			//reset base stats
@@ -224,7 +227,7 @@ public class BBModel {
 			lp.bombsLeft = 0;
 			lp.baseGuideLazerTimer = 10f;
 			lp.baseLazerTimer = 5f;
-			lp.cash = 50000000;
+			lp.cash = 500;
 			lp.magnetRechargeRate = 1;
 			score = 0;
 			lp.eternalMagBall = false;
@@ -371,7 +374,11 @@ public class BBModel {
 			Gdx.input.setCursorPosition(400,350);
 			mousex = 400; 
 		}else{
-			padOffset = mousex;
+			if(lp.isDrunk){
+				padOffset = screenWidth- controller.getMousePosition().x;
+			}else{
+				padOffset = mousex;
+			}
 		}
 		
 		float speedMod = 1;
@@ -405,7 +412,7 @@ public class BBModel {
 		if(lp.isSlow){
 			lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, screenx, 0.05f), 5);
 		}else{
-			lp.pad.setPosition(screenx, 5);
+			lp.pad.setPosition(MathUtils.lerp(lp.pad.body.getPosition().x, screenx, 0.3f), 5);
 		}
 		
 		/*
@@ -631,6 +638,7 @@ public class BBModel {
 				//disabled for webgl
 				//lp.pad.lazLightLeft.setActive(true);
 				//lp.pad.lazLightRight.setActive(true);
+				
 			} else {
 				lp.isFiringLazer = false;
 				lp.lazerTimer = lp.baseLazerTimer;
@@ -660,7 +668,8 @@ public class BBModel {
 		
 		// TODO implement limit to bomb count per second to stop all bombs being released at once
 		// B key to init bomb
-		if (controller.useBomb) {
+		if (controller.useBomb || controller.isDoubleClick) {
+			controller.isDoubleClick = false;
 			controller.useBomb = false;
 			if(lp.bombsLeft > 0){
 				lp.bombsLeft -= 1;
@@ -758,6 +767,9 @@ public class BBModel {
 				break;
 			case PING_SOUND:
 				ping.play(vol);
+				break;
+			case CHING_SOUND:
+				ching.play(vol);
 				break;
 			}
 		}
@@ -953,6 +965,7 @@ public class BBModel {
 				case EXTRA_MAG_CHARGE: 	lp.magnetRechargeRate+=1;		break;
 				case EXTRA_C_MAG_BALL: 	lp.eternalMagBall = true;		break;
 			}
+			playSound(PING_SOUND);
 			return true;
 		}
 		return false;

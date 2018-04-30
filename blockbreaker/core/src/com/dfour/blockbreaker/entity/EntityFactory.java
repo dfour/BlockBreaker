@@ -293,8 +293,8 @@ public class EntityFactory {
 	
 	public Portal makePortal(int x, int y){
 		Body bod = bodyFactory.makeSensorBody(x, y, 1, BodyType.StaticBody);
-		Animation anim =  new Animation(0.05f,atlas.findRegions("portal"));
-		anim.setPlayMode(PlayMode.LOOP_PINGPONG);
+		Animation anim =  new Animation(0.2f,atlas.findRegions("portal"));
+		anim.setPlayMode(PlayMode.LOOP);
 		Portal p = new Portal(bod, anim);
 		bod.setUserData(p);
 		preLinkedPortals[currentPortlaCount] = p;

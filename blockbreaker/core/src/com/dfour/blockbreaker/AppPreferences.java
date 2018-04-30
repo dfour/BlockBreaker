@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
+import java.util.Map.Entry;
 
 public class AppPreferences {
 	private static final String PREF_VOLUME = "volume";
@@ -187,8 +188,10 @@ public class AppPreferences {
 		if(!mapString.equalsIgnoreCase("")){
 			String[] nameAndMap = mapString.split(";");
 			for(String singleMap:nameAndMap){
-				String[] mapNameData = singleMap.split("@");
-				allMaps.put(mapNameData[0], mapNameData[1]);
+				if(!singleMap.contentEquals("")){
+					String[] mapNameData = singleMap.split("@");
+					allMaps.put(mapNameData[0], mapNameData[1]);
+				}
 			}
 		}
 		return allMaps;
@@ -197,11 +200,19 @@ public class AppPreferences {
 	public void addMap(String name, String nmap){
 		String cmaps = getPrefs().getString(MAPS, ""); //get current maps
 		if(cmaps.equalsIgnoreCase("")){
+			//empty so make new
 			getPrefs().putString(MAPS, name+"@"+nmap);
+			getPrefs().flush();
 		}else{
-			getPrefs().putString(MAPS, cmaps+";"+name+"@"+nmap);
-		}
-		
+			HashMap<String,String> maps = getMaps();
+			maps.put(name, nmap);
+			String mapString = "";
+			for(Entry<String, String> singleMap:maps.entrySet()){
+				mapString+=singleMap.getKey()+"@"+singleMap.getValue()+";";
+			}
+			getPrefs().putString(MAPS, mapString);
+			getPrefs().flush();
+		}	
 	}
 }
 

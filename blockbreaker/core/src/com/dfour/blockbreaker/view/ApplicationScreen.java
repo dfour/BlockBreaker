@@ -205,7 +205,7 @@ public class ApplicationScreen implements Screen {
 		NinePatchDrawable npd = new NinePatchDrawable(atlasGui.createPatch("drawer"));
 		
 		pauseMenuTable = new Table();
-		pauseMenuTable.setBackground(npd);
+		//pauseMenuTable.setBackground(npd);
 		pauseMenuTable.setVisible(false);
 		
 		imp = new InputMultiplexer();
@@ -335,6 +335,7 @@ public class ApplicationScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		controller.update(delta);
 		
 		fpsTimer += delta;
 		FPS+=1;
@@ -455,7 +456,7 @@ public class ApplicationScreen implements Screen {
 			
 			drawGuideLazors();
 	    }
-	    
+	 		
 	    this.fbBase.end();
 	    
 	    
@@ -470,6 +471,8 @@ public class ApplicationScreen implements Screen {
 		pb.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_DST_COLOR);
 		pb.draw(fbBase.getColorBufferTexture(),0,0,this.sw,this.sh);
 		pb.end();
+		
+		
 		
 		if(BlockBreaker.debug && BlockBreaker.debug_b2d_render){
 			debugRenderer.render(bbModel.world, debugMatrix);

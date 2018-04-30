@@ -21,12 +21,13 @@ public class BlockBreaker extends Game {
 	//TODO add animations to entities using boolean to state image vs animation for (normal, death, black hole death)
 		//TODO add continue button (saving score and cash in preferences ?? possible cheat)
 	//TODO update level designer
-	//TODO add buying sound effect for shop (cha-ching)
+	//TODO add buying sound effect for shop (cha-ching) (just need to add sound to assMan and update model
 	//TODO update level designer to use actual rendering like game, just without pad and info display and a obstacle menu instead
 		//TODO look into making level using level generator
 	//TODO update info display with spaceship dashboard look (metal with black display and green computer text)
 	//TODO NEEDS CHECKING add portal in and portal out obstacles (must look like portal portals) 
 	//			(portals close to edge allow blocks to escape area)
+	//TODO add sounds for lazors
 	//TODO fix bug where game ends and no pointer
 	//TODO redo rendering system so box to world rendering is in sync (e.g. 16px image = 1 box unit)
 		//TODO add Host > Client multiplayer then (see below)
@@ -52,7 +53,7 @@ public class BlockBreaker extends Game {
 	
 	// debug vars
 	public static boolean debug_mouse_capture = false;
-	public static boolean debug = true;
+	public static boolean debug = false;
 	public static boolean debug_b2d_render = false;
 	public static boolean debug_texture_render = true;
 	public static boolean debug_contact_log = false;

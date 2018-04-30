@@ -35,7 +35,7 @@ public class ShopScreen extends Scene2DScreen{
 	private Label lblCash;
 	private Label lblScore;
 	private TextButton btnDone;
-	
+		
 	public ShopScreen (BlockBreaker p, BBModel m){
 		super(p);
 		bbModel = m;
@@ -118,7 +118,7 @@ public class ShopScreen extends Scene2DScreen{
 				btnExRechargeRate.setChecked(false);
 			}
 		});
-		String magc = bbModel.lp.eternalMagBall?"$5000":"Purchased";
+		String magc = bbModel.lp.eternalMagBall?"Purchased":"$5000";
 		btnMagBallOnly = new TextButton(magc,skin);
 		btnMagBallOnly.setDisabled(!bbModel.lp.eternalMagBall);
 		btnMagBallOnly.addListener(new ClickListener(){

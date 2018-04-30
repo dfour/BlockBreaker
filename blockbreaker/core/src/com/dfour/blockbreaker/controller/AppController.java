@@ -13,6 +13,7 @@ public class AppController implements InputProcessor{
 	public boolean isReleaseDown = false;
 	public boolean isDragged = false;
 	public boolean isPauseDown = false;
+	public boolean isDoubleClick = false;
 	
 	public boolean ffour = false; 	// create brick
 	public boolean ffive = false; 	// kill bricks
@@ -26,6 +27,9 @@ public class AppController implements InputProcessor{
 	public boolean useBomb = false;
 	private Vector2 mouseLocation;
 	private BlockBreaker parent;
+	private float lastClick = 0f;
+	private float clickTimer  =0f;
+	
 	
 	public AppController(BlockBreaker p){
 		mouseLocation = new Vector2(0,0);
@@ -108,6 +112,11 @@ public class AppController implements InputProcessor{
 		}
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
+		
+		if(lastClick < clickTimer + 0.25f);{
+			isDoubleClick = true;
+		}
+		
 		return false;
 	}
 
@@ -123,6 +132,8 @@ public class AppController implements InputProcessor{
 		}
 		mouseLocation.x = screenX;
 		mouseLocation.y = screenY;
+		isDoubleClick = false;
+		lastClick = clickTimer; //set last click time
 		return false;
 	}
 
@@ -188,6 +199,10 @@ public class AppController implements InputProcessor{
 	
 	public void overrideMouseLocation(int x, int y){
 		mouseLocation = new Vector2(x,y);
+	}
+
+	public void update(float delta) {
+		clickTimer+=delta;
 	}
 	
 }

@@ -1,12 +1,15 @@
 package com.dfour.blockbreaker.view;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.dfour.blockbreaker.BlockBreaker;
 
 /**
@@ -33,9 +36,11 @@ public class CustomMapScreen extends Scene2DScreen{
 		
 		
 		if(maps.size() > 0){
-			for(String mapNames: maps.keySet()){
-				mapList.setItems(mapNames);
+			Array<String> mapNames = new Array<String>();
+			for(Entry<String, String> singleMap:maps.entrySet()){
+				mapNames.add(singleMap.getKey());
 			}
+			mapList.setItems(mapNames);
 		}else{
 			errorLabel.setText("No Custom Maps Saved! \r\n Make some Custom Maps in the level designer!");
 		}
